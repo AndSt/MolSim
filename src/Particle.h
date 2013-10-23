@@ -23,7 +23,7 @@ private:
 	/** the force effective on this particle */
 	utils::Vector<double, 3> f;
 
-	/** the force wich was effective on this particle */
+	/** the force which WAS effective on this particle */
 	utils::Vector<double, 3> old_f;
 
 	/** the mass of this particle */
@@ -63,6 +63,13 @@ public:
 	int getType();
 
 	bool operator==(Particle& other);
+
+	//extra
+	void setF(utils::Vector<double, 3> newF);
+
+	void setX(utils::Vector<double, 3> newX);
+
+	void setV(utils::Vector<double, 3> newX);
 
 	std::string toString();
 };

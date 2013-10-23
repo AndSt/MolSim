@@ -80,6 +80,12 @@ public:
 		return Vector(result);
 	}
 
+	void operator+=(const Vector& rhs) {
+			for(int i = 0; i < length; i++){
+				this->content[i] +=+ rhs.content[i];
+			}
+		}
+
 	Vector operator-(const Vector& rhs) const {
 		type result[length];
 
@@ -97,6 +103,24 @@ public:
 		}
 		return Vector(result);
 	}
+
+	Vector operator*(const Vector& rhs) const{
+			type result[length];
+
+			for (int i = 0; i < length; i++) {
+				result[i] = this->content[i] * rhs.content[i];
+			}
+			return Vector(result);
+		}
+
+	Vector operator/(const Vector& rhs) const{
+				type result[length];
+
+				for (int i = 0; i < length; i++) {
+					result[i] = this->content[i] / rhs.content[i];
+				}
+				return Vector(result);
+			}
 
 	double L2Norm() const {
 		double square_sum = 0;

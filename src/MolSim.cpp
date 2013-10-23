@@ -2,6 +2,7 @@
 #include "outputWriter/XYZWriter.h"
 #include "outputWriter/VTKWriter.h"
 #include "FileReader.h"
+#include "utils/Vector.h"
 
 #include <list>
 #include <cstring>
@@ -88,17 +89,22 @@ void calculateF() {
 	while (iterator != particles.end()) {
 		list<Particle>::iterator innerIterator = particles.begin();
 
+		//sum von Fij fuer alle j (i fest)
+		utils::Vector<double, 3> sumFi((double) 0);
 		while (innerIterator != particles.end()) {
 			if (innerIterator != iterator) {
 
-				Particle& p1 = *iterator;
-				Particle& p2 = *innerIterator;
+				Particle& p1 = *iterator; //i
+				Particle& p2 = *innerIterator; //j
 
 				// insert calculation of force here!
-
+				utils::Vector<double, 3> tempD = p1.getX() - p2.getX();
+				utils::Vector<double, 3> tempF = (p1.getM()*p2.getM()/(pow((tempD.L2Norm()),3)))*(-1)*tempD;
+				sumFi += tempF;
 			}
 			++innerIterator;
 		}
+		(*iterator).setF(sumFi);
 		++iterator;
 	}
 }
@@ -111,6 +117,8 @@ void calculateX() {
 		Particle& p = *iterator;
 
 		// insert calculation of X here!
+		utils::Vector<double, 3> tempX = p.getX() + delta_t*p.getV() + ((delta_t)*(delta_t)/(2*p.getM()))*p.getOldF();
+		p.setX(tempX);
 
 		++iterator;
 	}
@@ -124,7 +132,8 @@ void calculateV() {
 		Particle& p = *iterator;
 
 		// insert calculation of velocity here!
-
+		utils::Vector<double, 3> tempV = p.getV() + delta_t*(p.getF()+p.getOldF())/(2*p.getM());
+		p.setV(tempV);
 		++iterator;
 	}
 }
