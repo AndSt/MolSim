@@ -1,4 +1,3 @@
-
 #include "outputWriter/XYZWriter.h"
 #include "outputWriter/VTKWriter.h"
 #include "FileReader.h"
@@ -14,23 +13,23 @@ using namespace std;
 /**** forward declaration of the calculation functions ****/
 
 /**
- * calculate the force for all particles
- */
+* calculate the force for all particles
+*/
 void calculateF();
 
 /**
- * calculate the position for all particles
- */
+* calculate the position for all particles
+*/
 void calculateX();
 
 /**
- * calculate the position for all particles
- */
+* calculate the position for all particles
+*/
 void calculateV();
 
 /**
- * plot the particles to a xyz-file
- */
+* plot the particles to a xyz-file
+*/
 void plotParticles(int iteration);
 
 // plot the particles to VTKWriter-File
@@ -46,48 +45,48 @@ std::list<Particle> particles;
 
 int main(int argc, char* argsv[]) {
 
-	cout << "Hello from MolSim for PSE!" << endl;
-	cout << "[1]. Koordinaten; [2]. end_time; [3]. delta_t." << endl;
-	if (argc != 4) {
-		cout << "Errounous programme call! " << endl;
-		cout << "./molsym filename" << endl;
-	}
+        cout << "Hello from MolSim for PSE!" << endl;
+        cout << "[1]. Koordinaten; [2]. end_time; [3]. delta_t." << endl;
+        if (argc != 4) {
+                cout << "Errounous programme call! " << endl;
+                cout << "./molsym filename" << endl;
+        }
 
-	FileReader fileReader;
-	fileReader.readFile(particles, argsv[1]);
-	// the forces are needed to calculate x, but are not given in the input file.
-	calculateF();
+        FileReader fileReader;
+        fileReader.readFile(particles, argsv[1]);
+        // the forces are needed to calculate x, but are not given in the input file.
+        calculateF();
 
-	double current_time = start_time;
+        double current_time = start_time;
 
-	int iteration = 0;
+        int iteration = 0;
 
-	// end_time und delta_t eingegeben via command line
-	end_time = (double) atof(argsv[2]);
-	delta_t = (double) atof(argsv[3]);
+        // end_time und delta_t eingegeben via command line
+        end_time = (double) atof(argsv[2]);
+        delta_t = (double) atof(argsv[3]);
 
-	 // for this loop, we assume: current x, current f and current v are known
-	while (current_time < end_time) {
-		// calculate new x
-		calculateX();
+         // for this loop, we assume: current x, current f and current v are known
+        while (current_time < end_time) {
+                // calculate new x
+                calculateX();
 
-		// calculate new f
-		calculateF();
-		// calculate new v
-		calculateV();
+                // calculate new f
+                calculateF();
+                // calculate new v
+                calculateV();
 
-		iteration++;
-		if (iteration % 10 == 0) {
-			//plotParticles(iteration);
-			plotVTK(iteration);
-		}
-		cout << "Iteration " << iteration << " finished." << endl;
+                iteration++;
+                if (iteration % 10 == 0) {
+                        //plotParticles(iteration);
+                        plotVTK(iteration);
+                }
+                cout << "Iteration " << iteration << " finished." << endl;
 
-		current_time += delta_t;
-	}
+                current_time += delta_t;
+        }
 
-	cout << "output written. Terminating..." << endl;
-	return 0;
+        cout << "output written. Terminating..." << endl;
+        return 0;
 }
 
 
@@ -149,23 +148,24 @@ void calculateV() {
 
 void plotParticles(int iteration) {
 
-	string out_name("MD_vtk");
+        string out_name("MD_vtk");
 
-	outputWriter::XYZWriter writer;
-	writer.plotParticles(particles, out_name, iteration);
+        outputWriter::XYZWriter writer;
+        writer.plotParticles(particles, out_name, iteration);
 
 
 }
 
 void plotVTK(int iteration){
-	outputWriter::VTKWriter writer;
-	list<Particle>::iterator iterator = particles.begin();
-		while (iterator != particles.end()) {
-			Particle& p = *iterator;
-			writer.initializeOutput(particles.size());
-			writer.plotParticle(p);
-			++iterator;
-		}
-		string out_name("MD1_vtk");
-	writer.writeFile(out_name,iteration);
+        outputWriter::VTKWriter writer;
+        list<Particle>::iterator iterator = particles.begin();
+        writer.initializeOutput(particles.size());
+                while (iterator != particles.end()) {
+                        Particle& p = *iterator;
+
+                        writer.plotParticle(p);
+                        ++iterator;
+                }
+                string out_name("MD1_vtk");
+        writer.writeFile(out_name,iteration);
 }
