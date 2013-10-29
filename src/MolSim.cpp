@@ -33,6 +33,9 @@ void calculateV();
  */
 void plotParticles(int iteration);
 
+// plot the particles to VTKWriter-File
+void plotVTK(int iteration);
+
 
 double start_time = 0;
 double end_time = 1000;
@@ -44,7 +47,8 @@ std::list<Particle> particles;
 int main(int argc, char* argsv[]) {
 
 	cout << "Hello from MolSim for PSE!" << endl;
-	if (argc != 2) {
+	cout << "[1]. Koordinaten; [2]. end_time; [3]. delta_t." << endl;
+	if (argc != 4) {
 		cout << "Errounous programme call! " << endl;
 		cout << "./molsym filename" << endl;
 	}
@@ -58,6 +62,10 @@ int main(int argc, char* argsv[]) {
 
 	int iteration = 0;
 
+	// end_time und delta_t eingegeben via command line
+	end_time = (double) atof(argsv[2]);
+	delta_t = (double) atof(argsv[3]);
+
 	 // for this loop, we assume: current x, current f and current v are known
 	while (current_time < end_time) {
 		// calculate new x
@@ -70,7 +78,8 @@ int main(int argc, char* argsv[]) {
 
 		iteration++;
 		if (iteration % 10 == 0) {
-			plotParticles(iteration);
+			//plotParticles(iteration);
+			plotVTK(iteration);
 		}
 		cout << "Iteration " << iteration << " finished." << endl;
 
@@ -83,59 +92,58 @@ int main(int argc, char* argsv[]) {
 
 
 void calculateF() {
-	list<Particle>::iterator iterator;
-	iterator = particles.begin();
+        list<Particle>::iterator iterator;
+        iterator = particles.begin();
 
-	while (iterator != particles.end()) {
-		list<Particle>::iterator innerIterator = particles.begin();
+        while (iterator != particles.end()) {
+                list<Particle>::iterator innerIterator = particles.begin();
 
-		//sum von Fij fuer alle j (i fest)
-		utils::Vector<double, 3> sumFi((double) 0);
-		while (innerIterator != particles.end()) {
-			if (innerIterator != iterator) {
+                //sum von Fij fuer alle j (i fest)
+                utils::Vector<double, 3> sumFi((double) 0);
+                while (innerIterator != particles.end()) {
+                        if (innerIterator != iterator) {
 
-				Particle& p1 = *iterator; //i
-				Particle& p2 = *innerIterator; //j
+                                Particle& p1 = *iterator; //i
+                                Particle& p2 = *innerIterator; //j
 
-				// insert calculation of force here!
-				utils::Vector<double, 3> tempD = p1.getX() - p2.getX();
-				utils::Vector<double, 3> tempF = (p1.getM()*p2.getM()/(pow((tempD.L2Norm()),3)))*(-1)*tempD;
-				sumFi += tempF;
-			}
-			++innerIterator;
-		}
-		(*iterator).setF(sumFi);
-		++iterator;
-	}
+                                // insert calculation of force here!
+                                utils::Vector<double, 3> tempD = p1.getX() - p2.getX();
+                                utils::Vector<double, 3> tempF = (p1.getM()*p2.getM()/(pow((tempD.L2Norm()),3)))*(-1)*tempD;
+                                sumFi += tempF;
+                        }
+                        ++innerIterator;
+                }
+                (*iterator).setF(sumFi);
+                ++iterator;
+        }
 }
 
-
 void calculateX() {
-	list<Particle>::iterator iterator = particles.begin();
-	while (iterator != particles.end()) {
+        list<Particle>::iterator iterator = particles.begin();
+        while (iterator != particles.end()) {
 
-		Particle& p = *iterator;
+                Particle& p = *iterator;
 
-		// insert calculation of X here!
-		utils::Vector<double, 3> tempX = p.getX() + delta_t*p.getV() + ((delta_t)*(delta_t)/(2*p.getM()))*p.getOldF();
-		p.setX(tempX);
+                // insert calculation of X here!
+                utils::Vector<double, 3> tempX = p.getX() + delta_t*p.getV() + ((delta_t)*(delta_t)/(2*p.getM()))*p.getOldF();
+                p.setX(tempX);
 
-		++iterator;
-	}
+                ++iterator;
+        }
 }
 
 
 void calculateV() {
-	list<Particle>::iterator iterator = particles.begin();
-	while (iterator != particles.end()) {
+        list<Particle>::iterator iterator = particles.begin();
+        while (iterator != particles.end()) {
 
-		Particle& p = *iterator;
+                Particle& p = *iterator;
 
-		// insert calculation of velocity here!
-		utils::Vector<double, 3> tempV = p.getV() + delta_t*(p.getF()+p.getOldF())/(2*p.getM());
-		p.setV(tempV);
-		++iterator;
-	}
+                // insert calculation of velocity here!
+                utils::Vector<double, 3> tempV = p.getV() + (delta_t/(2*p.getM()))*(p.getF()+p.getOldF());
+                p.setV(tempV);
+                ++iterator;
+        }
 }
 
 
@@ -145,4 +153,19 @@ void plotParticles(int iteration) {
 
 	outputWriter::XYZWriter writer;
 	writer.plotParticles(particles, out_name, iteration);
+
+
+}
+
+void plotVTK(int iteration){
+	outputWriter::VTKWriter writer;
+	list<Particle>::iterator iterator = particles.begin();
+		while (iterator != particles.end()) {
+			Particle& p = *iterator;
+			writer.initializeOutput(particles.size());
+			writer.plotParticle(p);
+			++iterator;
+		}
+		string out_name("MD1_vtk");
+	writer.writeFile(out_name,iteration);
 }
