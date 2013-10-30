@@ -111,7 +111,7 @@ void calculateF() {
 
 		ParticleIterator innerIterator;
 		innerIterator = container.begin();
-		//sum von Fij fuer alle j (i fest)
+
 		utils::Vector<double, 3> sumFi((double) 0);
 		while (innerIterator != container.end()) {
 			if (innerIterator != iterator) {
@@ -119,10 +119,10 @@ void calculateF() {
 				Particle& p1 = *iterator; //i
 				Particle& p2 = *innerIterator; //j
 
-				// insert calculation of force here!
 				utils::Vector<double, 3> tempD = p1.getX() - p2.getX();
 				utils::Vector<double, 3> tempF = (p1.getM() * p2.getM()
 						/ (pow((tempD.L2Norm()), 3))) * (-1) * tempD;
+
 				sumFi += tempF;
 			}
 			++innerIterator;
@@ -134,7 +134,7 @@ void calculateF() {
 
 /**
  *  This method calculates the position of the particles.
- *  It obeys the Velocity-St�rmer-Verlet-Algorithm.
+ *  It obeys the Velocity-Stoermer-Verlet-Algorithm.
  */
 void calculateX() {
 
@@ -144,9 +144,9 @@ void calculateX() {
 
 		Particle& p = *iterator;
 
-		// insert calculation of X here!
 		utils::Vector<double, 3> tempX = p.getX() + delta_t * p.getV()
 				+ ((delta_t) * (delta_t) / (2 * p.getM())) * p.getOldF();
+
 		p.setX(tempX);
 
 		++iterator;
@@ -155,7 +155,7 @@ void calculateX() {
 
 /**
  *  This method calculates the position of the particles.
- *  It obeys the Velocity-St�rmer-Verlet-Algorithm.
+ *  It obeys the Velocity-Stoermer-Verlet-Algorithm.
  */
 void calculateV() {
 
@@ -165,9 +165,9 @@ void calculateV() {
 
 		Particle& p = *iterator;
 
-		// insert calculation of velocity here!
 		utils::Vector<double, 3> tempV = p.getV()
 				+ (delta_t / (2 * p.getM())) * (p.getF() + p.getOldF());
+
 		p.setV(tempV);
 		++iterator;
 	}
