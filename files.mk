@@ -1,0 +1,9 @@
+SOURCES=\
+src/FileReader.cpp\
+src/Particle.cpp\
+src/outputWriter/XYZWriter.cpp\
+src/outputWriter/vtk-unstructured.cpp\
+src/outputWriter/VTKWriter.cpp\
+src/MolSim.cpp\
+src/utils/ParticleContainer.cpp\
+src/utils/ParticleIterator.cpp\

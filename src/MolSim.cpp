@@ -2,6 +2,8 @@
 #include "outputWriter/VTKWriter.h"
 #include "FileReader.h"
 #include "utils/Vector.h"
+#include "utils/ParticleContainer.h"
+#include "utils/ParticleIterator.h"
 
 #include <list>
 #include <cstring>
@@ -13,159 +15,178 @@ using namespace std;
 /**** forward declaration of the calculation functions ****/
 
 /**
-* calculate the force for all particles
-*/
+ * calculate the force for all particles
+ */
 void calculateF();
 
 /**
-* calculate the position for all particles
-*/
+ * calculate the position for all particles
+ */
 void calculateX();
 
 /**
-* calculate the position for all particles
-*/
+ * calculate the position for all particles
+ */
 void calculateV();
 
 /**
-* plot the particles to a xyz-file
-*/
+ * plot the particles to a xyz-file
+ */
 void plotParticles(int iteration);
 
 // plot the particles to VTKWriter-File
 void plotVTK(int iteration);
-
 
 double start_time = 0;
 double end_time = 1000;
 double delta_t = 0.014;
 
 std::list<Particle> particles;
-
+ParticleContainer container;
 
 int main(int argc, char* argsv[]) {
 
-        cout << "Hello from MolSim for PSE!" << endl;
-        cout << "[1]. Koordinaten; [2]. end_time; [3]. delta_t." << endl;
-        if (argc != 4) {
-                cout << "Errounous programme call! " << endl;
-                cout << "./molsym filename" << endl;
-        }
+	cout << "Hello from MolSim for PSE!" << endl;
+	cout << "[1]. Koordinaten; [2]. end_time; [3]. delta_t." << endl;
+	if (argc != 4) {
+		cout << "Errounous programme call! " << endl;
+		cout << "./molsym filename" << endl;
+	}
 
-        FileReader fileReader;
-        fileReader.readFile(particles, argsv[1]);
-        // the forces are needed to calculate x, but are not given in the input file.
-        calculateF();
+	FileReader fileReader;
+	fileReader.readFile(particles, argsv[1]);
 
-        double current_time = start_time;
+	container.initialize(particles);
 
-        int iteration = 0;
+	// the forces are needed to calculate x, but are not given in the input file.
+	calculateF();
 
-        // end_time und delta_t eingegeben via command line
-        end_time = (double) atof(argsv[2]);
-        delta_t = (double) atof(argsv[3]);
+	double current_time = start_time;
 
-         // for this loop, we assume: current x, current f and current v are known
-        while (current_time < end_time) {
-                // calculate new x
-                calculateX();
+	int iteration = 0;
 
-                // calculate new f
-                calculateF();
-                // calculate new v
-                calculateV();
+	// end_time und delta_t eingegeben via command line
+	end_time = (double) atof(argsv[2]);
+	delta_t = (double) atof(argsv[3]);
 
-                iteration++;
-                if (iteration % 10 == 0) {
-                        //plotParticles(iteration);
-                        plotVTK(iteration);
-                }
-                cout << "Iteration " << iteration << " finished." << endl;
+	// for this loop, we assume: current x, current f and current v are known
+	while (current_time < end_time) {
+		// calculate new x
+		calculateX();
 
-                current_time += delta_t;
-        }
+		// calculate new f
+		calculateF();
+		// calculate new v
+		calculateV();
 
-        cout << "output written. Terminating..." << endl;
-        return 0;
+		iteration++;
+		if (iteration % 10 == 0) {
+			//plotParticles(iteration);
+			plotVTK(iteration);
+		}
+		cout << "Iteration " << iteration << " finished." << endl;
+
+		current_time += delta_t;
+	}
+
+	cout << "output written. Terminating..." << endl;
+	return 0;
 }
 
-
+/**
+ * This method calculates the forces between the particles.
+ * The calculation obeys the simple force calculation.
+ */
 void calculateF() {
-        list<Particle>::iterator iterator;
-        iterator = particles.begin();
+	ParticleIterator iterator;
+	iterator = container.begin();
+	while (iterator != container.end()) {
+		ParticleIterator innerIterator;
+		innerIterator = container.begin();
+		//sum von Fij fuer alle j (i fest)
+		utils::Vector<double, 3> sumFi((double) 0);
+		while (innerIterator != container.end()) {
+			if (innerIterator != iterator) {
 
-        while (iterator != particles.end()) {
-                list<Particle>::iterator innerIterator = particles.begin();
+				Particle& p1 = *iterator; //i
+				Particle& p2 = *innerIterator; //j
 
-                //sum von Fij fuer alle j (i fest)
-                utils::Vector<double, 3> sumFi((double) 0);
-                while (innerIterator != particles.end()) {
-                        if (innerIterator != iterator) {
-
-                                Particle& p1 = *iterator; //i
-                                Particle& p2 = *innerIterator; //j
-
-                                // insert calculation of force here!
-                                utils::Vector<double, 3> tempD = p1.getX() - p2.getX();
-                                utils::Vector<double, 3> tempF = (p1.getM()*p2.getM()/(pow((tempD.L2Norm()),3)))*(-1)*tempD;
-                                sumFi += tempF;
-                        }
-                        ++innerIterator;
-                }
-                (*iterator).setF(sumFi);
-                ++iterator;
-        }
+				// insert calculation of force here!
+				utils::Vector<double, 3> tempD = p1.getX() - p2.getX();
+				utils::Vector<double, 3> tempF = (p1.getM() * p2.getM()
+						/ (pow((tempD.L2Norm()), 3))) * (-1) * tempD;
+				sumFi += tempF;
+			}
+			++innerIterator;
+		}
+		(*iterator).setF(sumFi);
+		++iterator;
+	}
 }
 
+/**
+ *  This method calculates the position of the particles.
+ *  It obeys the Velocity-St�rmer-Verlet-Algorithm.
+ */
 void calculateX() {
-        list<Particle>::iterator iterator = particles.begin();
-        while (iterator != particles.end()) {
 
-                Particle& p = *iterator;
+	ParticleIterator iterator;
+	iterator = container.begin();
+	while (iterator != container.end()) {
 
-                // insert calculation of X here!
-                utils::Vector<double, 3> tempX = p.getX() + delta_t*p.getV() + ((delta_t)*(delta_t)/(2*p.getM()))*p.getOldF();
-                p.setX(tempX);
+		Particle& p = *iterator;
 
-                ++iterator;
-        }
+		// insert calculation of X here!
+		utils::Vector<double, 3> tempX = p.getX() + delta_t * p.getV()
+				+ ((delta_t) * (delta_t) / (2 * p.getM())) * p.getOldF();
+		p.setX(tempX);
+
+		++iterator;
+	}
 }
 
-
+/**
+ *  This method calculates the position of the particles.
+ *  It obeys the Velocity-St�rmer-Verlet-Algorithm.
+ */
 void calculateV() {
-        list<Particle>::iterator iterator = particles.begin();
-        while (iterator != particles.end()) {
 
-                Particle& p = *iterator;
+	ParticleIterator iterator;
+	iterator = container.begin();
+	while (iterator != container.end()) {
 
-                // insert calculation of velocity here!
-                utils::Vector<double, 3> tempV = p.getV() + (delta_t/(2*p.getM()))*(p.getF()+p.getOldF());
-                p.setV(tempV);
-                ++iterator;
-        }
+		Particle& p = *iterator;
+
+		// insert calculation of velocity here!
+		utils::Vector<double, 3> tempV = p.getV()
+				+ (delta_t / (2 * p.getM())) * (p.getF() + p.getOldF());
+		p.setV(tempV);
+		++iterator;
+	}
 }
-
 
 void plotParticles(int iteration) {
 
-        string out_name("MD_vtk");
+	string out_name("MD_vtk");
 
-        outputWriter::XYZWriter writer;
-        writer.plotParticles(particles, out_name, iteration);
-
+	outputWriter::XYZWriter writer;
+	writer.plotParticles(particles, out_name, iteration);
 
 }
 
-void plotVTK(int iteration){
-        outputWriter::VTKWriter writer;
-        list<Particle>::iterator iterator = particles.begin();
-        writer.initializeOutput(particles.size());
-                while (iterator != particles.end()) {
-                        Particle& p = *iterator;
+/**
+ * This method writes the output VTK files.
+ */
+void plotVTK(int iteration) {
+	outputWriter::VTKWriter writer;
+	list<Particle>::iterator iterator = particles.begin();
+	writer.initializeOutput(particles.size());
+	while (iterator != particles.end()) {
+		Particle& p = *iterator;
 
-                        writer.plotParticle(p);
-                        ++iterator;
-                }
-                string out_name("MD1_vtk");
-        writer.writeFile(out_name,iteration);
+		writer.plotParticle(p);
+		++iterator;
+	}
+	string out_name("MD1_vtk");
+	writer.writeFile(out_name, iteration);
 }
