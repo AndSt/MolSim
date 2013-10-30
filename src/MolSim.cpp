@@ -44,6 +44,12 @@ double delta_t = 0.014;
 std::list<Particle> particles;
 ParticleContainer container;
 
+
+/**
+ * @param argsv the first parameter is the file. ( here "eingabe-sonne.txt")
+ * The second parameter is the end_time.
+ * The third parameter is  delta_t.
+ */
 int main(int argc, char* argsv[]) {
 
 	cout << "Hello from MolSim for PSE!" << endl;
@@ -98,9 +104,11 @@ int main(int argc, char* argsv[]) {
  * The calculation obeys the simple force calculation.
  */
 void calculateF() {
+
 	ParticleIterator iterator;
 	iterator = container.begin();
 	while (iterator != container.end()) {
+
 		ParticleIterator innerIterator;
 		innerIterator = container.begin();
 		//sum von Fij fuer alle j (i fest)
@@ -179,9 +187,10 @@ void plotParticles(int iteration) {
  */
 void plotVTK(int iteration) {
 	outputWriter::VTKWriter writer;
-	list<Particle>::iterator iterator = particles.begin();
-	writer.initializeOutput(particles.size());
-	while (iterator != particles.end()) {
+	ParticleIterator iterator;
+	iterator = container.begin();
+	writer.initializeOutput(container.particles.size());
+	while (iterator != container.end()) {
 		Particle& p = *iterator;
 
 		writer.plotParticle(p);
