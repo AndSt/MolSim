@@ -8,14 +8,11 @@
 #include "Cuboid.h"
 
 #include <list>
-#incluse <cassert>
+#include <cassert>
 #include <cstring>
 #include <cstdlib>
 #include <iostream>
 
-// For Lennard-Jones
-#define EPSILON 5
-#define SIGMA 1
 
 using namespace std;
 
@@ -54,8 +51,12 @@ double start_time = 0;
 double end_time = 1000;
 double delta_t = 0.014;
 
+// For Lennard-Jones
+const double SIGMA = 1;
+const double EPSILON = 5;
+
 list<Particle> particles;
-//ParticleContainer container;
+ParticleContainer container;
 
 // List of cuboids
 list<Cuboid> cuboids;
@@ -89,7 +90,7 @@ int main(int argc, char* argsv[]) {
 	//FileReader fileReader;
 	//fileReader.readFile(particles, argsv[2]);
 
-	//container.initialize(particles);
+	container.initialize(particles);
 	cuboidsToList(cuboids, particles);
 
 	// the forces are needed to calculate x, but are not given in the input file.
@@ -249,7 +250,7 @@ void calculateFLJ() {
 	utils::Vector<double, 3> zero((double) 0);
 	ParticleIterator iterator;
 	utils::Vector<double, 3> sumF[container.size()];
-	for(int i = 0; i < sumF.size; i++)
+	for(int i = 0; i < container.size(); i++)
 	{
 		sumF[i] = zero;
 	}
@@ -270,8 +271,8 @@ void calculateFLJ() {
 			
 			//calculations
 			utils::Vector<double, 3> tempD = p1.getX() - p2.getX();
-			utils::Vector<double, 3> tempDNorm = tempD.L2Norm();
-			utils::Vector<double, 3> tempDSigDivNorm = SIGMA/tempDNorm;
+			double tempDNorm = tempD.L2Norm();
+			double tempDSigDivNorm = SIGMA/tempDNorm;
 			utils::Vector<double, 3> tempF = 24*EPSILON*pow(1/tempDNorm,2)*(pow(tempDSigDivNorm,6)-2*pow(tempDSigDivNorm,12))*tempD*(-1);
 			
 			
@@ -281,7 +282,7 @@ void calculateFLJ() {
 			++j;
 		}
 		
-		(*iterator).setF(sumFi);
+		(*iterator).setF(sumF[i]);
 		++iterator;
 		++i;
 	}
