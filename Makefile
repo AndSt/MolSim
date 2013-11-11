@@ -17,7 +17,7 @@ CFLAGS=-g -O3
 # ------------
 LDFLAGS= -lxerces-c 
 
-INCLUDES= -I./src -I./libxsd
+INCLUDES= -I./src -I./libxsd -I./libxsd/xsd
 
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=MolSim
@@ -26,10 +26,11 @@ all: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(OBJECTS) $(LDFLAGS) -o $@ 
-
+	rm $(OBJECTS)
+	
 clean:
 	rm $(OBJECTS)
+	
 
 .cpp.o:
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-
