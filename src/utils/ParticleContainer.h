@@ -18,14 +18,8 @@ class ParticleContainer {
 
 public:
 
-
 	ParticleContainer();
 	~ParticleContainer();
-
-	/**
-	 * contains the list of the given particles
-	 */
-	std::list<Particle> particles;
 
 	/**
 	 * fills the particles list
@@ -34,17 +28,30 @@ public:
 	void initialize(std::list<Particle> particles_arg);
 
 	/**
-	 * @return returns the first element of the container
+	 * @return the first element of the container
 	 */
 	ParticleIterator begin();
 
 	/**
-	 * @return returns the last element of the container
+	 * @return the last element of the container
 	 */
 	ParticleIterator end();
 
-private:
+	/**
+	 * @ return the particles list
+	 */
+	std::list<Particle> getList();
 
+	/**
+	 * @ return the size of the size
+	 */
+	int size();
+
+private:
+	/**
+	 * contains the list of the given particles
+	 */
+	std::list<Particle> particles;
 };
 
 

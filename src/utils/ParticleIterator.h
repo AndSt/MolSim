@@ -25,10 +25,6 @@ public:
 
 	virtual ~ParticleIterator();
 
-	/**
-	 * the element of the iterator
-	 */
-	std::list<Particle>::iterator iterator;
 
 	/**
 	 * @return returns the reference to the momentary particle
@@ -48,7 +44,10 @@ public:
 	bool operator!=(const ParticleIterator b);
 
 private:
-
+	/**
+	 * the element of the iterator
+	 */
+	std::list<Particle>::iterator iterator;
 
 };
 

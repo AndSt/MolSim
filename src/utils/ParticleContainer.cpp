@@ -7,6 +7,7 @@
 
 #include "ParticleContainer.h"
 
+
 ParticleContainer::ParticleContainer(){
 	// TODO Auto-generated constructor stub
 }
@@ -27,4 +28,10 @@ ParticleIterator ParticleContainer::end(){
 	return ParticleIterator(particles.end());
 }
 
+std::list<Particle> ParticleContainer::getList(){
+	return particles;
+}
 
+int ParticleContainer::size(){
+	return particles.size();
+}
