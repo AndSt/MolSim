@@ -67,40 +67,29 @@ std::list<Cuboid> cuboids;
 int main(int argc, char* argsv[]) {
 
 	/* Format input command line:
-	 * ./MolSim file <input file> <end time> <delta time>
-	 * ./MolSim type <input file> <end time> <delta time>
+	 * ./MolSim <input file> <end time> <delta time>
 	 * Example for input command line:
-	 * ./MolSim file "eingabe-sonne.txt" 1000 0.014
-	 * ./MolSim type "eingabe-cub.txt" 1000 0.014
+	 * ./MolSim "eingabe-sonne.txt" 1000 0.014
+	 * ./MolSim "eingabe-brownian.txt" 1000 0.014
 	 *
 	 */
 	cout << "Hello from MolSim for PSE!" << endl;
-	cout << "./MolSim file <input file> <end time> <delta time>" << endl;
-	cout << "or" << endl;
-	cout << "./MolSim type <input file> <end time> <delta time>" << endl;
-	if ((argc != 5) && (argc != 17)) {
+	cout << "./MolSim <input file> <end time> <delta time>" << endl;
+	if (argc != 4) {
 		cout << "Errounous programme call! " << endl;
 		exit(-1);
 	}
 
-	std::string str = argsv[1];
-	if (str.compare("file") == 0){
-		cout << "You chose via input file. Reading file..." << endl;
-		FileReader fileReaderCub;
-		fileReaderCub.readFileCub(cuboids, argsv[2]);
-	}else if (str.compare("type") == 0)
-		cout << "You chose via command line. Reading end_time and delta_time..." << endl;
-	else{
-		cout << "Error!\nEither [./MolSim file...] or [./MolSim type...]" << endl;
-		exit(-1);
-	}
+	cout << "Reading input file..." << endl;
+	FileReader fileReaderCub;
+	fileReaderCub.readFileCub(cuboids, argsv[1]);
 
 	// Via input file
 	//FileReader fileReader;
 	//fileReader.readFile(particles, argsv[2]);
 
 	//container.initialize(particles);
-	//cuboidsToList(cuboids, particles);
+	cuboidsToList(cuboids, particles);
 
 	// the forces are needed to calculate x, but are not given in the input file.
 	//calculateF();
@@ -111,8 +100,8 @@ int main(int argc, char* argsv[]) {
 	int iteration = 0;
 
 	// Via command line (but also for via input file)
-	end_time = (double) atof(argsv[3]);
-	delta_t = (double) atof(argsv[4]);
+	end_time = (double) atof(argsv[2]);
+	delta_t = (double) atof(argsv[3]);
 
 	// for this loop, we assume: current x, current f and current v are known
 	while (current_time < end_time) {
@@ -175,23 +164,24 @@ void calculateF() {
 }
 */
 
-// Convert a 3D vector to a list
-/*
+// Convert a list of cubois to one single list of particles
 void cuboidsToList(std::list<Cuboid>& cubList, std::list<Particle>& list){
 	list.clear();
-	std::list<Cuboid>::const_iterator iterator;
-	for (iterator = cubList.begin(); iterator != cubList.end(); iterator++) {
-		Cuboid& temp = *iterator;
-		for (int h = 0; h < temp.getHeight(); h++){
-			for (int w = 0; w < temp.getWidth(); w++){
-				for (int d = 0; d < temp.getDepth(); d++){
-					list.push_back(temp.getCuboid()[h][w][d]);
-				}
-			}
-		}
+	if (cubList.size() == 0){
+		cout << "Cuboid list is empty!" << endl;
+		exit(-1);
+	}
+
+	// Size >= 1
+	std::list<Cuboid>::iterator iterator = cubList.begin();
+	Cuboid& temp1 = *iterator;
+	list = temp1.getCuboid();
+	iterator++;
+	for (iterator; iterator != cubList.end(); iterator++) {
+		Cuboid& temp2 = *iterator;
+		list.merge(temp2);
 	}
 }
-*/
 
 // New calculateF() with Lennard-Jones
 void calculateFLJ(){
