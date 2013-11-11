@@ -8,6 +8,7 @@
 #include "Cuboid.h"
 
 #include <list>
+#incluse <cassert>
 #include <cstring>
 #include <cstdlib>
 #include <iostream>
@@ -164,7 +165,7 @@ void calculateF() {
 }
 */
 
-// Convert a list of cubois to one single list of particles
+// Convert a list of cuboids to one single list of particles
 void cuboidsToList(list<Cuboid>& cubList, list<Particle>& list){
 	list.clear();
 	if (cubList.size() == 0){
@@ -194,6 +195,7 @@ void cuboidsToList(list<Cuboid>& cubList, list<Particle>& list){
 	}
 }
 // New calculateF() with Lennard-Jones
+/*
 void calculateFLJ(){
 	// Symmetric matrix nxn for calculating Fij (only once per pair)
 	vector<vector<utils::Vector<double, 3> > > matrix;
@@ -237,6 +239,51 @@ void calculateFLJ(){
 		}
 		temp.setF(sumFi);
 		i++;
+	}
+}*/
+
+// New calculateF() with Lennard-Jones
+void calculateFLJ() {
+	
+	//initialize outer Iterator and index
+	utils::Vector<double, 3> zero((double) 0);
+	ParticleIterator iterator;
+	utils::Vector<double, 3> sumF[container.size()];
+	for(int i = 0; i < sumF.size; i++)
+	{
+		sumF[i] = zero;
+	}
+	iterator = container.begin();
+	int i = 0;
+	while (iterator != container.end()) {
+
+		//initialize inner Iterator and Index
+		ParticleIterator innerIterator;
+		innerIterator = iterator;
+		++innerIterator;
+		int j = i + 1;
+
+		while (innerIterator != container.end()) {
+
+			Particle& p1 = *iterator;
+			Particle& p2 = *innerIterator;
+			
+			//calculations
+			utils::Vector<double, 3> tempD = p1.getX() - p2.getX();
+			utils::Vector<double, 3> tempDNorm = tempD.L2Norm();
+			utils::Vector<double, 3> tempDSigDivNorm = SIGMA/tempDNorm;
+			utils::Vector<double, 3> tempF = 24*EPSILON*pow(1/tempDNorm,2)*(pow(tempDSigDivNorm,6)-2*pow(tempDSigDivNorm,12))*tempD*(-1);
+			
+			
+			sumF[i] += tempF;
+			sumF[j] += (-1)*tempF;
+			++innerIterator;
+			++j;
+		}
+		
+		(*iterator).setF(sumFi);
+		++iterator;
+		++i;
 	}
 }
 
