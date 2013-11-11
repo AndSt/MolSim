@@ -2,13 +2,19 @@
 #include "outputWriter/VTKWriter.h"
 #include "FileReader.h"
 #include "utils/Vector.h"
+#include "Particle.h"
 #include "utils/ParticleContainer.h"
 #include "utils/ParticleIterator.h"
+#include "Cuboid.h"
 
 #include <list>
 #include <cstring>
 #include <cstdlib>
 #include <iostream>
+
+// For Lennard-Jones
+#define EPSILON 5
+#define SIGMA 1
 
 using namespace std;
 
@@ -18,6 +24,12 @@ using namespace std;
  * calculate the force for all particles
  */
 void calculateF();
+
+// New calculation for force according to Lennard-Jones
+void calculateFLJ();
+
+// Convert a list of cuboids (each cuboid = 3D vector) to a list of particles
+void cuboidsToList(std::list<Cuboid>& cubList, std::list<Particle>& list);
 
 /**
  * calculate the position for all particles
@@ -44,6 +56,8 @@ double delta_t = 0.014;
 std::list<Particle> particles;
 ParticleContainer container;
 
+// List of cuboids
+std::list<Cuboid> cuboids;
 
 /**
  * @param argsv the first parameter is the file. ( here "eingabe-sonne.txt")
@@ -52,28 +66,53 @@ ParticleContainer container;
  */
 int main(int argc, char* argsv[]) {
 
+	/* Format input command line:
+	 * ./MolSim file <input file> <end time> <delta time>
+	 * ./MolSim type <input file> <end time> <delta time>
+	 * Example for input command line:
+	 * ./MolSim file "eingabe-sonne.txt" 1000 0.014
+	 * ./MolSim type "eingabe-cub.txt" 1000 0.014
+	 *
+	 */
 	cout << "Hello from MolSim for PSE!" << endl;
-	cout << "[1]. Koordinaten; [2]. end_time; [3]. delta_t." << endl;
-	if (argc != 4) {
+	cout << "./MolSim file <input file> <end time> <delta time>" << endl;
+	cout << "or" << endl;
+	cout << "./MolSim type <input file> <end time> <delta time>" << endl;
+	if ((argc != 5) && (argc != 17)) {
 		cout << "Errounous programme call! " << endl;
-		cout << "./molsym filename" << endl;
+		exit(-1);
 	}
 
-	FileReader fileReader;
-	fileReader.readFile(particles, argsv[1]);
+	std::string str = argsv[1];
+	if (str.compare("file") == 0){
+		cout << "You chose via input file. Reading file..." << endl;
+		FileReader fileReaderCub;
+		fileReaderCub.readFileCub(cuboids, argsv[2]);
+	}else if (str.compare("type") == 0)
+		cout << "You chose via command line. Reading end_time and delta_time..." << endl;
+	else{
+		cout << "Error!\nEither [./MolSim file...] or [./MolSim type...]" << endl;
+		exit(-1);
+	}
 
-	container.initialize(particles);
+	// Via input file
+	//FileReader fileReader;
+	//fileReader.readFile(particles, argsv[2]);
+
+	//container.initialize(particles);
+	cuboidsToList(cuboids, particles);
 
 	// the forces are needed to calculate x, but are not given in the input file.
-	calculateF();
+	//calculateF();
+	calculateFLJ();
 
 	double current_time = start_time;
 
 	int iteration = 0;
 
-	// end_time und delta_t eingegeben via command line
-	end_time = (double) atof(argsv[2]);
-	delta_t = (double) atof(argsv[3]);
+	// Via command line (but also for via input file)
+	end_time = (double) atof(argsv[3]);
+	delta_t = (double) atof(argsv[4]);
 
 	// for this loop, we assume: current x, current f and current v are known
 	while (current_time < end_time) {
@@ -81,7 +120,9 @@ int main(int argc, char* argsv[]) {
 		calculateX();
 
 		// calculate new f
-		calculateF();
+		//calculateF();
+		calculateFLJ();
+
 		// calculate new v
 		calculateV();
 
@@ -132,24 +173,79 @@ void calculateF() {
 	}
 }
 
+// Convert a 3D vector to a list
+void cuboidsToList(std::list<Cuboid>& cubList, std::list<Particle>& list){
+	list.clear();
+	std::list<Cuboid>::const_iterator iterator;
+	for (iterator = cubList.begin(); iterator != cubList.end(); iterator++) {
+		Cuboid temp = *iterator;
+		for (int h = 0; h < temp.getHeight(); h++){
+			for (int w = 0; w < temp.getWidth(); w++){
+				for (int d = 0; d < temp.getDepth(); d++){
+					list.push_back(temp.getCuboid()[h][w][d]);
+				}
+			}
+		}
+	}
+}
+
+// New calculateF() with Lennard-Jones
+void calculateFLJ(){
+	// Symmetric matrix nxn for calculating Fij (only once per pair)
+	std::vector<std::vector<utils::Vector<double, 3> > > matrix;
+	matrix.resize(particles.size());
+	for (int i = 0; i < particles.size(); i++) {
+		matrix[i].resize(particles.size());
+	}
+
+	// Index runs vertically
+	int i = 0;
+
+	// Index runs horizontally
+	int j = 0;
+
+	// Sum Fij for all j, i fixed
+	double ss[] = {0,0,0};
+	utils::Vector<double, 3> sumFi(ss);
+
+	std::list<Particle>::iterator iterator;
+	for (iterator = particles.begin(); iterator != particles.end(); iterator++) {
+		Particle& temp = *iterator;
+		std::list<Particle>::iterator iterator1;
+		j = 0;
+		sumFi = utils::Vector<double, 3> (ss);
+		for (iterator1 = particles.begin(); iterator1 != particles.end(); iterator1++) {
+			Particle& temp1 = *iterator1;
+			if (i==j)
+				matrix[i][j] = utils::Vector<double,3>(ss);
+			else if (i<j){
+				// Calculate Fij
+				utils::Vector<double, 3> tempD = temp1.getX() - temp.getX();
+				matrix[i][j] = 24*EPSILON*pow(1/(tempD.L2Norm()),2)*(pow(SIGMA/tempD.L2Norm(),6)-2*pow(SIGMA/tempD.L2Norm(),12))*tempD;
+			}
+			else
+				// The third Newton's law
+				matrix[i][j] = (-1)*matrix[j][i];
+
+			// Sum up the Fij for all j, i fixed
+			sumFi += matrix[i][j];
+			j++;
+		}
+		temp.setF(sumFi);
+		i++;
+	}
+}
+
 /**
  *  This method calculates the position of the particles.
  *  It obeys the Velocity-Stoermer-Verlet-Algorithm.
  */
 void calculateX() {
-
-	ParticleIterator iterator;
-	iterator = container.begin();
-	while (iterator != container.end()) {
-
+	std::list<Particle>::iterator iterator;
+	for (iterator = particles.begin(); iterator != particles.end(); iterator++) {
 		Particle& p = *iterator;
-
-		utils::Vector<double, 3> tempX = p.getX() + delta_t * p.getV()
-				+ ((delta_t) * (delta_t) / (2 * p.getM())) * p.getOldF();
-
-		p.setX(tempX);
-
-		++iterator;
+		utils::Vector<double, 3> tempX = p.getX() + delta_t * p.getV() + ((delta_t) * (delta_t) / (2 * p.getM())) * p.getOldF();
+		p.getX() = tempX;
 	}
 }
 
@@ -158,18 +254,11 @@ void calculateX() {
  *  It obeys the Velocity-Stoermer-Verlet-Algorithm.
  */
 void calculateV() {
-
-	ParticleIterator iterator;
-	iterator = container.begin();
-	while (iterator != container.end()) {
-
+	std::list<Particle>::iterator iterator;
+	for (iterator = particles.begin(); iterator != particles.end(); iterator++) {
 		Particle& p = *iterator;
-
-		utils::Vector<double, 3> tempV = p.getV()
-				+ (delta_t / (2 * p.getM())) * (p.getF() + p.getOldF());
-
-		p.setV(tempV);
-		++iterator;
+		utils::Vector<double, 3> tempV = p.getV() + (delta_t / (2 * p.getM())) * (p.getF() + p.getOldF());
+		p.getV() = tempV;
 	}
 }
 
@@ -179,7 +268,6 @@ void plotParticles(int iteration) {
 
 	outputWriter::XYZWriter writer;
 	writer.plotParticles(particles, out_name, iteration);
-
 }
 
 /**
@@ -187,15 +275,13 @@ void plotParticles(int iteration) {
  */
 void plotVTK(int iteration) {
 	outputWriter::VTKWriter writer;
-	ParticleIterator iterator;
-	iterator = container.begin();
-	writer.initializeOutput(container.particles.size());
-	while (iterator != container.end()) {
+	writer.initializeOutput(particles.size());
+	std::list<Particle>::iterator iterator;
+	for (iterator = particles.begin(); iterator != particles.end(); iterator++) {
 		Particle& p = *iterator;
-
 		writer.plotParticle(p);
-		++iterator;
 	}
+
 	string out_name("MD1_vtk");
 	writer.writeFile(out_name, iteration);
 }

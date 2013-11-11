@@ -10,6 +10,7 @@
 
 #include "Particle.h"
 #include <list>
+#include <Cuboid.h>
 
 class FileReader {
 
@@ -18,6 +19,8 @@ public:
 	virtual ~FileReader();
 
 	void readFile(std::list<Particle>& particles, char* filename);
+
+	void readFileCub(std::list<Cuboid>& cuboids, char* filename);
 
 };
 

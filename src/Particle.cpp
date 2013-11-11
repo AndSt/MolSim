@@ -66,22 +66,17 @@ double Particle::getM() {
 	return m;
 }
 
+void Particle::setM(double newMass){
+	m = newMass;
+}
+
 int Particle::getType() {
 	return type;
 }
 
-//extra
 void Particle::setF(utils::Vector<double, 3> newF){
 	old_f = f;
 	f = newF;
-}
-
-void Particle::setX(utils::Vector<double, 3> newX){
-	x = newX;
-}
-
-void Particle::setV(utils::Vector<double, 3> newV){
-	v = newV;
 }
 
 std::string Particle::toString() {

@@ -59,19 +59,15 @@ public:
 	utils::Vector<double, 3>& getV();
 
 	double getM();
+	void setM(double newMass);
 
 	int getType();
 
 	bool operator==(Particle& other);
 
-	//extra
-	void setF(utils::Vector<double, 3> newF);
-
-	void setX(utils::Vector<double, 3> newX);
-
-	void setV(utils::Vector<double, 3> newX);
-
 	std::string toString();
+
+	void setF(utils::Vector<double, 3> newF);
 };
 
 std::ostream& operator<<(std::ostream& stream, Particle& p);
