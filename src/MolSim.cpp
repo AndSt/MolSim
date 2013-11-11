@@ -28,8 +28,8 @@ using namespace std;
 // New calculation for force according to Lennard-Jones
 void calculateFLJ();
 
-// Convert a list of cuboids (each cuboid = 3D vector) to a list of particles
-//void cuboidsToList(std::list<Cuboid>& cubList, std::list<Particle>& list);
+// Convert a list of cuboids to a list of particles
+void cuboidsToList(list<Cuboid>& cubList, list<Particle>& list);
 
 /**
  * calculate the position for all particles
@@ -53,11 +53,11 @@ double start_time = 0;
 double end_time = 1000;
 double delta_t = 0.014;
 
-std::list<Particle> particles;
+list<Particle> particles;
 //ParticleContainer container;
 
 // List of cuboids
-std::list<Cuboid> cuboids;
+list<Cuboid> cuboids;
 
 /**
  * @param argsv the first parameter is the file. ( here "eingabe-sonne.txt")
@@ -165,7 +165,7 @@ void calculateF() {
 */
 
 // Convert a list of cubois to one single list of particles
-void cuboidsToList(std::list<Cuboid>& cubList, std::list<Particle>& list){
+void cuboidsToList(list<Cuboid>& cubList, list<Particle>& list){
 	list.clear();
 	if (cubList.size() == 0){
 		cout << "Cuboid list is empty!" << endl;
@@ -173,20 +173,30 @@ void cuboidsToList(std::list<Cuboid>& cubList, std::list<Particle>& list){
 	}
 
 	// Size >= 1
+	/*
 	std::list<Cuboid>::iterator iterator = cubList.begin();
 	Cuboid& temp1 = *iterator;
 	list = temp1.getCuboid();
 	iterator++;
-	for (iterator; iterator != cubList.end(); iterator++) {
+	for (; iterator != cubList.end(); iterator++) {
 		Cuboid& temp2 = *iterator;
-		list.merge(temp2);
+		list.merge(temp2.getCuboid());
+	}*/
+	
+	std::list<Cuboid>::iterator iterator;
+	for (iterator = cubList.begin(); iterator != cubList.end(); iterator++){
+		Cuboid& temp = *iterator;
+		std::list<Particle>::iterator iterator1;
+		for (iterator1 = temp.getCuboid().begin(); iterator1 != temp.getCuboid().end(); iterator1++){
+			Particle& tempP = *iterator1;
+			list.push_back(tempP);
+		}
 	}
 }
-
 // New calculateF() with Lennard-Jones
 void calculateFLJ(){
 	// Symmetric matrix nxn for calculating Fij (only once per pair)
-	std::vector<std::vector<utils::Vector<double, 3> > > matrix;
+	vector<vector<utils::Vector<double, 3> > > matrix;
 	matrix.resize(particles.size());
 	for (int i = 0; i < particles.size(); i++) {
 		matrix[i].resize(particles.size());
@@ -279,3 +289,4 @@ void plotVTK(int iteration) {
 	string out_name("MD1_vtk");
 	writer.writeFile(out_name, iteration);
 }
+
