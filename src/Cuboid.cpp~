@@ -97,7 +97,7 @@ utils::Vector<double, 3>& Cuboid::getStartV(){
 	return startV;
 }
 
-std::list<Particle>& Cuboid::getCuboid(){
+std::vector<std::vector<std::vector<Particle> > >& Cuboid::getCuboid(){
 	return cub;
 }
 

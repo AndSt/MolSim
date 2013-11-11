@@ -23,13 +23,13 @@ using namespace std;
 /**
  * calculate the force for all particles
  */
-//void calculateF();
+void calculateF();
 
 // New calculation for force according to Lennard-Jones
 void calculateFLJ();
 
 // Convert a list of cuboids (each cuboid = 3D vector) to a list of particles
-//void cuboidsToList(std::list<Cuboid>& cubList, std::list<Particle>& list);
+void cuboidsToList(std::list<Cuboid>& cubList, std::list<Particle>& list);
 
 /**
  * calculate the position for all particles
@@ -54,7 +54,7 @@ double end_time = 1000;
 double delta_t = 0.014;
 
 std::list<Particle> particles;
-//ParticleContainer container;
+ParticleContainer container;
 
 // List of cuboids
 std::list<Cuboid> cuboids;
@@ -100,7 +100,7 @@ int main(int argc, char* argsv[]) {
 	//fileReader.readFile(particles, argsv[2]);
 
 	//container.initialize(particles);
-	//cuboidsToList(cuboids, particles);
+	cuboidsToList(cuboids, particles);
 
 	// the forces are needed to calculate x, but are not given in the input file.
 	//calculateF();
@@ -144,7 +144,6 @@ int main(int argc, char* argsv[]) {
  * This method calculates the forces between the particles.
  * The calculation obeys the simple force calculation.
  */
-/*
 void calculateF() {
 
 	ParticleIterator iterator;
@@ -173,15 +172,13 @@ void calculateF() {
 		++iterator;
 	}
 }
-*/
 
 // Convert a 3D vector to a list
-/*
 void cuboidsToList(std::list<Cuboid>& cubList, std::list<Particle>& list){
 	list.clear();
 	std::list<Cuboid>::const_iterator iterator;
 	for (iterator = cubList.begin(); iterator != cubList.end(); iterator++) {
-		Cuboid& temp = *iterator;
+		Cuboid temp = *iterator;
 		for (int h = 0; h < temp.getHeight(); h++){
 			for (int w = 0; w < temp.getWidth(); w++){
 				for (int d = 0; d < temp.getDepth(); d++){
@@ -191,7 +188,6 @@ void cuboidsToList(std::list<Cuboid>& cubList, std::list<Particle>& list){
 		}
 	}
 }
-*/
 
 // New calculateF() with Lennard-Jones
 void calculateFLJ(){
