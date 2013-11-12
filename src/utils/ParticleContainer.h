@@ -25,7 +25,7 @@ public:
 	 * fills the particles list
 	 * @param the list
 	 */
-	void initialize(std::list<Particle> particles_arg);
+	void initialize(std::list<Particle>& particles_arg);
 
 	/**
 	 * @return the first element of the container
@@ -49,8 +49,8 @@ public:
 
 private:
 	/**
-	 * contains the list of the given particles
-	 */
+	  * contains the list of the given particles
+	  */
 	std::list<Particle> particles;
 };
 
