@@ -5,6 +5,7 @@
 #include "utils/ParticleContainer.h"
 #include "utils/ParticleIterator.h"
 #include "Cuboid.h"
+#include "utils/ParticleGenerator.h"
 
 #include <list>
 #include <cassert>
@@ -22,9 +23,6 @@ void simulate();
  * calculate the force for all particles, according to Lennard-Jones
  */
 void calculateFLJ();
-
-// Convert a list of cuboids to a list of particles
-void cuboidsToList(list<Cuboid>& cubList, list<Particle>& list);
 
 /**
  * calculate the position for all particles
@@ -49,9 +47,7 @@ const double EPSILON = 5;
 
 list<Particle> particles;
 ParticleContainer container;
-
-// List of cuboids
-list<Cuboid> cuboids;
+ParticleGenerator pgen;
 
 /**
  * @param argsv the first parameter is the file. ( here "eingabe-sonne.txt")
@@ -126,13 +122,13 @@ int main(int argc, char* argsv[]) {
 		} else if (option1 == 2) {
 			switch (option2) {
 			case 1:
-				fileReader.readFileCub(cuboids, "eingabe-brownian.txt");
+				pgen.readCuboids("eingabe-brownian.txt");
 				delta_t = 0.0002;
 				end_time = 5;
 				break;
 			}
 
-			cuboidsToList(cuboids, particles);
+			pgen.cuboidsToList(particles);
 		}
 
 		//cout << "[1] - "
@@ -184,20 +180,6 @@ void simulate(){
 			cout << "output written. Terminating..." << endl;
 }
 
-// Convert a list of cuboids to one single list of particles
-void cuboidsToList(list<Cuboid>& cubList, list<Particle>& list) {
-	std::list<Cuboid>::iterator iterator;
-	for (iterator = cubList.begin(); iterator != cubList.end(); iterator++) {
-		Cuboid& temp = *iterator;
-		std::list<Particle>::iterator iterator1;
-		for (iterator1 = temp.getCuboid().begin();
-				iterator1 != temp.getCuboid().end(); iterator1++) {
-			Particle& tempP = *iterator1;
-			list.push_back(tempP);
-		}
-	}
-}
-
 // New calculateF() with Lennard-Jones
 /*
  void calculateFLJ(){
@@ -244,7 +226,7 @@ void cuboidsToList(list<Cuboid>& cubList, list<Particle>& list) {
  temp.setF(sumFi);
  i++;
  }
-
+ }
  */
 
 /**
@@ -252,6 +234,7 @@ void cuboidsToList(list<Cuboid>& cubList, list<Particle>& list) {
  * The calculation obeys the simple force calculation.
  */
 // New calculateF() with Lennard-Jones
+
 void calculateFLJ() {
 
 	//initialize outer Iterator and index
@@ -283,7 +266,7 @@ void calculateFLJ() {
 			utils::Vector<double, 3> tempF = 24 * EPSILON
 					* pow(1 / tempDNorm, 2)
 					* (pow(tempDSigDivNorm, 6) - 2 * pow(tempDSigDivNorm, 12))
-					* tempD * (-1);
+					*  (-1)*tempD;
 
 			sumF[i] += tempF;
 			sumF[j] += (-1) * tempF;
