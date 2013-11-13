@@ -25,12 +25,32 @@ void ParticleContainerTest::setUp() {
 void ParticleContainerTest::tearDown() {
 }
 
+void ParticleContainerTest::testInitialize() {
+	container.initialize(particles);
+	CPPUNIT_ASSERT(*particles.begin() == *container.begin());
+}
+
 void ParticleContainerTest::testBegin() {
 	CPPUNIT_ASSERT(*particles.begin() == *container.begin());
 }
 
 void ParticleContainerTest::testEnd() {
-	CPPUNIT_ASSERT(*particles.end() == *container.end());
+
+	//go to the the last element in both lists and check equality
+	std::list<Particle>::iterator iterator1 = particles.begin();
+	std::list<Particle>::iterator testIterator1;
+	while (iterator1 != particles.end()) {
+		testIterator1 = iterator1;
+		++iterator1;
+	}
+
+	ParticleIterator iterator2 = container.begin();
+	ParticleIterator testIterator2;
+	while (iterator2 != container.end()) {
+		testIterator2 = iterator2;
+		++iterator2;
+	}
+	CPPUNIT_ASSERT(*testIterator1 == *testIterator2);
 }
 
 void ParticleContainerTest::testGetList() {
@@ -45,13 +65,16 @@ void ParticleContainerTest::testGetList() {
 
 void ParticleContainerTest::testSize() {
 	CPPUNIT_ASSERT(particles.size() == container.size());
+
 }
 
 CppUnit::Test *ParticleContainerTest::suite() {
 	CppUnit::TestSuite *testSuite = new CppUnit::TestSuite(
 			"ParticleContainerTest");
 
-	// add the tests
+	testSuite->addTest(
+			new CppUnit::TestCaller<ParticleContainerTest>("testInitialize",
+					&ParticleContainerTest::testInitialize));
 	testSuite->addTest(
 			new CppUnit::TestCaller<ParticleContainerTest>("testBegin",
 					&ParticleContainerTest::testBegin));
