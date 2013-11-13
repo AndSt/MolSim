@@ -53,14 +53,17 @@ CppUnit::Test *ParticleContainerTest::suite() {
 
 	// add the tests
 	testSuite->addTest(
-			new CppUnit::TestCaller("testBegin", &testBegin));
+			new CppUnit::TestCaller<ParticleContainerTest>("testBegin",
+					&ParticleContainerTest::testBegin));
 	testSuite->addTest(
-			new CppUnit::TestCaller("testEnd", &testEnd));
+			new CppUnit::TestCaller<ParticleContainerTest>("testEnd",
+					&ParticleContainerTest::testEnd));
 	testSuite->addTest(
-			new CppUnit::TestCaller("testGetList",
-					&testGetList));
+			new CppUnit::TestCaller<ParticleContainerTest>("testGetList",
+					&ParticleContainerTest::testGetList));
 	testSuite->addTest(
-			new CppUnit::TestCaller("testSize", &testSize));
+			new CppUnit::TestCaller<ParticleContainerTest>("testSize",
+					&ParticleContainerTest::testSize));
 
 	return testSuite;
 }

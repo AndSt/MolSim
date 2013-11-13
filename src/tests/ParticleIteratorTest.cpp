@@ -59,14 +59,15 @@ CppUnit::Test *ParticleIteratorTest::suite() {
 
 	// add the tests
 	testSuite->addTest(
-			new CppUnit::TestCaller("testConstructor", &testConstructor));
+			new CppUnit::TestCaller<ParticleIteratorTest>("testConstructor",
+					&ParticleIteratorTest::testConstructor));
 	testSuite->addTest(
-			new CppUnit::TestCaller("testInequality", &testInequality));
+			new CppUnit::TestCaller<ParticleIteratorTest>("testInequality", &ParticleIteratorTest::testInequality));
 	testSuite->addTest(
-			new CppUnit::TestCaller("testParticleReference",
-					&testParticleReference));
+			new CppUnit::TestCaller<ParticleIteratorTest>("testParticleReference",
+					&ParticleIteratorTest::testParticleReference));
 	testSuite->addTest(
-			new CppUnit::TestCaller("testIteration", &testIteration));
+			new CppUnit::TestCaller<ParticleIteratorTest>("testIteration", &ParticleIteratorTest::testIteration));
 
 	return testSuite;
 }
