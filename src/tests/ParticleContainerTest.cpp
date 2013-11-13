@@ -18,7 +18,7 @@ ParticleContainerTest::~ParticleContainerTest() {
 
 void ParticleContainerTest::setUp() {
 	FileReader fileReader;
-	fileReader.readFile(particles, "container_iterator_tests.txt");
+	fileReader.readFile(particles, "eingabe-brownian.txt");
 	container.initialize(particles);
 }
 

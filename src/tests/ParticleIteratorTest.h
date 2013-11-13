@@ -8,7 +8,6 @@
 #ifndef PARTICLEITERATORTEST_H_
 #define PARTICLEITERATORTEST_H_
 
-#include <cppunit/Test.h>
 #include <cppunit/TestCase.h>
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>

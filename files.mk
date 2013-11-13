@@ -5,6 +5,7 @@ src/utils/ParticleContainer.cpp\
 src/utils/ParticleGenerator.cpp\
 src/utils/ParticleIterator.cpp\
 src/MaxwellBoltzmannDistribution.cpp\
+src/tests/ParticleGeneratorTest.cpp\
 src/tests/ParticleContainerTest.cpp\
 src/tests/ParticleIteratorTest.cpp\
 src/Cuboid.cpp\

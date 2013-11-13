@@ -1,11 +1,23 @@
 #include "outputWriter/VTKWriter.h"
 #include "FileReader.h"
-#include "utils/Vector.h"
 #include "Particle.h"
+#include "Cuboid.h"
+#include "utils/Vector.h"
 #include "utils/ParticleContainer.h"
 #include "utils/ParticleIterator.h"
-#include "Cuboid.h"
 #include "utils/ParticleGenerator.h"
+
+#include <cppunit/TestCase.h>
+#include <cppunit/TestSuite.h>
+#include <cppunit/TestCaller.h>
+#include <cppunit/TestRunner.h>
+
+#include <cppunit/ui/text/TestRunner.h>
+#include <cppunit/CompilerOutputter.h>
+
+#include "tests/ParticleIteratorTest.h"
+#include "tests/ParticleContainerTest.h"
+#include "tests/ParticleGeneratorTest.h"
 
 #include <list>
 #include <cassert>
@@ -63,17 +75,74 @@ int main(int argc, char* argsv[]) {
 	 * ./MolSim "eingabe-brownian.txt" 5 0.0002
 	 *
 	 */
-	if (argsv[1] == "-test") {
-		cout << "testing";
-	}
 
-	else {
+	string arg1 = argsv[1];
+
+	if (arg1 == "-test") {
+
+		string str;
+		int option = 0;
+		while (option != 3) {
+			cout << "Enter '1', if you want to test all unit tests." << endl;
+			cout << "Enter '2', if you want to test a specific unit test."
+					<< endl;
+			cout << "Enter '3', if you want to exit the 'test suite'." << endl;
+			cout << endl;
+			while (true) {
+				getline(cin, str);
+				stringstream myStream(str);
+				if (myStream >> option)
+					break;
+				cout << "Invalid number, please try again" << endl;
+			}
+
+			if (option == 1) {
+
+				CppUnit::TextUi::TestRunner runner;
+				runner.addTest(ParticleIteratorTest::suite());
+				runner.addTest(ParticleContainerTest::suite());
+				runner.run();
+
+			} else if (option == 2) {
+				cout << "Enter '1', if you want to test the ParticleContainer."
+						<< endl;
+				cout << "Enter '2', if you want to test the ParticleIterator."
+						<< endl;
+				cout << "Enter '3', if you want to test the ParticleGenerator."
+						<< endl;
+
+				while (true) {
+					getline(cin, str);
+					stringstream myStream(str);
+					if (myStream >> option)
+						break;
+					cout << "Invalid number, please try again" << endl;
+				}
+				CppUnit::TextUi::TestRunner runner;
+				switch (option) {
+				case 1:
+					runner.addTest(ParticleContainerTest::suite());
+					break;
+				case 2:
+					runner.addTest(ParticleIteratorTest::suite());
+					break;
+				case 3:
+					runner.addTest(ParticleGeneratorTest::suite());
+					break;
+				}
+				runner.run();
+			}
+		}
+	} else {
 		string str;
 		FileReader fileReader;
 		cout << "Hello from MolSim for PSE!" << endl;
 		cout << endl;
-		cout << "Enter '1', if you want to test a particle file." << endl;
-		cout << "Enter '2', if you want to test a cuboid file." << endl;
+		cout
+				<< "Enter '1', if you want to run the program with a particle file."
+				<< endl;
+		cout << "Enter '2', if you want to run program with a cuboid file."
+				<< endl;
 		int option1, option2;
 
 		while (true) {
@@ -147,97 +216,46 @@ int main(int argc, char* argsv[]) {
 	return 0;
 }
 
-void simulate(){
-	// the forces are needed to calculate x, but are not given in the input file.
-			//calculateF();
-			calculateFLJ();
+void simulate() {
+// the forces are needed to calculate x, but are not given in the input file.
+//calculateF();
+	calculateFLJ();
 
-			double current_time = start_time;
+	double current_time = start_time;
 
-			int iteration = 0;
+	int iteration = 0;
 
-			// for this loop, we assume: current x, current f and current v are known
-			while (current_time < end_time) {
-				// calculate new x
-				calculateX();
+// for this loop, we assume: current x, current f and current v are known
+	while (current_time < end_time) {
+		// calculate new x
+		calculateX();
 
-				// calculate new f
-				//calculateF();
-				calculateFLJ();
+		// calculate new f
+		//calculateF();
+		calculateFLJ();
 
-				// calculate new v
-				calculateV();
+		// calculate new v
+		calculateV();
 
-				iteration++;
-				if (iteration % 10 == 0) {
-					plotVTK(iteration);
-				}
-				cout << "Iteration " << iteration << " finished." << endl;
+		iteration++;
+		if (iteration % 10 == 0) {
+			plotVTK(iteration);
+		}
+		cout << "Iteration " << iteration << " finished." << endl;
 
-				current_time += delta_t;
-			}
+		current_time += delta_t;
+	}
 
-			cout << "output written. Terminating..." << endl;
+	cout << "output written. Terminating..." << endl;
 }
-
-// New calculateF() with Lennard-Jones
-/*
- void calculateFLJ(){
- // Symmetric matrix nxn for calculating Fij (only once per pair)
- vector<vector<utils::Vector<double, 3> > > matrix;
- matrix.resize(particles.size());
- for (int i = 0; i < particles.size(); i++) {
- matrix[i].resize(particles.size());
- }
-
- // Index runs vertically
- int i = 0;
-
- // Index runs horizontally
- int j = 0;
-
- // Sum Fij for all j, i fixed
- double ss[] = {0,0,0};
- utils::Vector<double, 3> sumFi(ss);
-
- std::list<Particle>::iterator iterator;
- for (iterator = particles.begin(); iterator != particles.end(); iterator++) {
- Particle& temp = *iterator;
- std::list<Particle>::iterator iterator1;
- j = 0;
- sumFi = utils::Vector<double, 3> (ss);
- for (iterator1 = particles.begin(); iterator1 != particles.end(); iterator1++) {
- Particle& temp1 = *iterator1;
- if (i==j)
- matrix[i][j] = utils::Vector<double,3>(ss);
- else if (i<j){
- // Calculate Fij
- utils::Vector<double, 3> tempD = temp1.getX() - temp.getX();
- matrix[i][j] = 24*EPSILON*pow(1/(tempD.L2Norm()),2)*(pow(SIGMA/tempD.L2Norm(),6)-2*pow(SIGMA/tempD.L2Norm(),12))*tempD;
- }
- else
- // The third Newton's law
- matrix[i][j] = (-1)*matrix[j][i];
-
- // Sum up the Fij for all j, i fixed
- sumFi += matrix[i][j];
- j++;
- }
- temp.setF(sumFi);
- i++;
- }
- }
- */
 
 /**
  * This method calculates the forces between the particles.
- * The calculation obeys the simple force calculation.
+ * The calculation obeys the Lennard-Jones force between two molecules.
  */
-// New calculateF() with Lennard-Jones
-
 void calculateFLJ() {
 
-	//initialize outer Iterator and index
+//initialize outer Iterator and index
 	utils::Vector<double, 3> zero((double) 0);
 	ParticleIterator iterator;
 	utils::Vector<double, 3> sumF[container.size()];
@@ -266,7 +284,7 @@ void calculateFLJ() {
 			utils::Vector<double, 3> tempF = 24 * EPSILON
 					* pow(1 / tempDNorm, 2)
 					* (pow(tempDSigDivNorm, 6) - 2 * pow(tempDSigDivNorm, 12))
-					*  (-1)*tempD;
+					* (-1) * tempD;
 
 			sumF[i] += tempF;
 			sumF[j] += (-1) * tempF;

@@ -19,7 +19,7 @@ ParticleIteratorTest::~ParticleIteratorTest() {
 void ParticleIteratorTest::setUp() {
 	FileReader fileReader;
 	std::list<Particle> particles;
-	fileReader.readFile(particles, "container_iterator_tests.txt");
+	fileReader.readFile(particles, "eingabe-brownian.txt");
 	container.initialize(particles);
 
 	particle1 = container.begin();

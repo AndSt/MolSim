@@ -63,7 +63,7 @@ public:
 	 *
 	 * @return the TestSuite for the tested methods of ParticleContainer
 	 */
-	Test *suite();
+	static Test *suite();
 
 private:
 	ParticleContainer container;
