@@ -75,10 +75,12 @@ int main(int argc, char* argsv[]) {
 	 * ./MolSim "eingabe-brownian.txt" 5 0.0002
 	 *
 	 */
-
+	bool test = false;
+	if(argc >= 2){
 	string arg1 = argsv[1];
-
-	if (arg1 == "-test") {
+	test = true;
+	}
+	if (test == true) {
 
 		string str;
 		int option = 0;
@@ -128,6 +130,7 @@ int main(int argc, char* argsv[]) {
 					break;
 				case 3:
 					runner.addTest(ParticleGeneratorTest::suite());
+					option = 2;
 					break;
 				}
 				runner.run();
@@ -199,13 +202,6 @@ int main(int argc, char* argsv[]) {
 
 			pgen.cuboidsToList(particles);
 		}
-
-		//cout << "[1] - "
-		//cout << "./MolSim <input file> <end time> <delta time>" << endl;
-		/*if (argc != 4) {
-		 cout << "Errounous programme call! " << endl;
-		 exit(-1);
-		 }*/
 
 		cout << "Reading input file..." << endl;
 
