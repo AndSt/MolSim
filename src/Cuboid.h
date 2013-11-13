@@ -7,12 +7,14 @@
 
 #ifndef CUBOID_H_
 #define CUBOID_H_
-#include <vector>
-#include <Particle.h>
-#include "utils/Vector.h"
-#include <list>
 
-class Cuboid {
+#include "Particle.h"
+#include "utils/Vector.h"
+
+#include <list>
+#include <vector>
+
+class Cuboid : public ParticleContainer{
 private:
 	// The coordinate of the lower left front-side corner
 	utils::Vector<double, 3> origin;
@@ -66,7 +68,15 @@ public:
 	double getMeanV();
 	void setMeanV(double newV);
 
-	int getSize();
+	int size();
+
+	ParticleIterator begin();
+
+	ParticleIterator end();
+
+	std::list<Particle>& getList();
+
+	void cuboidsToList(std::list<Cuboid>& cubList, std::list<Particle>& list);
 
 	virtual ~Cuboid();
 };

@@ -8,50 +8,40 @@
 #ifndef PARTICLECONTAINER_H_
 #define PARTICLECONTAINER_H_
 
-#include <list>
-#include <Particle.h>
 #include "Vector.h"
 #include "ParticleIterator.h"
+#include "Particle.h"
 
+#include <cstring>
+#include <list>
 
 class ParticleContainer {
 
 public:
 
 	ParticleContainer();
-	~ParticleContainer();
-
-	/**
-	 * fills the particles list
-	 * @param the list
-	 */
-	void initialize(std::list<Particle>& particles_arg);
 
 	/**
 	 * @return the first element of the container
 	 */
-	ParticleIterator begin();
+	virtual ParticleIterator begin() = 0;
 
 	/**
 	 * @return the last element of the container
 	 */
-	ParticleIterator end();
+	virtual ParticleIterator end() = 0;
 
 	/**
 	 * @ return the particles list
 	 */
-	std::list<Particle> getList();
+	virtual std::list<Particle>& getList() = 0;
 
 	/**
 	 * @ return the size of the size
 	 */
-	int size();
+	virtual int size() = 0;
 
-private:
-	/**
-	  * contains the list of the given particles
-	  */
-	std::list<Particle> particles;
+	virtual ~ParticleContainer();
 };
 
 
