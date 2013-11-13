@@ -21,9 +21,10 @@ private:
 public:
 	ParticleGenerator();
 
-	ParticleGenerator(std::list<Cuboid> cubList){
-		cuboids = cubList;
-	}
+	ParticleGenerator(std::list<Cuboid> cubList);
+	
+	// Initialize with an input file
+	ParticleGenerator(char* filename);
 
 	void readCuboids(char* filename);
 
