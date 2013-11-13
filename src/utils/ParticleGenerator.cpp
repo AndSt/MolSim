@@ -11,7 +11,7 @@
 ParticleGenerator::ParticleGenerator() {
 }
 
-ParticleGenerator::ParticleGenerator(std::list<Cuboid> cubList){
+ParticleGenerator::ParticleGenerator(std::list<Cuboid>& cubList){
 		cuboids = cubList;
 }
 
