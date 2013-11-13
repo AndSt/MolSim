@@ -29,7 +29,7 @@ public:
 
 	void cuboidsToList(std::list<Particle>& list);
 
-	std::list<Cuboid> getCuboids();
+	std::list<Cuboid>& getCuboids();
 
 	virtual ~ParticleGenerator();
 };
