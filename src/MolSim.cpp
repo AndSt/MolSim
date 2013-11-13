@@ -5,7 +5,6 @@
 #include "utils/ParticleContainer.h"
 #include "utils/ParticleIterator.h"
 #include "Cuboid.h"
-#include "List.h"
 
 #include <list>
 #include <cassert>
@@ -23,6 +22,9 @@ void simulate();
  * calculate the force for all particles, according to Lennard-Jones
  */
 void calculateFLJ();
+
+// Convert a list of cuboids to a list of particles
+void cuboidsToList(list<Cuboid>& cubList, list<Particle>& list);
 
 /**
  * calculate the position for all particles
@@ -46,7 +48,7 @@ const double SIGMA = 1;
 const double EPSILON = 5;
 
 list<Particle> particles;
-List container;
+ParticleContainer container;
 
 // List of cuboids
 list<Cuboid> cuboids;
@@ -142,7 +144,7 @@ int main(int argc, char* argsv[]) {
 
 		cout << "Reading input file..." << endl;
 
-		container = List (particles);
+		container.initialize(particles);
 
 		simulate();
 	}
@@ -180,6 +182,20 @@ void simulate(){
 			}
 
 			cout << "output written. Terminating..." << endl;
+}
+
+// Convert a list of cuboids to one single list of particles
+void cuboidsToList(list<Cuboid>& cubList, list<Particle>& list) {
+	std::list<Cuboid>::iterator iterator;
+	for (iterator = cubList.begin(); iterator != cubList.end(); iterator++) {
+		Cuboid& temp = *iterator;
+		std::list<Particle>::iterator iterator1;
+		for (iterator1 = temp.getCuboid().begin();
+				iterator1 != temp.getCuboid().end(); iterator1++) {
+			Particle& tempP = *iterator1;
+			list.push_back(tempP);
+		}
+	}
 }
 
 // New calculateF() with Lennard-Jones

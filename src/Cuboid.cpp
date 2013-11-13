@@ -10,7 +10,6 @@
 #include <Particle.h>
 #include "utils/Vector.h"
 #include "MaxwellBoltzmannDistribution.h"
-#include "FileReader.h"
 
 Cuboid::Cuboid(int height, int width, int depth, double distance, double mass, utils::Vector<double, 3> ori, utils::Vector<double, 3> startVelocity, double meanVelocity){
 	// Initialize first variables
@@ -150,33 +149,8 @@ void Cuboid::setMeanV(double newV){
 	meanV = newV;
 }
 
-int Cuboid::size(){
+int Cuboid::getSize(){
 	return cHeight*cWidth*cDepth;
-}
-
-ParticleIterator Cuboid::begin(){
-	return cub.begin();
-}
-
-ParticleIterator Cuboid::end(){
-	return cub.end();
-}
-
-std::list<Particle>& Cuboid::getList(){
-	return cub;
-}
-
-void cuboidsToList(std::list<Cuboid>& cubList, std::list<Particle>& list) {
-	std::list<Cuboid>::iterator iterator;
-	for (iterator = cubList.begin(); iterator != cubList.end(); iterator++) {
-		Cuboid& temp = *iterator;
-		std::list<Particle>::iterator iterator1;
-		for (iterator1 = temp.getCuboid().begin();
-				iterator1 != temp.getCuboid().end(); iterator1++) {
-			Particle& tempP = *iterator1;
-			list.push_back(tempP);
-		}
-	}
 }
 
 Cuboid::~Cuboid() {
