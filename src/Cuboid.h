@@ -47,14 +47,14 @@ public:
 	/** /brief The main constructor.
 	 * 
 	 * Constructs a new cuboid with all information needed.
-	 * @param[in]	height		Cuboid's height in particles.
-	 * @param[in]	width		Cuboid's width in particles.
-	 * @param[in] 	depth		Cuboid's depth in particles.
-	 * @param[in]	distance	Cuboid's mesh width.
-	 * @param[in]	mass		Mass of each particle in cuboid.
-	 * @param[in]	ori		Cuboid's lower left corner's 3D coordinate.
-	 * @param[in]	startVelocity	Velocity at the beginning of each particle in cuboid.
-	 * @param[in]	meanVelocity	Mean velocity (aka. brownian factor) of each partcile in cuboid.
+	 * @param[in] height Cuboid's height in particles.
+	 * @param[in] width Cuboid's width in particles.
+	 * @param[in] depth Cuboid's depth in particles.
+	 * @param[in] distance Cuboid's mesh width.
+	 * @param[in] mass Mass of each particle in cuboid.
+	 * @param[in] ori Cuboid's lower left corner's 3D coordinate.
+	 * @param[in] startVelocity Velocity at the beginning of each particle in cuboid.
+	 * @param[in] meanVelocity Mean velocity (aka. brownian factor) of each partcile in cuboid.
 	 */
 	Cuboid(int height, int width, int depth, double distance, double mass, utils::Vector<double, 3> ori, utils::Vector<double, 3> startVelocity, double meanVelocity);
 
