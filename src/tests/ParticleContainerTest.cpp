@@ -16,28 +16,51 @@ ParticleContainerTest::~ParticleContainerTest() {
 	// TODO Auto-generated destructor stub
 }
 
-void ParticleContainerTest::setUp(){
+void ParticleContainerTest::setUp() {
 	FileReader fileReader;
 	fileReader.readFile(particles, "container_iterator_tests.txt");
 	container.initialize(particles);
 }
 
-void ParticleContainerTest::tearDown(){
+void ParticleContainerTest::tearDown() {
 }
 
-
-void ParticleContainerTest::testBegin(){
+void ParticleContainerTest::testBegin() {
 	CPPUNIT_ASSERT(*particles.begin() == *container.begin());
 }
 
-void ParticleContainerTest::testEnd(){
+void ParticleContainerTest::testEnd() {
 	CPPUNIT_ASSERT(*particles.end() == *container.end());
 }
 
-void ParticleContainerTest::testGetList(){
-	CPPUNIT_ASSERT(particles == container.getList());
+void ParticleContainerTest::testGetList() {
+	ParticleIterator pIterator = container.begin();
+	std::list<Particle>::iterator iterator = particles.begin();
+	while (iterator != particles.end()) {
+		CPPUNIT_ASSERT(*iterator == *pIterator);
+		++iterator;
+		++pIterator;
+	}
 }
 
-void ParticleContainerTest::testSize(){
-	CPPUNIT_ASSERT(particles.size == container.size());
+void ParticleContainerTest::testSize() {
+	CPPUNIT_ASSERT(particles.size() == container.size());
+}
+
+CppUnit::Test *ParticleContainerTest::suite() {
+	CppUnit::TestSuite *testSuite = new CppUnit::TestSuite(
+			"ParticleContainerTest");
+
+	// add the tests
+	testSuite->addTest(
+			new CppUnit::TestCaller("testBegin", &testBegin));
+	testSuite->addTest(
+			new CppUnit::TestCaller("testEnd", &testEnd));
+	testSuite->addTest(
+			new CppUnit::TestCaller("testGetList",
+					&testGetList));
+	testSuite->addTest(
+			new CppUnit::TestCaller("testSize", &testSize));
+
+	return testSuite;
 }

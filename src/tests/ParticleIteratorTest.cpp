@@ -16,40 +16,57 @@ ParticleIteratorTest::~ParticleIteratorTest() {
 	// TODO Auto-generated destructor stub
 }
 
-void ParticleIteratorTest::setUp(){
+void ParticleIteratorTest::setUp() {
 	FileReader fileReader;
+	std::list<Particle> particles;
 	fileReader.readFile(particles, "container_iterator_tests.txt");
 	container.initialize(particles);
 
-	particle1 = new ParticleIterator(container.begin());
-	particle2 = new ParticleIterator(container.begin());
-	particle3=  new ParticleIterator((++container.begin()));
+	particle1 = container.begin();
+	particle2 = container.begin();
+	particle3 = container.begin();
+	++particle3;
 }
 
-void ParticleIteratorTest::tearDown(){
-	delete particle1;
-	delete particle2;
-	delete particle3;
+void ParticleIteratorTest::tearDown() {
+
 }
 
-void ParticleIteratorTest::testConstructor(){
-	CPPUNIT_ASSERT(*ParticleIterator(container.begin) == *particle1);
-	CPPUNIT_ASSERT(!(*ParticleIterator(container.begin) == *particle3));
+void ParticleIteratorTest::testConstructor() {
+	ParticleIterator testIt(container.begin());
+	CPPUNIT_ASSERT(*testIt == *particle1);
+	CPPUNIT_ASSERT(!(*testIt == *particle3));
 }
 
-void ParticleIteratorTest::testInequality(){
+void ParticleIteratorTest::testInequality() {
 	CPPUNIT_ASSERT(!(particle1 != particle2));
 	CPPUNIT_ASSERT(particle1 != particle3);
 }
 
-void ParticleIteratorTest::testParticleReference(){
+void ParticleIteratorTest::testParticleReference() {
 	CPPUNIT_ASSERT(*particle1 == *particle2);
 	CPPUNIT_ASSERT(!(*particle1 == *particle3));
 }
 
-void ParticleIteratorTest::testIteration(){
-	CPPUNIT_ASSERT(++particle1 == ++particle2);
-	CPPUNIT_ASSERT(!(++particle1 == ++particle3));
+void ParticleIteratorTest::testIteration() {
+	CPPUNIT_ASSERT(*particle1 == *particle2);
+	CPPUNIT_ASSERT(!(*particle1 == *particle3));
 }
 
+CppUnit::Test *ParticleIteratorTest::suite() {
+	CppUnit::TestSuite *testSuite = new CppUnit::TestSuite(
+			"ParticleIteratorTest");
 
+	// add the tests
+	testSuite->addTest(
+			new CppUnit::TestCaller("testConstructor", &testConstructor));
+	testSuite->addTest(
+			new CppUnit::TestCaller("testInequality", &testInequality));
+	testSuite->addTest(
+			new CppUnit::TestCaller("testParticleReference",
+					&testParticleReference));
+	testSuite->addTest(
+			new CppUnit::TestCaller("testIteration", &testIteration));
+
+	return testSuite;
+}
