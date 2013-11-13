@@ -44,12 +44,8 @@ void ParticleGeneratorTest::testReadCuboids(){
 }
 
 CppUnit::Test *ParticleGeneratorTest::suite(){
-	CppUnit::TestSuite *testSuite = new CppUnit::TestSuite(
-				"ParticleIteratorTest");
+	CppUnit::TestSuite *testSuite = new CppUnit::TestSuite("ParticleGeneratorTest");
 
-		// add the tests
-		testSuite->addTest(
-				new CppUnit::TestCaller<ParticleGeneratorTest>("testReadCuboids",
-						&ParticleGeneratorTest::testReadCuboids));
+
 		return testSuite;
 }
