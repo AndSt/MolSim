@@ -36,6 +36,6 @@ void ParticleGenerator::cuboidsToList(std::list<Particle>& list) {
 	}
 }
 
-std::list<Cuboid> ParticleGenerator::getCuboids(){
+std::list<Cuboid>& ParticleGenerator::getCuboids(){
 	return cuboids;
 }
