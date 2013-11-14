@@ -43,20 +43,21 @@ void FileReader::readFile(std::list<Particle>& particles, char* filename) {
     string tmp_string;
 
     if (input_file.is_open()) {
-
+    	
+    	LOG4CXX_WARN(filereaderlogger, "Reading open file.");
     	getline(input_file, tmp_string);
-    	cout << "Read line: " << tmp_string << endl;
+    	LOG4CXX_INFO(filereaderlogger,"Reading " << tmp_string << " line.");
 
     	while (tmp_string.size() == 0 || tmp_string[0] == '#') {
     		getline(input_file, tmp_string);
-    		cout << "Read line: " << tmp_string << endl;
+    		LOG4CXX_INFO(filereaderlogger,"Reading comment line.");
     	}
 
     	istringstream numstream(tmp_string);
     	numstream >> num_particles;
-    	cout << "Reading " << num_particles << "." << endl;
+    	LOG4CXX_INFO(filereaderlogger,"Reading " << num_particles);
     	getline(input_file, tmp_string);
-    	cout << "Read line: " << tmp_string << endl;
+    	LOG4CXX_INFO(filereaderlogger,"Read line: " << tmp_string << ".");
 
     	for (int i = 0; i < num_particles; i++) {
     		istringstream datastream(tmp_string);
@@ -77,7 +78,7 @@ void FileReader::readFile(std::list<Particle>& particles, char* filename) {
     		particles.push_back(p);
 
     		getline(input_file, tmp_string);
-    		cout << "Read line: " << tmp_string << endl;
+    		LOG4CXX_INFO(filereaderlogger,"Read line: " << tmp_string << ".");
     	}
     } else {
     	LOG4CXX_ERROR(filereaderlogger,"Error: could not open file " << filename );
@@ -104,19 +105,20 @@ void FileReader::readFileCub(std::list<Cuboid>& cuboids, char* filename) {
 
     if (input_file.is_open()) {
 
+    	LOG4CXX_WARN(filereaderlogger, "Reading open file.");
     	getline(input_file, tmp_string);
-    	cout << "Read line: " << tmp_string << endl;
+    	LOG4CXX_INFO(filereaderlogger,"Reading " << tmp_string << " line.");
 
     	while (tmp_string.size() == 0 || tmp_string[0] == '#') {
     		getline(input_file, tmp_string);
-    		cout << "Read line: " << tmp_string << endl;
+    		LOG4CXX_INFO(filereaderlogger,"Reading comment line.");
     	}
 
     	istringstream numstream(tmp_string);
     	numstream >> numCub;
-    	cout << "Reading " << numCub << "." << endl;
+    	LOG4CXX_INFO(filereaderlogger,"Reading " << numCub << ".");
     	getline(input_file, tmp_string);
-    	cout << "Read line: " << tmp_string << endl;
+    	LOG4CXX_INFO(filereaderlogger,"Read line: " << tmp_string);
 
     	for (int i = 0; i < numCub; i++) {
     	    istringstream datastream(tmp_string);
@@ -146,7 +148,7 @@ void FileReader::readFileCub(std::list<Cuboid>& cuboids, char* filename) {
     	    cuboids.push_back(cub);
 
     	    getline(input_file, tmp_string);
-    	    cout << "Read line: " << tmp_string << endl;
+    	    LOG4CXX_INFO(filereaderlogger,"Read line: " << tmp_string);
     	}
    } else {
 	   LOG4CXX_ERROR(filereaderlogger,"Error: could not open file " << filename );
