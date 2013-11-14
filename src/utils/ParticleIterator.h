@@ -42,12 +42,12 @@ public:
 	 * @return returns true, if the two iterators don't match
 	 */
 	bool operator!=(const ParticleIterator b);
-std::list<Particle>::iterator iterator;
+
 private:
 	/**
 	 * the element of the iterator
 	 */
-
+	std::list<Particle>::iterator iterator;
 
 };
 
