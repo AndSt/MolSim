@@ -11,7 +11,6 @@
 #include <log4cxx/propertyconfigurator.h>
 #include <log4cxx/xml/domconfigurator.h>
 
-
 #include <cppunit/TestCase.h>
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
@@ -51,8 +50,17 @@ void calculateX();
  */
 void calculateV();
 
+void getIntegerInput(string &str, int &input);
+
+void getDoubleInput(string &str, double &input);
+
 // plot the particles to VTKWriter-File
 void plotVTK(int iteration);
+
+using namespace std;
+using namespace log4cxx;
+using namespace log4cxx::xml;
+using namespace log4cxx::helpers;
 
 double start_time = 0;
 double end_time = 1000;
@@ -66,14 +74,9 @@ list<Particle> particles;
 ParticleContainer container;
 ParticleGenerator pgen;
 
+string fileName;
+
 log4cxx::LoggerPtr molsimlogger(log4cxx::Logger::getLogger("MolSim"));
-
-using namespace std;
-using namespace log4cxx;
-using namespace log4cxx::xml;
-using namespace log4cxx::helpers;
-
-
 
 /**
  * @param argsv the first parameter is the file. ( here "eingabe-sonne.txt")
@@ -81,9 +84,9 @@ using namespace log4cxx::helpers;
  * The third parameter is delta_t.
  */
 int main(int argc, char* argsv[]) {
-	
+
 	PropertyConfigurator::configure("Log4cxxConfig.cfg");
-	LOG4CXX_INFO(molsimlogger,"Arrived @ main.");
+	LOG4CXX_INFO(molsimlogger, "Arrived @ main.");
 
 	/* Format input command line:
 	 * ./MolSim <input file> <end time> <delta time>
@@ -93,31 +96,30 @@ int main(int argc, char* argsv[]) {
 	 *
 	 */
 
-
 	bool test = false;
-	if(argc >= 2){
-	string arg1 = argsv[1];
-	test = true;
+	if (argc >= 2) {
+		string arg1 = argsv[1];
+		test = true;
 	}
 	if (test == true) {
-		
-		LOG4CXX_INFO(molsimlogger,"Arrived @ testsuite.");
+
+		LOG4CXX_INFO(molsimlogger, "Arrived @ testsuite.");
 
 		string str;
 		int option = 0;
+
+		cout << "Here are the testing options: " << endl;
+		cout << "Tipp: If you Enter Option '1' or '2' you will get back to this menu";
+		cout << endl << endl;
 		while (option != 3) {
 			cout << "Enter '1', if you want to test all unit tests." << endl;
 			cout << "Enter '2', if you want to test a specific unit test."
 					<< endl;
 			cout << "Enter '3', if you want to exit the 'test suite'." << endl;
 			cout << endl;
-			while (true) {
-				getline(cin, str);
-				stringstream myStream(str);
-				if (myStream >> option)
-					break;
-				cout << "Invalid number, please try again" << endl;
-			}
+
+			//Check for correct input
+			getIntegerInput(str, option);
 
 			if (option == 1) {
 
@@ -135,13 +137,9 @@ int main(int argc, char* argsv[]) {
 				cout << "Enter '3', if you want to test the ParticleGenerator."
 						<< endl;
 
-				while (true) {
-					getline(cin, str);
-					stringstream myStream(str);
-					if (myStream >> option)
-						break;
-					cout << "Invalid number, please try again" << endl;
-				}
+				//Check for correct input
+				getIntegerInput(str, option);
+
 				CppUnit::TextUi::TestRunner runner;
 				switch (option) {
 				case 1:
@@ -159,25 +157,23 @@ int main(int argc, char* argsv[]) {
 			}
 		}
 	} else {
-		LOG4CXX_INFO(molsimlogger,"Arrived @ filedecision.");
+		LOG4CXX_INFO(molsimlogger, "Arrived @ filedecision.");
 		string str;
 		FileReader fileReader;
 		cout << "Hello from MolSim for PSE!" << endl;
 		cout << endl;
+		//Variable for Level 1 Options:
+		int option1;
+		//Level 1 Options:
+		//[1] - run from particle file
+		//[2] - run from cuboid file
 		cout
 				<< "Enter '1', if you want to run the program with a particle file."
 				<< endl;
 		cout << "Enter '2', if you want to run program with a cuboid file."
 				<< endl;
-		int option1, option2;
 
-		while (true) {
-			getline(cin, str);
-			stringstream myStream(str);
-			if (myStream >> option1)
-				break;
-			cout << "Invalid number, please try again" << endl;
-		}
+		getIntegerInput(str, option1);
 
 		switch (option1) {
 		case 1:
@@ -186,7 +182,12 @@ int main(int argc, char* argsv[]) {
 			cout << "         file -'eingabe-sonne.txt'" << endl;
 			cout << "         end time - 1000" << endl;
 			cout << "         delta t - 0.014" << endl;
-			cout << "Enter '2', if you want a different configuration" << endl;
+			cout
+					<< "Enter '2', if you 'eingabe-sonne.txt' with different options"
+					<< endl;
+			cout << "Enter '3', if you want completely different options"
+					<< endl;
+
 			break;
 		case 2:
 			cout << "Enter '1', if you want the default configuration: "
@@ -194,46 +195,87 @@ int main(int argc, char* argsv[]) {
 			cout << "         file -'eingabe-brownian.txt'" << endl;
 			cout << "         end time - 5" << endl;
 			cout << "         delta t - 0.0002" << endl;
-			cout << "Enter '2', if you want a different configuration" << endl;
+			cout
+					<< "Enter '2', if you 'eingabe-brownian.txt' with different options"
+					<< endl;
+			cout << "Enter '3', if you want completely different options"
+					<< endl;
 			break;
 		}
 
-		while (true) {
-			getline(cin, str);
-			stringstream myStream(str);
-			if (myStream >> option2)
-				break;
-			cout << "Invalid number, please try again" << endl;
-		}
+		//Variable for Level 2 Options:
+		int option2;
+
+		//Level 2 Options:
+		//[1] - default configuration
+		//[2] - define delta_t, end_time by yourself
+		//[3] - define fileName, delta_t and end_time by yourself
+		getIntegerInput(str, option2);
 
 		if (option1 == 1) {
 			switch (option2) {
 			case 1:
-				fileReader.readFile(particles, "eingabe-sonne.txt");
+				fileName = "eingabe-sonne.txt";
 				delta_t = 0.014;
 				end_time = 1000;
 				break;
+			case 2:
+				fileName = "eingabe-sonne.txt";
+				cout << "Please enter the value of delta_t:" << endl;
+				getDoubleInput(str, delta_t);
+				cout << "Please enter the value of end_time:" << endl;
+				getDoubleInput(str, end_time);
+				break;
+			case 3:
+				cout << "Please enter the name of your file:" << endl;
+				getline(cin, fileName);
+				cout << "Please enter the value of delta_end:" << endl;
+				getDoubleInput(str, delta_t);
+				cout << "Please enter the value of end_time:" << endl;
+				getDoubleInput(str, end_time);
+				break;
 			}
+			char *cstr = new char[fileName.length() + 1];
+			strcpy(cstr, fileName.c_str());
+			fileReader.readFile(particles, cstr);
 		} else if (option1 == 2) {
 			switch (option2) {
 			case 1:
-				pgen.readCuboids("eingabe-brownian.txt");
+				fileName = "eingabe-brownian.txt";
 				delta_t = 0.0002;
 				end_time = 5;
 				break;
+			case 2:
+				fileName = "eingabe-brownian.txt";
+				cout << "Please enter the value of delta_t:" << endl;
+				getDoubleInput(str, delta_t);
+				cout << "Please enter the value of end_time:" << endl;
+				getDoubleInput(str, end_time);
+				break;
+			case 3:
+				cout << "Please enter the name of your file:" << endl;
+				getline(cin, fileName);
+				cout << "Please enter the value of delta_t:" << endl;
+				getDoubleInput(str, delta_t);
+				cout << "Please enter the value of end_time:" << endl;
+				getDoubleInput(str, end_time);
+				break;
 			}
 
+			char *cstr = new char[fileName.length() + 1];
+			strcpy(cstr, fileName.c_str());
+			pgen.readCuboids(cstr);
 			pgen.cuboidsToList(particles);
 		}
 
 		cout << "Reading input file..." << endl;
-		
-		LOG4CXX_INFO(molsimlogger,"Arrived @ initialization call.");
+
+		LOG4CXX_INFO(molsimlogger, "Arrived @ initialization call.");
 		container.initialize(particles);
 
-		LOG4CXX_INFO(molsimlogger,"Arrived @ simulation call.");
+		LOG4CXX_INFO(molsimlogger, "Arrived @ simulation call.");
 		simulate();
-		LOG4CXX_INFO(molsimlogger,"Arrived @ ending simulation.");
+		LOG4CXX_INFO(molsimlogger, "Arrived @ ending simulation.");
 	}
 	return 0;
 }
@@ -361,13 +403,33 @@ void calculateV() {
 	}
 }
 
+void getIntegerInput(string &str, int &input) {
+	while (true) {
+		getline(cin, str);
+		stringstream myStream(str);
+		if (myStream >> input)
+			break;
+		cout << "Invalid number, please try again" << endl;
+	}
+}
+
+void getDoubleInput(string &str, double &input) {
+	while (true) {
+		getline(cin, str);
+		stringstream myStream(str);
+		if (myStream >> input)
+			break;
+		cout << "Invalid number, please try again" << endl;
+	}
+}
+
 /**
  * This method writes the output VTK files.
  */
 void plotVTK(int iteration) {
-	
-	LOG4CXX_TRACE(molsimlogger,"Arrived @ plotVTK.");
-	
+
+	LOG4CXX_TRACE(molsimlogger, "Arrived @ plotVTK.");
+
 	outputWriter::VTKWriter writer;
 	ParticleIterator iterator;
 	iterator = container.begin();
