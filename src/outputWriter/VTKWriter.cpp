@@ -11,18 +11,23 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <log4cxx/logger.h>
+#include <log4cxx/propertyconfigurator.h>
+#include <log4cxx/xml/domconfigurator.h>
 
 using namespace std;
+
+log4cxx::LoggerPtr vtkwriterlogger(log4cxx::Logger::getLogger("VTKWriter"));
 
 namespace outputWriter {
 
 VTKWriter::VTKWriter() {
-	// TODO Auto-generated constructor stub
+	LOG4CXX_DEBUG(vtkwriterlogger,"Constructed.");
 
 }
 
 VTKWriter::~VTKWriter() {
-	// TODO Auto-generated destructor stub
+	LOG4CXX_DEBUG(vtkwriterlogger,"Destructed.");
 }
 
 void VTKWriter::initializeOutput(int numParticles) {
@@ -68,9 +73,9 @@ void VTKWriter::writeFile(const std::string& filename, int iteration) {
 
 void VTKWriter::plotParticle(Particle& p) {
 	if (vtkFile->UnstructuredGrid().present()) {
-		cout << "UnstructuredGrid is present" << endl;
+		LOG4CXX_TRACE(vtkwriterlogger,"UnstructuredGrid is present.");
 	} else {
-		cout << "ERROR: No UnstructuredGrid present" << endl;
+		LOG4CXX_ERROR(vtkwriterlogger,"No UnstructuredGrid present.");
 	}
 
 	PointData::DataArray_sequence& pointDataSequence = vtkFile->UnstructuredGrid()->Piece().PointData().DataArray();
