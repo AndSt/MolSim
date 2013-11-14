@@ -8,9 +8,7 @@
 #include "utils/ParticleGenerator.h"
 
 #include <log4cxx/logger.h>
-#include <log4cxx/basicconfigurator.h>
 #include <log4cxx/propertyconfigurator.h>
-#include <log4cxx/helpers/exception.h>
 #include <log4cxx/xml/domconfigurator.h>
 
 
@@ -68,6 +66,7 @@ list<Particle> particles;
 ParticleContainer container;
 ParticleGenerator pgen;
 
+log4cxx::LoggerPtr molsimlogger(log4cxx::Logger::getLogger("MolSim"));
 
 using namespace std;
 using namespace log4cxx;
@@ -82,7 +81,9 @@ using namespace log4cxx::helpers;
  * The third parameter is delta_t.
  */
 int main(int argc, char* argsv[]) {
-
+	
+	PropertyConfigurator::configure("Log4cxxConfig.cfg");
+	LOG4CXX_INFO(molsimlogger,"Arrived @ main.");
 
 	/* Format input command line:
 	 * ./MolSim <input file> <end time> <delta time>
@@ -99,6 +100,8 @@ int main(int argc, char* argsv[]) {
 	test = true;
 	}
 	if (test == true) {
+		
+		LOG4CXX_INFO(molsimlogger,"Arrived @ testsuite.");
 
 		string str;
 		int option = 0;
@@ -156,6 +159,7 @@ int main(int argc, char* argsv[]) {
 			}
 		}
 	} else {
+		LOG4CXX_INFO(molsimlogger,"Arrived @ filedecision.");
 		string str;
 		FileReader fileReader;
 		cout << "Hello from MolSim for PSE!" << endl;
@@ -223,10 +227,13 @@ int main(int argc, char* argsv[]) {
 		}
 
 		cout << "Reading input file..." << endl;
-
+		
+		LOG4CXX_INFO(molsimlogger,"Arrived @ initialization call.");
 		container.initialize(particles);
 
+		LOG4CXX_INFO(molsimlogger,"Arrived @ simulation call.");
 		simulate();
+		LOG4CXX_INFO(molsimlogger,"Arrived @ ending simulation.");
 	}
 	return 0;
 }
@@ -358,6 +365,9 @@ void calculateV() {
  * This method writes the output VTK files.
  */
 void plotVTK(int iteration) {
+	
+	LOG4CXX_TRACE(molsimlogger,"Arrived @ plotVTK.");
+	
 	outputWriter::VTKWriter writer;
 	ParticleIterator iterator;
 	iterator = container.begin();
