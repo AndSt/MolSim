@@ -15,8 +15,8 @@ CFLAGS=-g -O3
 
 # Linker flags
 # ------------
-LDFLAGS= -lxerces-c -lcppunit
-
+LDFLAGS= -lxerces-c -lcppunit -llog4cxx
+ 
 INCLUDES= -I./src -I./libxsd -I./libxsd/xsd
 
 OBJECTS=$(SOURCES:.cpp=.o)

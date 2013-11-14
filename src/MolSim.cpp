@@ -7,6 +7,13 @@
 #include "utils/ParticleIterator.h"
 #include "utils/ParticleGenerator.h"
 
+#include <log4cxx/logger.h>
+#include <log4cxx/basicconfigurator.h>
+#include <log4cxx/propertyconfigurator.h>
+#include <log4cxx/helpers/exception.h>
+#include <log4cxx/xml/domconfigurator.h>
+
+
 #include <cppunit/TestCase.h>
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
@@ -61,12 +68,21 @@ list<Particle> particles;
 ParticleContainer container;
 ParticleGenerator pgen;
 
+
+using namespace std;
+using namespace log4cxx;
+using namespace log4cxx::xml;
+using namespace log4cxx::helpers;
+
+
+
 /**
  * @param argsv the first parameter is the file. ( here "eingabe-sonne.txt")
  * The second parameter is the end_time.
  * The third parameter is delta_t.
  */
 int main(int argc, char* argsv[]) {
+
 
 	/* Format input command line:
 	 * ./MolSim <input file> <end time> <delta time>
@@ -75,6 +91,8 @@ int main(int argc, char* argsv[]) {
 	 * ./MolSim "eingabe-brownian.txt" 5 0.0002
 	 *
 	 */
+
+
 	bool test = false;
 	if(argc >= 2){
 	string arg1 = argsv[1];
@@ -103,6 +121,7 @@ int main(int argc, char* argsv[]) {
 				CppUnit::TextUi::TestRunner runner;
 				runner.addTest(ParticleIteratorTest::suite());
 				runner.addTest(ParticleContainerTest::suite());
+				runner.addTest(ParticleGeneratorTest::suite());
 				runner.run();
 
 			} else if (option == 2) {
