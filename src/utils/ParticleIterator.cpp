@@ -7,6 +7,8 @@
 
 #include "ParticleIterator.h"
 
+using namespace utils;
+
 ParticleIterator::ParticleIterator(){
 
 }

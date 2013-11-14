@@ -14,6 +14,7 @@
 #include <cppunit/TestRunner.h>
 #include <cppunit/extensions/HelperMacros.h>
 
+#include <string.h>
 #include <list>
 #include <Cuboid.h>
 #include <utils/ParticleGenerator.h>
@@ -41,11 +42,6 @@ public:
 	void testReadCuboids();
 
 	/**
-	 * Tests the cuboidsToList() method
-	 */
-	void testCuboidsToList();
-
-	/**
 	 *
 	 * @return the TestSuite for the tested methods of ParticleGenerator
 	 */
@@ -63,7 +59,7 @@ private:
 	/**
 	 * Generator to test
 	 */
-	ParticleGenerator generator;
+	utils::ParticleGenerator generator;
 };
 
 #endif /* PARTICLEGENERATORTEST_H_ */

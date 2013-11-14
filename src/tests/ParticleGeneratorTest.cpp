@@ -7,7 +7,7 @@
 
 #include "ParticleGeneratorTest.h"
 
-ParticleGeneratorTest::ParticleGeneratorTest(){
+ParticleGeneratorTest::ParticleGeneratorTest() {
 
 }
 
@@ -29,8 +29,10 @@ void ParticleGeneratorTest::setUp() {
 	cuboid2 = Cuboid(8, 8, 1, 1.1225, 1, oriXYZ, startVel, 0.1);
 
 	//set up the particle generator
-	generator.readCuboids("src/tests/testFiles/generator.txt");
-
+	std::string fileName = "src/tests/testFiles/generator.txt";
+	char *cstr = new char[fileName.length() + 1];
+	strcpy(cstr, fileName.c_str());
+	generator.readCuboids(cstr);
 }
 
 void ParticleGeneratorTest::tearDown() {
@@ -62,38 +64,11 @@ void ParticleGeneratorTest::testReadCuboids() {
 	CPPUNIT_ASSERT(cuboid2.getMeanV() == testCuboid.getMeanV());
 }
 
-void ParticleGeneratorTest::testCuboidsToList(){
-	generator.cuboidsToList(particles);
-
-	//Test first part of the list by checking the equality of the list in
-	//cuboid1
-	std::list<Particle>::iterator particleIterator = particles.begin();
-	std::list<Particle>::iterator cuboidIterator = cuboid1.getCuboid().begin();
-	while(cuboidIterator != cuboid1.getCuboid().end()){
-		CPPUNIT_ASSERT(*cuboidIterator == *particleIterator);
-		++particleIterator;
-		++cuboidIterator;
-	}
-
-	//Test second part of the list by checking the equality of the list in
-	//cuboid2
-	cuboidIterator = cuboid2.getCuboid().begin();
-	while(cuboidIterator != cuboid2.getCuboid().end()){
-			CPPUNIT_ASSERT(*cuboidIterator == *particleIterator);
-			++particleIterator;
-			++cuboidIterator;
-		}
-}
-
 CppUnit::Test *ParticleGeneratorTest::suite() {
 	CppUnit::TestSuite *testSuite = new CppUnit::TestSuite(
 			"ParticleGeneratorTest");
 	testSuite->addTest(
-				new CppUnit::TestCaller<ParticleGeneratorTest>("testReadCuboids",
-						&ParticleGeneratorTest::testReadCuboids));
-	std::cout << "##############################################################" << std::endl;
-	testSuite->addTest(
-					new CppUnit::TestCaller<ParticleGeneratorTest>("testCuboidstoList",
-							&ParticleGeneratorTest::testCuboidsToList));
+			new CppUnit::TestCaller<ParticleGeneratorTest>("testReadCuboids",
+					&ParticleGeneratorTest::testReadCuboids));
 	return testSuite;
 }

@@ -13,6 +13,7 @@
 #include "Vector.h"
 #include "ParticleIterator.h"
 
+namespace utils {
 
 class ParticleContainer {
 
@@ -30,12 +31,12 @@ public:
 	/**
 	 * @return the first element of the container
 	 */
-	ParticleIterator begin();
+	utils::ParticleIterator begin();
 
 	/**
 	 * @return the last element of the container
 	 */
-	ParticleIterator end();
+	utils::ParticleIterator end();
 
 	/**
 	 * @ return the particles list
@@ -49,10 +50,11 @@ public:
 
 private:
 	/**
-	  * contains the list of the given particles
-	  */
+	 * contains the list of the given particles
+	 */
 	std::list<Particle> particles;
 };
 
+}
 
 #endif /* PARTICLECONTAINER_H_ */

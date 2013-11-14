@@ -71,8 +71,8 @@ const double SIGMA = 1;
 const double EPSILON = 5;
 
 list<Particle> particles;
-ParticleContainer container;
-ParticleGenerator pgen;
+utils::ParticleContainer container;
+utils::ParticleGenerator pgen;
 
 string fileName;
 
@@ -337,7 +337,7 @@ void calculateFLJ() {
 
 //initialize outer Iterator and index
 	utils::Vector<double, 3> zero((double) 0);
-	ParticleIterator iterator;
+	utils::ParticleIterator iterator;
 	utils::Vector<double, 3> sumF[container.size()];
 	for (int i = 0; i < container.size(); i++) {
 		sumF[i] = zero;
@@ -347,7 +347,7 @@ void calculateFLJ() {
 	while (iterator != container.end()) {
 
 		//initialize inner Iterator and Index
-		ParticleIterator innerIterator;
+		utils::ParticleIterator innerIterator;
 		innerIterator = iterator;
 		++innerIterator;
 		int j = i + 1;
@@ -384,7 +384,7 @@ void calculateFLJ() {
  */
 void calculateX() {
 
-	ParticleIterator iterator;
+	utils::ParticleIterator iterator;
 	iterator = container.begin();
 	while (iterator != container.end()) {
 
@@ -405,7 +405,7 @@ void calculateX() {
  */
 void calculateV() {
 
-	ParticleIterator iterator;
+	utils::ParticleIterator iterator;
 	iterator = container.begin();
 	while (iterator != container.end()) {
 
@@ -447,7 +447,7 @@ void plotVTK(int iteration) {
 	LOG4CXX_TRACE(molsimlogger, "Arrived @ plotVTK.");
 
 	outputWriter::VTKWriter writer;
-	ParticleIterator iterator;
+	utils::ParticleIterator iterator;
 	iterator = container.begin();
 	writer.initializeOutput(container.size());
 	while (iterator != container.end()) {

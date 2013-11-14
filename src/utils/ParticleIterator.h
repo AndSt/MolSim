@@ -11,6 +11,7 @@
 #include <list>
 #include <Particle.h>
 
+namespace utils{
 
 class ParticleIterator {
 
@@ -50,6 +51,8 @@ private:
 	std::list<Particle>::iterator iterator;
 
 };
+
+}
 
 
 #endif /* PARTICLEITERATOR_H_ */

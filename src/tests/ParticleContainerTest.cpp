@@ -19,7 +19,10 @@ ParticleContainerTest::~ParticleContainerTest() {
 void ParticleContainerTest::setUp() {
 	//initialize particles
 	FileReader fileReader;
-	fileReader.readFile(particles, "src/tests/testFiles/container+iterator.txt");
+	std::string fileName = "src/tests/testFiles/container+iterator.txt";
+	char *cstr = new char[fileName.length() + 1];
+	strcpy(cstr, fileName.c_str());
+	fileReader.readFile(particles, cstr);
 	//initialize container
 	container.initialize(particles);
 }
@@ -32,7 +35,7 @@ void ParticleContainerTest::testInitialize() {
 	container.initialize(particles);
 
 	//iterate over both lists and check equality
-	ParticleIterator pIterator = container.begin();
+	utils::ParticleIterator pIterator = container.begin();
 	std::list<Particle>::iterator iterator = particles.begin();
 	while (iterator != particles.end()) {
 		CPPUNIT_ASSERT(*iterator == *pIterator);
@@ -55,8 +58,8 @@ void ParticleContainerTest::testEnd() {
 		++iterator1;
 	}
 
-	ParticleIterator iterator2 = container.begin();
-	ParticleIterator testIterator2;
+	utils::ParticleIterator iterator2 = container.begin();
+	utils::ParticleIterator testIterator2;
 	while (iterator2 != container.end()) {
 		testIterator2 = iterator2;
 		++iterator2;
@@ -66,7 +69,7 @@ void ParticleContainerTest::testEnd() {
 
 void ParticleContainerTest::testGetList() {
 	//iterate over both lists and check equality
-	ParticleIterator pIterator = container.begin();
+	utils::ParticleIterator pIterator = container.begin();
 	std::list<Particle>::iterator iterator = particles.begin();
 	while (iterator != particles.end()) {
 		CPPUNIT_ASSERT(*iterator == *pIterator);

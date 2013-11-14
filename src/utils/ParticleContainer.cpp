@@ -7,8 +7,9 @@
 
 #include "ParticleContainer.h"
 
+using namespace utils;
 
-ParticleContainer::ParticleContainer(){
+ParticleContainer::ParticleContainer() {
 	// TODO Auto-generated constructor stub
 }
 
@@ -20,18 +21,18 @@ void ParticleContainer::initialize(std::list<Particle>& particles_arg) {
 	particles = particles_arg;
 }
 
-ParticleIterator ParticleContainer::begin(){
+ParticleIterator ParticleContainer::begin() {
 	return ParticleIterator(particles.begin());
 }
 
-ParticleIterator ParticleContainer::end(){
+ParticleIterator ParticleContainer::end() {
 	return ParticleIterator(particles.end());
 }
 
-std::list<Particle> ParticleContainer::getList(){
+std::list<Particle> ParticleContainer::getList() {
 	return particles;
 }
 
-int ParticleContainer::size(){
+int ParticleContainer::size() {
 	return particles.size();
 }

@@ -12,6 +12,8 @@
 
 #include <list>
 
+namespace utils {
+
 /** \class ParticleGenerator
  *  \brief This is a class capsulating (almost) all work related to cuboids.
  * 
@@ -51,4 +53,5 @@ public:
 	virtual ~ParticleGenerator();
 };
 
+}
 #endif /* PARTICLEGENERATOR_H_ */

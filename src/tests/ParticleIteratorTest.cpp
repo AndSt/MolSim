@@ -19,7 +19,10 @@ ParticleIteratorTest::~ParticleIteratorTest() {
 void ParticleIteratorTest::setUp() {
 	FileReader fileReader;
 	std::list<Particle> particles;
-	fileReader.readFile(particles, "src/tests/testFiles/container+iterator.txt");
+	std::string fileName = "src/tests/testFiles/container+iterator.txt";
+	char *cstr = new char[fileName.length() + 1];
+	strcpy(cstr, fileName.c_str());
+	fileReader.readFile(particles, cstr);
 	container.initialize(particles);
 
 	particle1 = container.begin();
@@ -33,7 +36,7 @@ void ParticleIteratorTest::tearDown() {
 }
 
 void ParticleIteratorTest::testConstructor() {
-	ParticleIterator testIt(container.begin());
+	utils::ParticleIterator testIt(container.begin());
 	CPPUNIT_ASSERT(*testIt == *particle1);
 	CPPUNIT_ASSERT(!(*testIt == *particle3));
 }
@@ -62,12 +65,15 @@ CppUnit::Test *ParticleIteratorTest::suite() {
 			new CppUnit::TestCaller<ParticleIteratorTest>("testConstructor",
 					&ParticleIteratorTest::testConstructor));
 	testSuite->addTest(
-			new CppUnit::TestCaller<ParticleIteratorTest>("testInequality", &ParticleIteratorTest::testInequality));
+			new CppUnit::TestCaller<ParticleIteratorTest>("testInequality",
+					&ParticleIteratorTest::testInequality));
 	testSuite->addTest(
-			new CppUnit::TestCaller<ParticleIteratorTest>("testParticleReference",
+			new CppUnit::TestCaller<ParticleIteratorTest>(
+					"testParticleReference",
 					&ParticleIteratorTest::testParticleReference));
 	testSuite->addTest(
-			new CppUnit::TestCaller<ParticleIteratorTest>("testIteration", &ParticleIteratorTest::testIteration));
+			new CppUnit::TestCaller<ParticleIteratorTest>("testIteration",
+					&ParticleIteratorTest::testIteration));
 
 	return testSuite;
 }

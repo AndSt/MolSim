@@ -14,6 +14,7 @@
 #include <cppunit/TestRunner.h>
 #include <cppunit/extensions/HelperMacros.h>
 
+#include <string.h>
 #include <list>
 #include <Particle.h>
 #include <utils/ParticleContainer.h>
@@ -69,7 +70,7 @@ private:
 	/**
 	 * The particle container who will be tested
 	 */
-	ParticleContainer container;
+	utils::ParticleContainer container;
 	/**
 	 * The particle list, which will be used to compare to the container
 	 */

@@ -14,6 +14,7 @@
 #include <cppunit/TestRunner.h>
 #include <cppunit/extensions/HelperMacros.h>
 
+#include <string.h>
 #include <utils/ParticleContainer.h>
 #include <utils/ParticleIterator.h>
 #include <Particle.h>
@@ -63,11 +64,11 @@ private:
 	/**
 	 * Used Container to Check the Iterator
 	 */
-	ParticleContainer container;
+	utils::ParticleContainer container;
 	/**
 	 * Used Iterators
 	 */
-	ParticleIterator particle1, particle2, particle3;
+	utils::ParticleIterator particle1, particle2, particle3;
 
 };
 

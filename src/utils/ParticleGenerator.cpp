@@ -11,6 +11,8 @@
 #include <log4cxx/propertyconfigurator.h>
 #include <log4cxx/xml/domconfigurator.h>
 
+using namespace utils;
+
 log4cxx::LoggerPtr particlegeneratorlogger(log4cxx::Logger::getLogger("ParticleGenerator"));
 
 ParticleGenerator::ParticleGenerator() {
