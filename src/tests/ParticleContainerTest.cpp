@@ -17,8 +17,10 @@ ParticleContainerTest::~ParticleContainerTest() {
 }
 
 void ParticleContainerTest::setUp() {
+	//initialize particles
 	FileReader fileReader;
-	fileReader.readFile(particles, "eingabe-brownian.txt");
+	fileReader.readFile(particles, "src/tests/testFiles/container+iterator.txt");
+	//initialize container
 	container.initialize(particles);
 }
 
@@ -26,8 +28,17 @@ void ParticleContainerTest::tearDown() {
 }
 
 void ParticleContainerTest::testInitialize() {
+	//initialize container
 	container.initialize(particles);
-	CPPUNIT_ASSERT(*particles.begin() == *container.begin());
+
+	//iterate over both lists and check equality
+	ParticleIterator pIterator = container.begin();
+	std::list<Particle>::iterator iterator = particles.begin();
+	while (iterator != particles.end()) {
+		CPPUNIT_ASSERT(*iterator == *pIterator);
+		++iterator;
+		++pIterator;
+	}
 }
 
 void ParticleContainerTest::testBegin() {
@@ -54,6 +65,7 @@ void ParticleContainerTest::testEnd() {
 }
 
 void ParticleContainerTest::testGetList() {
+	//iterate over both lists and check equality
 	ParticleIterator pIterator = container.begin();
 	std::list<Particle>::iterator iterator = particles.begin();
 	while (iterator != particles.end()) {
@@ -65,7 +77,6 @@ void ParticleContainerTest::testGetList() {
 
 void ParticleContainerTest::testSize() {
 	CPPUNIT_ASSERT(particles.size() == container.size());
-
 }
 
 CppUnit::Test *ParticleContainerTest::suite() {

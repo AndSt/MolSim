@@ -25,12 +25,12 @@ public:
 	virtual ~ParticleContainerTest();
 
 	/**
-	 * Set up the test variables
+	 * Set up the test variables(container, particles)
 	 */
 	void setUp();
 
 	/**
-	 * Delete the variables
+	 *
 	 */
 	void tearDown();
 
@@ -66,7 +66,13 @@ public:
 	static Test *suite();
 
 private:
+	/**
+	 * The particle container who will be tested
+	 */
 	ParticleContainer container;
+	/**
+	 * The particle list, which will be used to compare to the container
+	 */
 	std::list<Particle> particles;
 };
 
