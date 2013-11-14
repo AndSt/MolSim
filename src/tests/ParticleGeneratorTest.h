@@ -52,8 +52,17 @@ public:
 	static Test *suite();
 
 private:
+	/**
+	 * Cuboids, to test the readCuboids() method
+	 */
 	Cuboid cuboid1, cuboid2;
+	/**
+	 * Generated particle list
+	 */
 	std::list<Particle> particles;
+	/**
+	 * Generator to test
+	 */
 	ParticleGenerator generator;
 };
 

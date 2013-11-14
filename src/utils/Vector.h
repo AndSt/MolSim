@@ -13,15 +13,15 @@
 #include <iostream>
 
 namespace utils {
-template <typename type, int length>
+template<typename type, int length>
 class Vector;
 }
 
-
 /** Global operators first */
 
-template <typename type, int length>
-std::ostream& operator<<(std::ostream& stream, const utils::Vector<type, length>& v) {
+template<typename type, int length>
+std::ostream& operator<<(std::ostream& stream,
+		const utils::Vector<type, length>& v) {
 
 	stream << "[";
 	for (int i = 0; i < length; i++) {
@@ -31,19 +31,20 @@ std::ostream& operator<<(std::ostream& stream, const utils::Vector<type, length>
 	return stream;
 }
 
-
-template <typename type, int length>
-utils::Vector<type, length> operator*(double scalar, const utils::Vector<type, length>& v) {
+template<typename type, int length>
+utils::Vector<type, length> operator*(double scalar,
+		const utils::Vector<type, length>& v) {
 	return v * scalar;
 }
 
 /** Vector class definition */
 
-template <typename type, int length>
+template<typename type, int length>
 class utils::Vector {
 
-	friend std::ostream& operator<< <type,length>(std::ostream& stream, const Vector& v);
-	friend Vector operator* <type,length>(double scalar, const Vector& v);
+	friend std::ostream& operator<<<type, length>(std::ostream& stream,
+			const Vector& v);
+	friend Vector operator*<type, length>(double scalar, const Vector& v);
 
 private:
 
@@ -81,10 +82,10 @@ public:
 	}
 
 	void operator+=(const Vector& rhs) {
-			for(int i = 0; i < length; i++){
-				this->content[i] +=+ rhs.content[i];
-			}
+		for (int i = 0; i < length; i++) {
+			this->content[i] += +rhs.content[i];
 		}
+	}
 
 	Vector operator-(const Vector& rhs) const {
 		type result[length];
@@ -95,7 +96,7 @@ public:
 		return Vector(result);
 	}
 
-	Vector operator*(double scalar) const{
+	Vector operator*(double scalar) const {
 		type result[length];
 
 		for (int i = 0; i < length; i++) {
@@ -104,23 +105,23 @@ public:
 		return Vector(result);
 	}
 
-	Vector operator*(const Vector& rhs) const{
-			type result[length];
+	Vector operator*(const Vector& rhs) const {
+		type result[length];
 
-			for (int i = 0; i < length; i++) {
-				result[i] = this->content[i] * rhs.content[i];
-			}
-			return Vector(result);
+		for (int i = 0; i < length; i++) {
+			result[i] = this->content[i] * rhs.content[i];
 		}
+		return Vector(result);
+	}
 
-	Vector operator/(const Vector& rhs) const{
-				type result[length];
+	Vector operator/(const Vector& rhs) const {
+		type result[length];
 
-				for (int i = 0; i < length; i++) {
-					result[i] = this->content[i] / rhs.content[i];
-				}
-				return Vector(result);
-			}
+		for (int i = 0; i < length; i++) {
+			result[i] = this->content[i] / rhs.content[i];
+		}
+		return Vector(result);
+	}
 
 	double L2Norm() const {
 		double square_sum = 0;
@@ -140,7 +141,7 @@ public:
 	}
 
 	Vector& operator=(const Vector& rhs) {
-		if(this != &rhs) {
+		if (this != &rhs) {
 			for (int i = 0; i < length; i++) {
 				content[i] = rhs.content[i];
 			}
@@ -160,12 +161,12 @@ public:
 	}
 
 	const type& operator[](int i) const {
-			return content[i];
+		return content[i];
 	}
 
 	bool operator==(const Vector& rhs) const {
 		for (int i = 0; i < length; i++) {
-			if(content[i] != rhs.content[i]) {
+			if (content[i] != rhs.content[i]) {
 				return false;
 			}
 		}
@@ -178,6 +179,5 @@ public:
 		return str.str();
 	}
 };
-
 
 #endif /* VECTOR_ */
