@@ -89,18 +89,22 @@ int main(int argc, char* argsv[]) {
 	LOG4CXX_INFO(molsimlogger, "Arrived @ main.");
 
 	/* Format input command line:
-	 * ./MolSim <input file> <end time> <delta time>
-	 * Example for input command line:
-	 * ./MolSim "eingabe-sonne.txt" 1000 0.014
-	 * ./MolSim "eingabe-brownian.txt" 5 0.0002
+	 * for running:
+	 * ./MolSim
 	 *
+	 * for testing:
+	 * ./MolSim -test
 	 */
 
 	bool test = false;
 	if (argc >= 2) {
 		string arg1 = argsv[1];
-		test = true;
+		if(arg1 == "-test") test = true;
 	}
+
+	/*
+	 * "Testing suite": Read in the Options and run the TestRunner
+	 */
 	if (test == true) {
 
 		LOG4CXX_INFO(molsimlogger, "Arrived @ testsuite.");
@@ -156,13 +160,20 @@ int main(int argc, char* argsv[]) {
 				runner.run();
 			}
 		}
-	} else {
+	}
+
+	/*
+	 * "Running suite":
+	 * 	reads in options, fills particle container and runs the simulation
+	 */
+
+	else {
 		LOG4CXX_INFO(molsimlogger, "Arrived @ filedecision.");
 		string str;
 		FileReader fileReader;
 		cout << "Hello from MolSim for PSE!" << endl;
 		cout << endl;
-		//Variable for Level 1 Options:
+		//variable for Level 1 Options:
 		int option1;
 		//Level 1 Options:
 		//[1] - run from particle file
@@ -203,15 +214,16 @@ int main(int argc, char* argsv[]) {
 			break;
 		}
 
-		//Variable for Level 2 Options:
+		//variable for Level 2 Options:
 		int option2;
 
-		//Level 2 Options:
+		//level 2 Options:
 		//[1] - default configuration
 		//[2] - define delta_t, end_time by yourself
 		//[3] - define fileName, delta_t and end_time by yourself
 		getIntegerInput(str, option2);
 
+		//for particle file:
 		if (option1 == 1) {
 			switch (option2) {
 			case 1:
@@ -238,7 +250,9 @@ int main(int argc, char* argsv[]) {
 			char *cstr = new char[fileName.length() + 1];
 			strcpy(cstr, fileName.c_str());
 			fileReader.readFile(particles, cstr);
-		} else if (option1 == 2) {
+		}
+		//for cuboid list:
+		else if (option1 == 2) {
 			switch (option2) {
 			case 1:
 				fileName = "eingabe-brownian.txt";
@@ -270,15 +284,18 @@ int main(int argc, char* argsv[]) {
 
 		cout << "Reading input file..." << endl;
 
+		//inintialize container with particle list
 		LOG4CXX_INFO(molsimlogger, "Arrived @ initialization call.");
 		container.initialize(particles);
 
+		//start simulation
 		LOG4CXX_INFO(molsimlogger, "Arrived @ simulation call.");
 		simulate();
 		LOG4CXX_INFO(molsimlogger, "Arrived @ ending simulation.");
 	}
 	return 0;
 }
+
 
 void simulate() {
 // the forces are needed to calculate x, but are not given in the input file.
@@ -295,7 +312,6 @@ void simulate() {
 		calculateX();
 
 		// calculate new f
-		//calculateF();
 		calculateFLJ();
 
 		// calculate new v
