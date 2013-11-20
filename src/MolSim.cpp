@@ -290,6 +290,9 @@ int main(int argc, char* argsv[]) {
 
 		//start simulation
 		LOG4CXX_INFO(molsimlogger, "Arrived @ simulation call.");
+
+		cout << "Running simulation..." << endl;
+
 		simulate();
 		LOG4CXX_INFO(molsimlogger, "Arrived @ ending simulation.");
 	}
@@ -321,12 +324,13 @@ void simulate() {
 		if (iteration % 10 == 0) {
 			plotVTK(iteration);
 		}
-		cout << "Iteration " << iteration << " finished." << endl;
+		//cout << "Iteration " << iteration << " finished." << endl;
+		LOG4CXX_TRACE(molsimlogger, "Iteration " << iteration << " finished.");
 
 		current_time += delta_t;
 	}
 
-	cout << "output written. Terminating..." << endl;
+	cout << "Output written. Terminating..." << endl;
 }
 
 /**
