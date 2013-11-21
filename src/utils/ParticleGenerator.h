@@ -34,7 +34,7 @@ public:
 	/** Main constructor, which creates a particle generator from a list of cuboids.
 	 * @param[in] cubList A list of cuboids.
 	 */
-	ParticleGenerator(std::list<Cuboid> cubList);
+	ParticleGenerator(std::list<Cuboid>& cubList);
 
 	/** The reading procedure, which can convert information from a given input file into particle generator's list of cuboids.
 	 * @param[in] filename The full name of the input file in the project folder, e.g: "eingabe-brownian.txt".
