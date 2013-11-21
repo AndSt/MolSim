@@ -46,7 +46,7 @@ void calculateFLJ();
 void calculateX();
 
 /**
- * calculate the position for all particles
+ * calculate the velocity for all particles
  */
 void calculateV();
 
