@@ -29,6 +29,11 @@
 #include <cstdlib>
 #include <iostream>
 
+using namespace std;
+using namespace log4cxx;
+using namespace log4cxx::xml;
+using namespace log4cxx::helpers;
+
 /**** forward declaration of the calculation functions ****/
 
 void simulate();
@@ -55,18 +60,15 @@ void getDoubleInput(string &str, double &input);
 // plot the particles to VTKWriter-File
 void plotVTK(int iteration);
 
-using namespace std;
-using namespace log4cxx;
-using namespace log4cxx::xml;
-using namespace log4cxx::helpers;
 
 double start_time = 0;
 double end_time = 1000;
 double delta_t = 0.014;
 
 // For Lennard-Jones
-const double SIGMA = 1;
-const double EPSILON = 5;
+const double SIGMA = 1.0;
+const double EPSILON = 5.0;
+const double R_CUTOFF = 3.0;
 
 list<Particle> particles;
 utils::ParticleContainer container;
@@ -360,16 +362,19 @@ void calculateFLJ() {
 			Particle& p2 = *innerIterator;
 
 			//calculations
-			utils::Vector<double, 3> tempD = p1.getX() - p2.getX();
+			utils::Vector<double, 3> tempD = p2.getX() - p1.getX();
 			double tempDNorm = tempD.L2Norm();
-			double tempDSigDivNorm = SIGMA / tempDNorm;
-			utils::Vector<double, 3> tempF = 24 * EPSILON
-					* pow(1 / tempDNorm, 2)
-					* (pow(tempDSigDivNorm, 6) - 2 * pow(tempDSigDivNorm, 12))
-					* (-1) * tempD;
 
-			sumF[i] += tempF;
-			sumF[j] += (-1) * tempF;
+			if(tempDNorm < R_CUTOFF) {
+				double tempDSigDivNormPowSix = pow(SIGMA / tempDNorm, 6);
+				utils::Vector<double, 3> tempF = 24 * EPSILON
+					* pow(1 / tempDNorm, 2)
+					* (tempDSigDivNormPowSix - 2 * pow(tempDSigDivNormPowSix, 2))
+					* tempD;
+
+				sumF[i] += tempF;
+				sumF[j] += (-1) * tempF;
+			}
 			++innerIterator;
 			++j;
 		}
