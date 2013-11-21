@@ -29,8 +29,6 @@
 #include <cstdlib>
 #include <iostream>
 
-using namespace std;
-
 /**** forward declaration of the calculation functions ****/
 
 void simulate();
