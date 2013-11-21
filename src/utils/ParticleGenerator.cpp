@@ -19,7 +19,7 @@ ParticleGenerator::ParticleGenerator() {
 	LOG4CXX_INFO(particlegeneratorlogger,"Constructed.");
 }
 
-ParticleGenerator::ParticleGenerator(std::list<Cuboid> cubList){
+ParticleGenerator::ParticleGenerator(std::list<Cuboid>& cubList){
 	LOG4CXX_INFO(particlegeneratorlogger,"Constructed with ParticleList.");
 		cuboids = cubList;
 }
