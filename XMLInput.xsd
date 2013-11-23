@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<!-- definition of simple elements -->
+<xs:element name="meshWidth" type="xs:decimal"/>
+<xs:element name="sigma" type="xs:decimal"/>
+<xs:element name="epsilon" type="xs:decimal"/>
+<xs:element name="mass" type="xs:decimal"/>
+<xs:element name="t_end" type="xs:decimal"/>
+<xs:element name="delta_t" type="xs:decimal"/>
+<xs:element name="meanVelocity" type="xs:decimal"/>
+
+<xs:element name="oriX" type="decimal"/>
+<xs:element name="oriY" type="decimal"/>
+<xs:element name="oriZ" type="decimal"/>
+
+<xs:element name="velX" type="decimal"/>
+<xs:element name="velY" type="decimal"/>
+<xs:element name="velZ" type="decimal"/>
+
+<xs:element name="width" type="positiveInteger"/>
+<xs:element name="height" type="positiveInteger"/>
+<xs:element name="depth" type="positiveInteger"/>
+
+<!-- small complex elements -->
+<xs:element name="originVector">
+	<xs:complexType>
+		<xs:sequence>
+      			<xs:element ref="oriX"/>
+      			<xs:element ref="oriY"/>
+			<xs:element ref="oriZ"/>
+    		</xs:sequence>
+  	</xs:complexType>
+</xs:element>
+
+<xs:element name="startVelocity">
+	<xs:complexType>
+		<xs:sequence>
+      			<xs:element ref="velX"/>
+      			<xs:element ref="velY"/>
+			<xs:element ref="velZ"/>
+    		</xs:sequence>
+  	</xs:complexType>
+</xs:element>
+
+<xs:element name="size">
+	<xs:complexType>
+		<xs:sequence>
+      			<xs:element ref="width"/>
+      			<xs:element ref="height"/>
+			<xs:element ref="depth"/>
+    		</xs:sequence>
+  	</xs:complexType>
+</xs:element>
+
+<xs:element name="cuboid">
+	<xs:complexType>
+		<xs:sequence>
+      			<xs:element ref="originVector"/>
+      			<xs:element ref="startVelocity"/>
+			<xs:element ref="size"/>
+    		</xs:sequence>
+  	</xs:complexType>
+</xs:element>
+
+<!-- the biggest complex element -->
+<xs:element name="cuboidsInput">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element ref="meshWidth"/>
+			<xs:element ref="sigma"/>
+			<xs:element ref="epsilon"/>
+			<xs:element ref="mass"/>
+			<xs:element ref="t_end"/>
+			<xs:element ref="delta_t"/>
+			<xs:element ref="meanVelocity"/>
+      			<xs:element ref="cuboid" maxOccurs="unbounded"/>
+    		</xs:sequence>
+  	</xs:complexType>
+</xs:element>
+
+</xs:schema> 
