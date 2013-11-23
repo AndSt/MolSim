@@ -29,7 +29,7 @@
 			<xs:element ref="oriX"/>
       			<xs:element ref="oriY"/>
 			<xs:element ref="oriZ"/>
-    		</xs:sequence>
+		</xs:sequence>
   	</xs:complexType>
 </xs:element>
 
@@ -39,7 +39,7 @@
 			<xs:element ref="velX"/>
 			<xs:element ref="velY"/>
 			<xs:element ref="velZ"/>
-    		</xs:sequence>
+		</xs:sequence>
   	</xs:complexType>
 </xs:element>
 
@@ -49,7 +49,7 @@
 			<xs:element ref="width"/>
 			<xs:element ref="height"/>
 			<xs:element ref="depth"/>
-    		</xs:sequence>
+		</xs:sequence>
   	</xs:complexType>
 </xs:element>
 
@@ -75,7 +75,7 @@
 			<xs:element ref="delta_t"/>
 			<xs:element ref="meanVelocity"/>
 			<xs:element ref="cuboid" maxOccurs="unbounded"/>
-    		</xs:sequence>
+		</xs:sequence>
   	</xs:complexType>
 </xs:element>
 
