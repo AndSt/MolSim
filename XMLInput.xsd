@@ -59,8 +59,8 @@
 			<xs:element ref="originVector"/>
 			<xs:element ref="startVelocity"/>
 			<xs:element ref="size"/>
-    		</xs:sequence>
-  	</xs:complexType>
+		</xs:sequence>
+	</xs:complexType>
 </xs:element>
 
 <!-- the biggest complex element -->
