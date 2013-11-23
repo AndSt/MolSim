@@ -27,7 +27,7 @@
 	<xs:complexType>
 		<xs:sequence>
 			<xs:element ref="oriX"/>
-      			<xs:element ref="oriY"/>
+			<xs:element ref="oriY"/>
 			<xs:element ref="oriZ"/>
 		</xs:sequence>
   	</xs:complexType>
