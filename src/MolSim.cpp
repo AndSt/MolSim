@@ -365,11 +365,6 @@ void calculateFLJ() {
 			utils::Vector<double, 3> tempD = p2.getX() - p1.getX();
 			double tempDNorm = tempD.L2Norm();
 
-			utils::Vector<double, 3> tempD2 = p2.getX() - p1.getX();
-			double tempDNorm2 = tempD.L2Norm();
-			double diff = tempDNorm - tempDNorm2;
-			cout << diff << endl;
-
 			if(tempDNorm < R_CUTOFF) {
 				double tempDSigDivNormPowSix = pow(SIGMA / tempDNorm, 6);
 				utils::Vector<double, 3> tempF = 24 * EPSILON
