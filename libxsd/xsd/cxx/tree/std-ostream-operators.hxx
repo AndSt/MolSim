@@ -180,9 +180,9 @@ namespace xsd
 
       // idref
       //
-      template <typename T, typename C, typename B>
+      template <typename C, typename B, typename T>
       inline std::basic_ostream<C>&
-      operator<< (std::basic_ostream<C>& os, const idref<T, C, B>& v)
+      operator<< (std::basic_ostream<C>& os, const idref<C, B, T>& v)
       {
         const B& r (v);
         return os << r;

@@ -2133,7 +2133,7 @@ namespace xsd
        *
        * @nosubgrouping
        */
-      template <typename T, typename C, typename B>
+      template <typename C, typename B, typename T>
       class idref: public B
       {
         typedef B base_type;

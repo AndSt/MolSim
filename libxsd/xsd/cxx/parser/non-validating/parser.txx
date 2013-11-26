@@ -114,7 +114,7 @@ namespace xsd
           //
           if (ns == xml::bits::xsi_namespace<C> () &&
               (name == xml::bits::type<C> () ||
-               name == xml::bits::nil<C> () ||
+               name == xml::bits::nil_lit<C> () ||
                name == xml::bits::schema_location<C> () ||
                name == xml::bits::no_namespace_schema_location<C> ()))
             return;
@@ -153,7 +153,7 @@ namespace xsd
           //
           if (ns == xml::bits::xsi_namespace<C> () &&
               (name == xml::bits::type<C> () ||
-               name == xml::bits::nil<C> () ||
+               name == xml::bits::nil_lit<C> () ||
                name == xml::bits::schema_location<C> () ||
                name == xml::bits::no_namespace_schema_location<C> ()))
             return;
@@ -276,7 +276,7 @@ namespace xsd
           //
           if (ns == xml::bits::xsi_namespace<C> () &&
               (name == xml::bits::type<C> () ||
-               name == xml::bits::nil<C> () ||
+               name == xml::bits::nil_lit<C> () ||
                name == xml::bits::schema_location<C> () ||
                name == xml::bits::no_namespace_schema_location<C> ()))
             return;

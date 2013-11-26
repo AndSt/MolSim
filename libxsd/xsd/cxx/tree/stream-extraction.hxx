@@ -204,9 +204,9 @@ namespace xsd
 
       // idref
       //
-      template <typename T, typename C, typename B>
+      template <typename C, typename B, typename T>
       template <typename S>
-      inline idref<T, C, B>::
+      inline idref<C, B, T>::
       idref (istream<S>& s, flags f, container* c)
           : B (s, f, c), identity_ (*this)
       {

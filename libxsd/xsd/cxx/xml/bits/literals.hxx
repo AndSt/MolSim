@@ -44,7 +44,7 @@ namespace xsd
 
         template <typename C>
         const C*
-        nil ();
+        nil_lit ();
 
         template <typename C>
         const C*

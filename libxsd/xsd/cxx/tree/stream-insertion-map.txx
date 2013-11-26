@@ -108,7 +108,7 @@ namespace xsd
           &inserter_impl<S, id>,
           false);
 
-        typedef idref<type, C, ncname> idref;
+        typedef idref<C, ncname, type> idref;
         register_type (
           typeid (idref),
           qualified_name (bits::idref<C> (), xsd),

@@ -92,7 +92,7 @@ namespace xsd
           &comparator_impl<id>,
           false);
 
-        typedef idref<type, C, ncname> idref;
+        typedef idref<C, ncname, type> idref;
         register_type (
           typeid (idref),
           &comparator_impl<idref>,

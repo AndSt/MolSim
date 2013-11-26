@@ -533,23 +533,23 @@ namespace xsd
 
       // idref
       //
-      template <typename T, typename C, typename B>
+      template <typename C, typename B, typename T>
       inline void
-      operator<< (xercesc::DOMElement& e, const idref<T, C, B>& x)
+      operator<< (xercesc::DOMElement& e, const idref<C, B, T>& x)
       {
         bits::insert<C> (e, x);
       }
 
-      template <typename T, typename C, typename B>
+      template <typename C, typename B, typename T>
       inline void
-      operator<< (xercesc::DOMAttr& a, const idref<T, C, B>& x)
+      operator<< (xercesc::DOMAttr& a, const idref<C, B, T>& x)
       {
         bits::insert<C> (a, x);
       }
 
-      template <typename T, typename C, typename B>
+      template <typename C, typename B, typename T>
       inline void
-      operator<< (list_stream<C>& ls, const idref<T, C, B>& x)
+      operator<< (list_stream<C>& ls, const idref<C, B, T>& x)
       {
         ls.os_ << x;
       }

@@ -97,7 +97,7 @@ namespace xsd
           &extractor_impl<S, id>,
           false);
 
-        typedef idref<type, C, ncname> idref;
+        typedef idref<C, ncname, type> idref;
         register_type (
           qualified_name (bits::idref<C> (), xsd),
           &extractor_impl<S, idref>,

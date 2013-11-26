@@ -73,7 +73,7 @@ namespace xsd
 
         template <>
         inline const char*
-        nil<char> ()
+        nil_lit<char> ()
         {
           return "nil";
         }
@@ -199,7 +199,7 @@ namespace xsd
 
         template <>
         inline const wchar_t*
-        nil<wchar_t> ()
+        nil_lit<wchar_t> ()
         {
           return L"nil";
         }

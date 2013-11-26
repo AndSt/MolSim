@@ -177,9 +177,9 @@ namespace xsd
 
       // idref
       //
-      template <typename S, typename T, typename C, typename B>
+      template <typename S, typename C, typename B, typename T>
       inline ostream<S>&
-      operator<< (ostream<S>& s, const idref<T, C, B>& x)
+      operator<< (ostream<S>& s, const idref<C, B, T>& x)
       {
         const B& r (x);
         return s << r;

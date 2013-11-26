@@ -1032,5 +1032,3 @@ namespace xsd
 #include <xsd/cxx/tree/exceptions.txx>
 
 #endif  // XSD_CXX_TREE_EXCEPTIONS_HXX
-
-#include <xsd/cxx/tree/exceptions.ixx>
