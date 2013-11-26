@@ -1,0 +1,29 @@
+root := ../../..
+
+include $(root)/build/cxx/rules.make
+include $(root)/build/xsd/tree-rules.make
+
+
+# Build.
+#
+driver: driver.o config.o
+
+config.o: config.cxx config.hxx
+driver.o: driver.cxx config.hxx
+
+config.cxx config.hxx: config.xsd
+
+
+# Test.
+#
+.PHONY: test
+test: driver config.xml
+	./driver config.xml
+
+
+# Clean.
+#
+.PHONY: clean
+clean:
+	rm -f config.o config.?xx driver.o driver
+

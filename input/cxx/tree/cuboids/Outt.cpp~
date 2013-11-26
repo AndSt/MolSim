@@ -1,0 +1,55 @@
+// file      : examples/cxx/tree/hello/driver.cxx
+// author    : Boris Kolpackov <boris@codesynthesis.com>
+// copyright : not copyrighted - public domain
+
+
+#include <memory>   // std::auto_ptr
+#include <iostream>
+#include <string>
+#include <list>
+
+#include "cuboids.hxx"
+#include "/home/son/Programms/GIT/Mol/src/utils/Vector.h"
+#include "/home/son/Programms/GIT/Mol/src/Cuboid.h"
+
+using namespace std;
+
+void extractCuboids(list<Cuboid>& cub);
+
+
+int main(){
+	list<Cuboid> cub;
+	extractCuboids(cub);
+	return 0;
+}
+
+void extractCuboids(list<Cuboid>& cub)
+{
+  try
+  {
+	auto_ptr<cuboids_t> h (cuboids ("cuboids.xml", xml_schema::flags::dont_validate));
+	cuboids_t::cuboid_const_iterator i;
+    	for (i = h->cuboid().begin (); i != h->cuboid().end(); ++i)
+    	{
+		
+		double a[] = {i->originVector().oriX(), i->originVector().oriY(), i->originVector().oriZ()};
+		utils::Vector<double, 3> ori(a);
+		double b[] = {i->startVelocity().velX(), i->startVelocity().velY(), i->startVelocity().velZ()};
+		utils::Vector<double, 3> vel(b);
+		int hei = i->size3D().height();
+		int w = i->size3D().width();
+		int d = i->size3D().depth();
+		int mesh = h->meshWidth();
+		double m = h->mass(); 
+
+      		Cuboid c(hei, w, d, mesh, m, ori, vel, 0.1);
+		cub.push_back(c);
+    	}
+	
+  }
+  catch (const xml_schema::exception& e)
+  {
+    cerr << e << endl;
+    exit(-1);
+  }
+}

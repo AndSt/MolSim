@@ -1,0 +1,29 @@
+root := ../../..
+
+include $(root)/build/cxx/rules.make
+include $(root)/build/xsd/tree-rules.make
+
+
+# Build.
+#
+driver: driver.o cuboids.o
+
+cuboids.o: cuboids.cxx cuboids.hxx
+driver.o: driver.cxx cuboids.hxx
+
+cuboids.cxx cuboids.hxx: cuboids.xsd
+
+
+# Test.
+#
+.PHONY: test
+test: driver cuboids.xml
+	./driver cuboids.xml
+
+
+# Clean.
+#
+.PHONY: clean
+clean:
+	rm -f cuboids.o cuboids.?xx driver.o driver
+
