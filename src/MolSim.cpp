@@ -26,13 +26,23 @@
 #include <list>
 #include <cassert>
 #include <cstring>
+#include <string>
 #include <cstdlib>
 #include <iostream>
+#include <memory>
+
+#include "InputCuboids.h"
+#include "InputParticles.h"
+#include "InputSetting.h"
 
 using namespace std;
 using namespace log4cxx;
 using namespace log4cxx::xml;
 using namespace log4cxx::helpers;
+
+void extractCuboids(list<Cuboid>& cub);
+void extractParticles(list<Particle>& par);
+void extractSetting();
 
 /**** forward declaration of the calculation functions ****/
 
@@ -66,11 +76,16 @@ double end_time = 1000;
 double delta_t = 0.014;
 
 // For Lennard-Jones
-const double SIGMA = 1.0;
-const double EPSILON = 5.0;
-const double R_CUTOFF = 3.0;
+double SIGMA = 1.0;
+double EPSILON = 5.0;
+double R_CUTOFF = 3.0;
 
-list<Particle> particles;
+string inputName;
+string inputType;
+string outputMask;
+int outputFreq = 10;
+
+list<Particle> particleList;
 utils::ParticleContainer container;
 utils::ParticleGenerator pgen;
 
@@ -84,6 +99,13 @@ log4cxx::LoggerPtr molsimlogger(log4cxx::Logger::getLogger("MolSim"));
  * The third parameter is delta_t.
  */
 int main(int argc, char* argsv[]) {
+	
+	/*extractSetting();
+	cout << start_time << endl;
+	cout << end_time << endl;
+	cout << inputName << endl;
+	cout << inputType << endl;
+	*///return 0;	
 
 	PropertyConfigurator::configure("Log4cxxConfig.cfg");
 	LOG4CXX_INFO(molsimlogger, "Arrived @ main.");
@@ -249,7 +271,7 @@ int main(int argc, char* argsv[]) {
 			}
 			char *cstr = new char[fileName.length() + 1];
 			strcpy(cstr, fileName.c_str());
-			fileReader.readFile(particles, cstr);
+			fileReader.readFile(particleList, cstr);
 		}
 		//for cuboid list:
 		else if (option1 == 2) {
@@ -279,14 +301,14 @@ int main(int argc, char* argsv[]) {
 			char *cstr = new char[fileName.length() + 1];
 			strcpy(cstr, fileName.c_str());
 			pgen.readCuboids(cstr);
-			pgen.cuboidsToList(particles);
+			pgen.cuboidsToList(particleList);
 		}
 
 		cout << "Reading input file..." << endl;
 
 		//inintialize container with particle list
 		LOG4CXX_INFO(molsimlogger, "Arrived @ initialization call.");
-		container.initialize(particles);
+		container.initialize(particleList);
 
 		//start simulation
 		LOG4CXX_INFO(molsimlogger, "Arrived @ simulation call.");
@@ -364,6 +386,11 @@ void calculateFLJ() {
 			//calculations
 			utils::Vector<double, 3> tempD = p2.getX() - p1.getX();
 			double tempDNorm = tempD.L2Norm();
+
+			utils::Vector<double, 3> tempD2 = p2.getX() - p1.getX();
+			double tempDNorm2 = tempD.L2Norm();
+			double diff = tempDNorm - tempDNorm2;
+			cout << diff << endl;
 
 			if(tempDNorm < R_CUTOFF) {
 				double tempDSigDivNormPowSix = pow(SIGMA / tempDNorm, 6);
@@ -465,4 +492,86 @@ void plotVTK(int iteration) {
 	}
 	string out_name("MD1_vtk");
 	writer.writeFile(out_name, iteration);
+}
+
+void extractCuboids(list<Cuboid>& cub)
+{
+  try
+  {
+	auto_ptr<cuboids_t> h (cuboids ("InputCuboids.xml", xml_schema::flags::dont_validate));
+	cuboids_t::cuboid_const_iterator i;
+    	for (i = h->cuboid().begin (); i != h->cuboid().end(); ++i)
+    	{		
+		double a[] = {i->originVector().oriX(), i->originVector().oriY(), i->originVector().oriZ()};
+		utils::Vector<double, 3> ori(a);
+		double b[] = {i->startVelocity().velX(), i->startVelocity().velY(), i->startVelocity().velZ()};
+		utils::Vector<double, 3> vel(b);
+		int hei = i->size3D().height();
+		int w = i->size3D().width();
+		int d = i->size3D().depth();
+		int mesh = h->meshWidth();
+		double m = h->mass();
+		double meanV = h->meanV();
+
+      		Cuboid c(hei, w, d, mesh, m, ori, vel, meanV);
+		cub.push_back(c);
+    	}
+	
+  }
+  catch (const xml_schema::exception& e)
+  {
+    cerr << e << endl;
+    exit(-1);
+  }
+}
+
+void extractParticles(list<Particle>& par)
+{
+  try
+  {
+	auto_ptr<particles_t> h (particles ("InputParicles.xml", xml_schema::flags::dont_validate));
+	particles_t::particle_const_iterator i;
+    	for (i = h->particle().begin (); i != h->particle().end(); ++i)
+    	{		
+		double a[] = {i->position().x(), i->position().y(), i->position().z()};
+		utils::Vector<double, 3> pos(a);
+		double b[] = {i->velocity().x(), i->velocity().y(), i->velocity().z()};
+		utils::Vector<double, 3> vel(b);
+		double m = i->mass();
+
+      		Particle p(pos, vel, m, 1);
+		par.push_back(p);
+    	}
+	
+  }
+  catch (const xml_schema::exception& e)
+  {
+    cerr << e << endl;
+    exit(-1);
+  }
+}
+
+void extractSetting()
+{
+  try
+  {
+	auto_ptr<pse_t> h (pse ("InputSetting.xml", xml_schema::flags::dont_validate));
+	start_time = h->start_time();
+	end_time = h->t_end();
+	delta_t = h->delta_t();
+
+	EPSILON = h->ljf().epsilon();
+	SIGMA = h->ljf().sigma();
+
+	inputName = h->inputfile().name();
+	inputType = h->inputfile().type();
+
+	outputMask = h->outputfile().name();
+	outputFreq = h->outputfile().freq();
+  }
+  catch (const xml_schema::exception& e)
+  {
+    cerr << e << endl;
+    exit(-1);
+  }
 }
