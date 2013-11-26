@@ -227,7 +227,9 @@ int main(int argc, char* argsv[]) {
 		case 3:
 			cout << "XML input files are stored in MolSim/input/cxx/tree/" << endl;
 			cout << "There are 3 sources of input files:" << endl;
-			cout << "\tInputSetting: contains start_time, end_time, delta_t,\n\t\t inputfile name, inputfile type, output mask and output frequency." << endl;
+			cout << "\tInputSetting: contains start_time, end_time, delta_t,\
+					\n\t\t inputfile name, inputfile type, output mask\
+				 	\n\t\t and output frequency." << endl;
 			cout << "\tInputParticles: contains all information needed for particles." << endl;
 			cout << "\tInputCuboids: contains all information needed for cuboids." << endl;
 			cout << "Press 1 to continue." << endl;
