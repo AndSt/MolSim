@@ -31,18 +31,10 @@
 #include <iostream>
 #include <memory>
 
-#include "InputCuboids.h"
-#include "InputParticles.h"
-#include "InputSetting.h"
-
 using namespace std;
 using namespace log4cxx;
 using namespace log4cxx::xml;
 using namespace log4cxx::helpers;
-
-void extractCuboids(list<Cuboid>& cub);
-void extractParticles(list<Particle>& par);
-void extractSetting();
 
 /**** forward declaration of the calculation functions ****/
 
@@ -70,20 +62,23 @@ void getDoubleInput(string &str, double &input);
 // plot the particles to VTKWriter-File
 void plotVTK(int iteration);
 
-
 double start_time = 0;
 double end_time = 1000;
 double delta_t = 0.014;
+
+//{InputCuboids, InputParticles}
+string inputName = "InputCuboids";
+
+//{cuboids, particles, spheres}
+string inputType = "cuboids";
+
+string outputMask = "MD_vtk";
+int freq = 10;
 
 // For Lennard-Jones
 double SIGMA = 1.0;
 double EPSILON = 5.0;
 double R_CUTOFF = 3.0;
-
-string inputName;
-string inputType;
-string outputMask;
-int outputFreq = 10;
 
 list<Particle> particleList;
 utils::ParticleContainer container;
@@ -99,13 +94,6 @@ log4cxx::LoggerPtr molsimlogger(log4cxx::Logger::getLogger("MolSim"));
  * The third parameter is delta_t.
  */
 int main(int argc, char* argsv[]) {
-	
-	/*extractSetting();
-	cout << start_time << endl;
-	cout << end_time << endl;
-	cout << inputName << endl;
-	cout << inputType << endl;
-	*///return 0;	
 
 	PropertyConfigurator::configure("Log4cxxConfig.cfg");
 	LOG4CXX_INFO(molsimlogger, "Arrived @ main.");
@@ -200,11 +188,13 @@ int main(int argc, char* argsv[]) {
 		//Level 1 Options:
 		//[1] - run from particle file
 		//[2] - run from cuboid file
+		//[3] - run from XML input files
 		cout
 				<< "Enter '1', if you want to run the program with a particle file."
 				<< endl;
 		cout << "Enter '2', if you want to run program with a cuboid file."
 				<< endl;
+		cout << "Enter '3', if you want to run program with xml input files." << endl;
 
 		getIntegerInput(str, option1);
 
@@ -233,6 +223,14 @@ int main(int argc, char* argsv[]) {
 					<< endl;
 			cout << "Enter '3', if you want completely different options"
 					<< endl;
+			break;
+		case 3:
+			cout << "XML input files are stored in MolSim/input/cxx/tree/" << endl;
+			cout << "There are 3 sources of input files:" << endl;
+			cout << "\tInputSetting: contains start_time, end_time, delta_t,\n\t\t inputfile name, inputfile type, output mask and output frequency." << endl;
+			cout << "\tInputParticles: contains all information needed for particles." << endl;
+			cout << "\tInputCuboids: contains all information needed for cuboids." << endl;
+			cout << "Press 1 to continue." << endl;
 			break;
 		}
 
@@ -301,7 +299,26 @@ int main(int argc, char* argsv[]) {
 			char *cstr = new char[fileName.length() + 1];
 			strcpy(cstr, fileName.c_str());
 			pgen.readCuboids(cstr);
-			pgen.cuboidsToList(particleList);
+			pgen.cuboidsToList();
+			particleList = pgen.getParticleList();
+		}
+
+		//for XML input:
+		else if (option1 == 3){
+			//doesn't care about option2
+			//getting information from InputSetting first
+			pgen.extractSetting(start_time, end_time, delta_t, EPSILON, SIGMA, inputName, inputType, outputMask, freq);
+			if (inputType=="particles"){
+				pgen.extractParticles(inputName);
+				particleList = pgen.getParticleList();
+			}else if (inputType=="cuboids"){
+				pgen.extractCuboids(inputName);
+				pgen.cuboidsToList();
+				particleList = pgen.getParticleList();
+			}else{
+			//"spheres":
+			
+			}
 		}
 
 		cout << "Reading input file..." << endl;
@@ -343,7 +360,7 @@ void simulate() {
 		calculateV();
 
 		iteration++;
-		if (iteration % 10 == 0) {
+		if (iteration % freq == 0) {
 			plotVTK(iteration);
 		}
 		//cout << "Iteration " << iteration << " finished." << endl;
@@ -490,88 +507,6 @@ void plotVTK(int iteration) {
 		writer.plotParticle(p);
 		++iterator;
 	}
-	string out_name("MD1_vtk");
+	string out_name(outputMask);
 	writer.writeFile(out_name, iteration);
-}
-
-void extractCuboids(list<Cuboid>& cub)
-{
-  try
-  {
-	auto_ptr<cuboids_t> h (cuboids ("InputCuboids.xml", xml_schema::flags::dont_validate));
-	cuboids_t::cuboid_const_iterator i;
-    	for (i = h->cuboid().begin (); i != h->cuboid().end(); ++i)
-    	{		
-		double a[] = {i->originVector().oriX(), i->originVector().oriY(), i->originVector().oriZ()};
-		utils::Vector<double, 3> ori(a);
-		double b[] = {i->startVelocity().velX(), i->startVelocity().velY(), i->startVelocity().velZ()};
-		utils::Vector<double, 3> vel(b);
-		int hei = i->size3D().height();
-		int w = i->size3D().width();
-		int d = i->size3D().depth();
-		int mesh = h->meshWidth();
-		double m = h->mass();
-		double meanV = h->meanV();
-
-      		Cuboid c(hei, w, d, mesh, m, ori, vel, meanV);
-		cub.push_back(c);
-    	}
-	
-  }
-  catch (const xml_schema::exception& e)
-  {
-    cerr << e << endl;
-    exit(-1);
-  }
-}
-
-void extractParticles(list<Particle>& par)
-{
-  try
-  {
-	auto_ptr<particles_t> h (particles ("InputParicles.xml", xml_schema::flags::dont_validate));
-	particles_t::particle_const_iterator i;
-    	for (i = h->particle().begin (); i != h->particle().end(); ++i)
-    	{		
-		double a[] = {i->position().x(), i->position().y(), i->position().z()};
-		utils::Vector<double, 3> pos(a);
-		double b[] = {i->velocity().x(), i->velocity().y(), i->velocity().z()};
-		utils::Vector<double, 3> vel(b);
-		double m = i->mass();
-
-      		Particle p(pos, vel, m, 1);
-		par.push_back(p);
-    	}
-	
-  }
-  catch (const xml_schema::exception& e)
-  {
-    cerr << e << endl;
-    exit(-1);
-  }
-}
-
-void extractSetting()
-{
-  try
-  {
-	auto_ptr<pse_t> h (pse ("InputSetting.xml", xml_schema::flags::dont_validate));
-	start_time = h->start_time();
-	end_time = h->t_end();
-	delta_t = h->delta_t();
-
-	EPSILON = h->ljf().epsilon();
-	SIGMA = h->ljf().sigma();
-
-	inputName = h->inputfile().name();
-	inputType = h->inputfile().type();
-
-	outputMask = h->outputfile().name();
-	outputFreq = h->outputfile().freq();
-  }
-  catch (const xml_schema::exception& e)
-  {
-    cerr << e << endl;
-    exit(-1);
-  }
 }

@@ -16,12 +16,12 @@ xsi:noNamespaceSchemaLocation="config.xsd">
 	</ljf>
 	
 	<inputfile>
-		<name>cuboids.xml</name>
+		<name>InputCuboids.xml</name>
 		<type>cuboids</type>
 	</inputfile>
 	
 	<outputfile>
-		<name>"MD_vtk"</name>
+		<name>MD_vtk</name>
 		<freq>10</freq>
 	</outputfile>
 </pse>

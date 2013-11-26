@@ -42,7 +42,7 @@ void ParticleGeneratorTest::tearDown() {
 void ParticleGeneratorTest::testReadCuboids() {
 
 	//Check first cuboid
-	Cuboid testCuboid = *generator.getCuboids().begin();
+	Cuboid testCuboid = *generator.getCuboidList().begin();
 	CPPUNIT_ASSERT(cuboid1.getDepth() == testCuboid.getDepth());
 	CPPUNIT_ASSERT(cuboid1.getHeight() == testCuboid.getHeight());
 	CPPUNIT_ASSERT(cuboid1.getWidth() == testCuboid.getWidth());
@@ -53,7 +53,7 @@ void ParticleGeneratorTest::testReadCuboids() {
 	CPPUNIT_ASSERT(cuboid1.getMeanV() == testCuboid.getMeanV());
 
 	//Check second cuboid
-	testCuboid = *(++generator.getCuboids().begin());
+	testCuboid = *(++generator.getCuboidList().begin());
 	CPPUNIT_ASSERT(cuboid2.getDepth() == testCuboid.getDepth());
 	CPPUNIT_ASSERT(cuboid2.getHeight() == testCuboid.getHeight());
 	CPPUNIT_ASSERT(cuboid2.getWidth() == testCuboid.getWidth());

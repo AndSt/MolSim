@@ -6,7 +6,6 @@ xsi:noNamespaceSchemaLocation="config.xsd">
 	<start_time>0.0</start_time>
 	<t_end>1000</t_end>
 	<delta_t>0.014</delta_t>
-	<meanV>0.1</meanV>
 	
 	<!-- Lennard-Jones Force --> 
 	<ljf>
@@ -22,7 +21,7 @@ xsi:noNamespaceSchemaLocation="config.xsd">
 	</inputfile>
 	
 	<outputfile>
-		<name>"MD_vtk"</name>
+		<name>MD_vtk</name>
 		<freq>10</freq>
 	</outputfile>
 </pse>

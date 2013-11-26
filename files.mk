@@ -10,9 +10,9 @@ src/tests/ParticleGeneratorTest.cpp\
 src/FileReader.cpp\
 src/MaxwellBoltzmannDistribution.cpp\
 src/MolSim.cpp\
-src/InputSetting.cpp\
-src/InputParticles.cpp\
 src/utils/ParticleContainer.cpp\
 src/utils/ParticleGenerator.cpp\
 src/utils/ParticleIterator.cpp\
-src/InputCuboids.cpp\
+src/utils/InputSetting.cpp\
+src/utils/InputParticles.cpp\
+src/utils/InputCuboids.cpp\

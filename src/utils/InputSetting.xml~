@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<pse
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="config.xsd">
+
+	<start_time>0.0</start_time>
+	<t_end>1000</t_end>
+	<delta_t>0.014</delta_t>
+	
+	<!-- Lennard-Jones Force --> 
+	<ljf>
+		<!-- potential well --> 
+		<epsilon>5.0</epsilon>
+		<!-- zero crossing --> 
+		<sigma>1.0</sigma>
+	</ljf>
+	
+	<inputfile>
+		<name>cuboids.xml</name>
+		<type>cuboids</type>
+	</inputfile>
+	
+	<outputfile>
+		<name>MD_vtk</name>
+		<freq>10</freq>
+	</outputfile>
+</pse>
