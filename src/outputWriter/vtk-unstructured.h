@@ -46,7 +46,7 @@
 
 #include <xsd/cxx/config.hxx>
 
-#if (XSD_INT_VERSION != 3029951L)
+#if (XSD_INT_VERSION != 3030000L)
 #error XSD runtime version mismatch
 #endif
 
@@ -321,7 +321,7 @@ namespace xml_schema
    * @brief C++ type corresponding to the IDREF XML Schema
    * built-in type.
    */
-  typedef ::xsd::cxx::tree::idref< type, char, ncname > idref;
+  typedef ::xsd::cxx::tree::idref< char, ncname, type > idref;
 
   /**
    * @brief C++ type corresponding to the IDREFS XML Schema
@@ -456,27 +456,27 @@ namespace xml_schema
   /**
    * @brief Namespace serialization information.
    */
-  typedef ::xsd::cxx::xml::dom::namespace_info < char > namespace_info;
+  typedef ::xsd::cxx::xml::dom::namespace_info< char > namespace_info;
 
   /**
    * @brief Namespace serialization information map.
    */
-  typedef ::xsd::cxx::xml::dom::namespace_infomap < char > namespace_infomap;
+  typedef ::xsd::cxx::xml::dom::namespace_infomap< char > namespace_infomap;
 
   /**
    * @brief List serialization stream.
    */
-  typedef ::xsd::cxx::tree::list_stream < char > list_stream;
+  typedef ::xsd::cxx::tree::list_stream< char > list_stream;
 
   /**
    * @brief Serialization wrapper for the %double type.
    */
-  typedef ::xsd::cxx::tree::as_double < double_ > as_double;
+  typedef ::xsd::cxx::tree::as_double< double_ > as_double;
 
   /**
    * @brief Serialization wrapper for the %decimal type.
    */
-  typedef ::xsd::cxx::tree::as_decimal < decimal > as_decimal;
+  typedef ::xsd::cxx::tree::as_decimal< decimal > as_decimal;
 
   /**
    * @brief Simple type facet.
@@ -495,6 +495,24 @@ namespace xml_schema
    * @brief Parsing properties.
    */
   typedef ::xsd::cxx::tree::properties< char > properties;
+
+  // Parsing/serialization diagnostics.
+  //
+
+  /**
+   * @brief Error severity.
+   */
+  typedef ::xsd::cxx::tree::severity severity;
+
+  /**
+   * @brief Error condition.
+   */
+  typedef ::xsd::cxx::tree::error< char > error;
+
+  /**
+   * @brief List of %error conditions.
+   */
+  typedef ::xsd::cxx::tree::diagnostics< char > diagnostics;
 
   // Exceptions.
   //
@@ -561,24 +579,6 @@ namespace xml_schema
    * @brief Exception indicating a serialization failure.
    */
   typedef ::xsd::cxx::tree::serialization< char > serialization;
-
-  // Parsing/serialization diagnostics.
-  //
-
-  /**
-   * @brief Error severity.
-   */
-  typedef ::xsd::cxx::tree::severity severity;
-
-  /**
-   * @brief Error condition.
-   */
-  typedef ::xsd::cxx::tree::error< char > error;
-
-  /**
-   * @brief List of %error conditions.
-   */
-  typedef ::xsd::cxx::tree::diagnostics< char > diagnostics;
 
   /**
    * @brief Error handler callback interface.
