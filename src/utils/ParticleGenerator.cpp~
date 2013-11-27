@@ -130,7 +130,7 @@ void ParticleGenerator::extractParticles(const string filename)
   }
 }
 
-void extractSetting(double& start_time, double& end_time, double& delta_t, double& EPSILON, double& SIGMA, 
+void ParticleGenerator::extractSetting(double& start_time, double& end_time, double& delta_t, double& EPSILON, double& SIGMA, 
 	string& inputName, string& inputType, string& outputMask, int& outputFreq)
 {
   try

@@ -34,7 +34,6 @@ ParticleGenerator::ParticleGenerator(std::list<Cuboid>& cubList){
 }
 
 ParticleGenerator::ParticleGenerator(std::list<Particle>& parList){
-	//LOG4CXX_INFO(particlegeneratorlogger,"Constructed with ParticleList.");
 	particleList = parList;
 }
 
