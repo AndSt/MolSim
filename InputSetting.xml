@@ -17,11 +17,12 @@ xsi:noNamespaceSchemaLocation="config.xsd">
 	
 	<inputfile>
 		<name>InputCuboids.xml</name>
+		<!-- particles/cuboids/spheres -->
 		<type>cuboids</type>
 	</inputfile>
 	
 	<outputfile>
-		<name>MD_vtk</name>
+		<name>MolSimVTK</name>
 		<freq>10</freq>
 	</outputfile>
 </pse>
