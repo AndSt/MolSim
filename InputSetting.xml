@@ -4,8 +4,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:noNamespaceSchemaLocation="config.xsd">
 
 	<start_time>0.0</start_time>
-	<t_end>1000</t_end>
-	<delta_t>0.014</delta_t>
+	<t_end>5</t_end>
+	<delta_t>0.0002</delta_t>
 	
 	<!-- Lennard-Jones Force --> 
 	<ljf>
