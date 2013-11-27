@@ -44,7 +44,7 @@ Cuboid::Cuboid(int height, int width, int depth, double distance, double mass,
 				Particle p(vel, startVelocity, mass, 1);
 
 				// Movement of each particle superposed by Brownian Motion
-				MaxwellBoltzmannDistribution(p, meanVelocity, 3);
+				MaxwellBoltzmannDistribution(p, meanVelocity, 2);
 
 				cub.push_back(p);
 			}
