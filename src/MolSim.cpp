@@ -225,7 +225,7 @@ int main(int argc, char* argsv[]) {
 					<< endl;
 			break;
 		case 3:
-			cout << "XML input files are stored in MolSim/input/cxx/tree/" << endl;
+			cout << "XML input files are stored in MolSim." << endl;
 			cout << "There are 3 sources of input files:" << endl;
 			cout << "\tInputSetting: contains start_time, end_time, delta_t,\
 					\n\t\t inputfile name, inputfile type, output mask\
@@ -303,7 +303,6 @@ int main(int argc, char* argsv[]) {
 			pgen.readCuboids(cstr);
 			pgen.cuboidsToList();
 			particleList = pgen.getParticleList();
-
 		}
 
 		//for XML input:
@@ -312,13 +311,18 @@ int main(int argc, char* argsv[]) {
 			//getting information from InputSetting first
 			pgen.extractSetting(start_time, end_time, delta_t, EPSILON, SIGMA, inputName, inputType, outputMask, freq);
 			if (inputType=="particles"){
+				cout << "[particles] has been chosen as input type." << endl;
+				cout << "Press enter to continue..." << endl;
+				cin.ignore();
 				pgen.extractParticles(inputName);
 				particleList = pgen.getParticleList();
 			}else if (inputType=="cuboids"){
+				cout << "[cuboids] has been chosen as input type." << endl;
+				cout << "Press enter to continue" << endl;
+				cin.ignore();
 				pgen.extractCuboids(inputName);
 				pgen.cuboidsToList();
 				particleList = pgen.getParticleList();
-				list<Particle> testlist = particleList;
 			}else{
 			//"spheres":
 			
@@ -346,40 +350,40 @@ int main(int argc, char* argsv[]) {
 void simulate() {
 // the forces are needed to calculate x, but are not given in the input file.
 //calculateF();
-        calculateFLJ();
+	calculateFLJ();
 
-        double current_time = start_time;
+	double current_time = start_time;
 
-        int iteration = 0;
+	int iteration = 0;
 
 // for this loop, we assume: current x, current f and current v are known
-        while (current_time < end_time) {
-                // calculate new x
-                calculateX();
+	while (current_time < end_time) {
+		// calculate new x
+		calculateX();
 
-                // calculate new f
-                calculateFLJ();
+		// calculate new f
+		calculateFLJ();
 
-                // calculate new v
-                calculateV();
+		// calculate new v
+		calculateV();
 
-                iteration++;
-                if (iteration % freq == 0) {
-                        plotVTK(iteration);
-                }
-                //cout << "Iteration " << iteration << " finished." << endl;
-                LOG4CXX_TRACE(molsimlogger, "Iteration " << iteration << " finished.");
+		iteration++;
+		if (iteration % freq == 0) {
+			plotVTK(iteration);
+		}
+		//cout << "Iteration " << iteration << " finished." << endl;
+		LOG4CXX_TRACE(molsimlogger, "Iteration " << iteration << " finished.");
 
-                current_time += delta_t;
-        }
+		current_time += delta_t;
+	}
 
-        cout << "Output written. Terminating..." << endl;
+	cout << "Output written. Terminating..." << endl;
 }
 
 /**
-* This method calculates the forces between the particles.
-* The calculation obeys the Lennard-Jones force between two molecules.
-*/
+ * This method calculates the forces between the particles.
+ * The calculation obeys the Lennard-Jones force between two molecules.
+ */
 void calculateFLJ() {
 
 //initialize outer Iterator and index
@@ -405,16 +409,24 @@ void calculateFLJ() {
 			Particle& p2 = *innerIterator;
 
 			//calculations
-			utils::Vector<double, 3> tempD = p1.getX() - p2.getX();
+			utils::Vector<double, 3> tempD = p2.getX() - p1.getX();
 			double tempDNorm = tempD.L2Norm();
-			double tempDSigDivNorm = SIGMA / tempDNorm;
-			utils::Vector<double, 3> tempF = 24 * EPSILON
-					* pow(1 / tempDNorm, 2)
-					* (pow(tempDSigDivNorm, 6) - 2 * pow(tempDSigDivNorm, 12))
-					* (-1) * tempD;
 
-			sumF[i] += tempF;
-			sumF[j] += (-1) * tempF;
+			utils::Vector<double, 3> tempD2 = p2.getX() - p1.getX();
+			double tempDNorm2 = tempD.L2Norm();
+			double diff = tempDNorm - tempDNorm2;
+			cout << diff << endl;
+
+			if(tempDNorm < R_CUTOFF) {
+				double tempDSigDivNormPowSix = pow(SIGMA / tempDNorm, 6);
+				utils::Vector<double, 3> tempF = 24 * EPSILON
+					* pow(1 / tempDNorm, 2)
+					* (tempDSigDivNormPowSix - 2 * pow(tempDSigDivNormPowSix, 2))
+					* tempD;
+
+				sumF[i] += tempF;
+				sumF[j] += (-1) * tempF;
+			}
 			++innerIterator;
 			++j;
 		}
@@ -426,83 +438,83 @@ void calculateFLJ() {
 }
 
 /**
-* This method calculates the position of the particles.
-* It obeys the Velocity-Stoermer-Verlet-Algorithm.
-*/
+ *  This method calculates the position of the particles.
+ *  It obeys the Velocity-Stoermer-Verlet-Algorithm.
+ */
 void calculateX() {
 
-        utils::ParticleIterator iterator;
-        iterator = container.begin();
-        while (iterator != container.end()) {
+	utils::ParticleIterator iterator;
+	iterator = container.begin();
+	while (iterator != container.end()) {
 
-                Particle& p = *iterator;
+		Particle& p = *iterator;
 
-                utils::Vector<double, 3> tempX = p.getX() + delta_t * p.getV()
-                                + ((delta_t) * (delta_t) / (2 * p.getM())) * p.getOldF();
+		utils::Vector<double, 3> tempX = p.getX() + delta_t * p.getV()
+				+ ((delta_t) * (delta_t) / (2 * p.getM())) * p.getOldF();
 
-                p.getX() = tempX;
+		p.getX() = tempX;
 
-                ++iterator;
-        }
+		++iterator;
+	}
 }
 
 /**
-* This method calculates the position of the particles.
-* It obeys the Velocity-Stoermer-Verlet-Algorithm.
-*/
+ *  This method calculates the position of the particles.
+ *  It obeys the Velocity-Stoermer-Verlet-Algorithm.
+ */
 void calculateV() {
 
-        utils::ParticleIterator iterator;
-        iterator = container.begin();
-        while (iterator != container.end()) {
+	utils::ParticleIterator iterator;
+	iterator = container.begin();
+	while (iterator != container.end()) {
 
-                Particle& p = *iterator;
+		Particle& p = *iterator;
 
-                utils::Vector<double, 3> tempV = p.getV()
-                                + (delta_t / (2 * p.getM())) * (p.getF() + p.getOldF());
+		utils::Vector<double, 3> tempV = p.getV()
+				+ (delta_t / (2 * p.getM())) * (p.getF() + p.getOldF());
 
-                p.getV() = tempV;
-                ++iterator;
-        }
+		p.getV() = tempV;
+		++iterator;
+	}
 }
 
 void getIntegerInput(string &str, int &input) {
-        while (true) {
-                getline(cin, str);
-                stringstream myStream(str);
-                if (myStream >> input)
-                        break;
-                cout << "Invalid number, please try again" << endl;
-        }
+	while (true) {
+		getline(cin, str);
+		stringstream myStream(str);
+		if (myStream >> input)
+			break;
+		cout << "Invalid number, please try again" << endl;
+	}
 }
 
 void getDoubleInput(string &str, double &input) {
-        while (true) {
-                getline(cin, str);
-                stringstream myStream(str);
-                if (myStream >> input)
-                        break;
-                cout << "Invalid number, please try again" << endl;
-        }
+	while (true) {
+		getline(cin, str);
+		stringstream myStream(str);
+		if (myStream >> input)
+			break;
+		cout << "Invalid number, please try again" << endl;
+	}
 }
 
 /**
-* This method writes the output VTK files.
-*/
+ * This method writes the output VTK files.
+ */
 void plotVTK(int iteration) {
 
-        LOG4CXX_TRACE(molsimlogger, "Arrived @ plotVTK.");
+	LOG4CXX_TRACE(molsimlogger, "Arrived @ plotVTK.");
 
-        outputWriter::VTKWriter writer;
-        utils::ParticleIterator iterator;
-        iterator = container.begin();
-        writer.initializeOutput(container.size());
-        while (iterator != container.end()) {
-                Particle& p = *iterator;
+	outputWriter::VTKWriter writer;
+	utils::ParticleIterator iterator;
+	iterator = container.begin();
+	writer.initializeOutput(container.size());
+	while (iterator != container.end()) {
+		Particle& p = *iterator;
 
-                writer.plotParticle(p);
-                ++iterator;
-        }
-        string out_name(outputMask);
-        writer.writeFile(out_name, iteration);
+		writer.plotParticle(p);
+		++iterator;
+	}
+	string out_name(outputMask);
+	writer.writeFile(out_name, iteration);
 }
