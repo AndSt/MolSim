@@ -1,6 +1,5 @@
 27.11.2013 "Makefile changes"
 + It's now possible to change the XML files (only the contain, not the structure) in MolSim folder.
-+ The folder Input is now just a temp. folder for XML building. However, don't delete this folder.
 
 26.11.2013 "XML READERS"
 + The XML readers are now stored in ParticleGenerator (extractSetting, extractCuboids, extractParticles).
