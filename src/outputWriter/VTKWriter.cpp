@@ -17,7 +17,7 @@
 
 using namespace std;
 
-log4cxx::LoggerPtr vtkwriterlogger(log4cxx::Logger::getLogger("VTKWriter"));
+log4cxx::LoggerPtr vtkwriterlogger(log4cxx::Logger::getLogger("vtkwriter"));
 
 namespace outputWriter {
 

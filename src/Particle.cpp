@@ -17,7 +17,7 @@ log4cxx::LoggerPtr particlelogger(log4cxx::Logger::getLogger("Particle"));
 
 Particle::Particle(int type_arg) {
 	type = type_arg;
-	LOG4CXX_INFO(particlelogger,"Arrived @ Particles.");
+	LOG4CXX_INFO(particlelogger,"Arrived @ Type Constructor.");
 	f = 0.0;
 	old_f = 0.0;
 }

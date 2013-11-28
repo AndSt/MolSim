@@ -19,17 +19,19 @@
 #include <log4cxx/propertyconfigurator.h>
 #include <log4cxx/xml/domconfigurator.h>
 
+using namespace log4cxx;
+using namespace log4cxx::xml;
 using namespace utils;
 using namespace std;
 
-//log4cxx::LoggerPtr particlegeneratorlogger(log4cxx::Logger::getLogger("ParticleGenerator"));
+log4cxx::LoggerPtr particlegeneratorlogger(log4cxx::Logger::getLogger("particlegenerator"));
 
 ParticleGenerator::ParticleGenerator() {
 	//LOG4CXX_INFO(particlegeneratorlogger,"Constructed.");
 }
 
 ParticleGenerator::ParticleGenerator(std::list<Cuboid>& cubList){
-	//LOG4CXX_INFO(particlegeneratorlogger,"Constructed with CuboidList.");
+	LOG4CXX_INFO(particlegeneratorlogger,"Constructed with CuboidList.");
 	cuboidList = cubList;
 }
 
@@ -38,18 +40,18 @@ ParticleGenerator::ParticleGenerator(std::list<Particle>& parList){
 }
 
 ParticleGenerator::~ParticleGenerator() {
-	//LOG4CXX_INFO(particlegeneratorlogger,"Destructed.");
+	LOG4CXX_INFO(particlegeneratorlogger,"Destructed.");
 }
 
 void ParticleGenerator::readCuboids(char* filename){
 	FileReader fileReader;
-	//LOG4CXX_INFO(particlegeneratorlogger,"Reading Cuboids.");
+	LOG4CXX_INFO(particlegeneratorlogger,"Reading Cuboids.");
 	fileReader.readFileCub(cuboidList, filename);
 }
 
 void ParticleGenerator::cuboidsToList() {
 	std::list<Cuboid>::iterator iterator;
-	//LOG4CXX_INFO(particlegeneratorlogger,"Doing cuboidsToList.");
+	LOG4CXX_INFO(particlegeneratorlogger,"Doing cuboidsToList.");
 	particleList.clear();
 	for (iterator = cuboidList.begin(); iterator != cuboidList.end(); iterator++) {
 		Cuboid& temp = *iterator;
@@ -63,12 +65,12 @@ void ParticleGenerator::cuboidsToList() {
 }
 
 std::list<Cuboid>& ParticleGenerator::getCuboidList(){
-	//LOG4CXX_INFO(particlegeneratorlogger,"Returning cuboid list.");
+	LOG4CXX_INFO(particlegeneratorlogger,"Returning cuboid list.");
 	return cuboidList;
 }
 
 std::list<Particle>& ParticleGenerator::getParticleList(){
-	//LOG4CXX_INFO(particlegeneratorlogger,"Returning particle list.");
+	LOG4CXX_INFO(particlegeneratorlogger,"Returning particle list.");
 	return particleList;
 }
 

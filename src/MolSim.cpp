@@ -86,7 +86,7 @@ utils::ParticleGenerator pgen;
 
 string fileName;
 
-log4cxx::LoggerPtr molsimlogger(log4cxx::Logger::getLogger("MolSim"));
+log4cxx::LoggerPtr molsimlogger(log4cxx::Logger::getLogger("molsim"));
 
 /**
  * @param argsv the first parameter is the file. ( here "eingabe-sonne.txt")
@@ -412,12 +412,7 @@ void calculateFLJ() {
 			utils::Vector<double, 3> tempD = p2.getX() - p1.getX();
 			double tempDNorm = tempD.L2Norm();
 
-			utils::Vector<double, 3> tempD2 = p2.getX() - p1.getX();
-			double tempDNorm2 = tempD.L2Norm();
-			double diff = tempDNorm - tempDNorm2;
-			cout << diff << endl;
-
-			if(tempDNorm < R_CUTOFF) {
+			//if(tempDNorm < R_CUTOFF) {
 				double tempDSigDivNormPowSix = pow(SIGMA / tempDNorm, 6);
 				utils::Vector<double, 3> tempF = 24 * EPSILON
 					* pow(1 / tempDNorm, 2)
@@ -426,7 +421,7 @@ void calculateFLJ() {
 
 				sumF[i] += tempF;
 				sumF[j] += (-1) * tempF;
-			}
+			//}
 			++innerIterator;
 			++j;
 		}
