@@ -104,6 +104,8 @@ void FileReader::readFileCub(std::list<Cuboid>& cuboids, char* filename) {
     string tmp_string;
 
     if (input_file.is_open()) {
+	
+	cuboids.clear();
 
     	LOG4CXX_INFO(filereaderlogger, "Reading open file.");
     	getline(input_file, tmp_string);

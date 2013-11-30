@@ -20,6 +20,7 @@
 #include <utils/ParticleGenerator.h>
 #include <utils/Vector.h>
 #include <FileReader.h>
+#include "Particle.h"
 
 class ParticleGeneratorTest : CppUnit::TestCase {
 public:
@@ -41,6 +42,12 @@ public:
 	 */
 	void testReadCuboids();
 
+	void testExtractCuboids();
+
+	void testExtractParticles();
+	
+	void testExtractSetting();
+
 	/**
 	 *
 	 * @return the TestSuite for the tested methods of ParticleGenerator
@@ -52,6 +59,7 @@ private:
 	 * Cuboids, to test the readCuboids() method
 	 */
 	Cuboid cuboid1, cuboid2;
+
 	/**
 	 * Generated particle list
 	 */
@@ -60,6 +68,10 @@ private:
 	 * Generator to test
 	 */
 	utils::ParticleGenerator generator;
+
+	double start_time, end_time, delta_t, EPSILON, SIGMA; 
+	string inputName, inputType, outputMask;
+	int outputFreq;
 };
 
 #endif /* PARTICLEGENERATORTEST_H_ */

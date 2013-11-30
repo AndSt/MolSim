@@ -86,7 +86,7 @@ utils::ParticleGenerator pgen;
 
 string fileName;
 
-log4cxx::LoggerPtr molsimlogger(log4cxx::Logger::getLogger("MolSim"));
+log4cxx::LoggerPtr molsimlogger(log4cxx::Logger::getLogger("molsim"));
 
 /**
  * @param argsv the first parameter is the file. ( here "eingabe-sonne.txt")
@@ -225,7 +225,7 @@ int main(int argc, char* argsv[]) {
 					<< endl;
 			break;
 		case 3:
-			cout << "XML input files are stored in MolSim/input/cxx/tree/" << endl;
+			cout << "XML input files are stored in MolSim." << endl;
 			cout << "There are 3 sources of input files:" << endl;
 			cout << "\tInputSetting: contains start_time, end_time, delta_t,\
 					\n\t\t inputfile name, inputfile type, output mask\
@@ -311,9 +311,21 @@ int main(int argc, char* argsv[]) {
 			//getting information from InputSetting first
 			pgen.extractSetting(start_time, end_time, delta_t, EPSILON, SIGMA, inputName, inputType, outputMask, freq);
 			if (inputType=="particles"){
+				cout << "[particles] has been chosen as input type." << endl;
+				cout << "Press enter to continue..." << endl;
+				cin.ignore();
 				pgen.extractParticles(inputName);
 				particleList = pgen.getParticleList();
 			}else if (inputType=="cuboids"){
+				pgen.extractCuboids(inputName);
+				cout << "h: " << (*pgen.getCuboidList().begin()).getDistance() << endl;
+				cout << "h: " << (*pgen.getCuboidList().begin()).getWidth() << endl;
+				cout << "h: " << (*pgen.getCuboidList().begin()).getHeight() << endl;
+				cout << "h: " << (*pgen.getCuboidList().begin()).getOrigin() << endl;
+				cout << "h: " << (*pgen.getCuboidList().begin()).getMass() << endl;
+				cout << "[cuboids] has been chosen as input type." << endl;
+				cout << "Press enter to continue" << endl;
+				cin.ignore();
 				pgen.extractCuboids(inputName);
 				pgen.cuboidsToList();
 				particleList = pgen.getParticleList();
@@ -406,12 +418,7 @@ void calculateFLJ() {
 			utils::Vector<double, 3> tempD = p2.getX() - p1.getX();
 			double tempDNorm = tempD.L2Norm();
 
-			utils::Vector<double, 3> tempD2 = p2.getX() - p1.getX();
-			double tempDNorm2 = tempD.L2Norm();
-			double diff = tempDNorm - tempDNorm2;
-			cout << diff << endl;
-
-			if(tempDNorm < R_CUTOFF) {
+			//if(tempDNorm < R_CUTOFF) {
 				double tempDSigDivNormPowSix = pow(SIGMA / tempDNorm, 6);
 				utils::Vector<double, 3> tempF = 24 * EPSILON
 					* pow(1 / tempDNorm, 2)
@@ -420,7 +427,7 @@ void calculateFLJ() {
 
 				sumF[i] += tempF;
 				sumF[j] += (-1) * tempF;
-			}
+			//}
 			++innerIterator;
 			++j;
 		}

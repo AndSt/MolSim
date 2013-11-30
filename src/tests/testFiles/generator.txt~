@@ -1,0 +1,11 @@
+#
+# file format: 
+# Lines of comment start with '#' and are only allowed at the beginning of the file
+# Empty lines are not allowed.
+# The first line not being a comment has to be one integer, indicating the number of 
+# cuboids data sets.
+#
+# <Origin XYZ>      <Start velociy>     height  width   depth   distance        mass    meanVelocity
+2
+0.0 0.0 0.0         0.0 0.0 0.0         8       40      1       1.1225          1       0.1
+15.0 15.0 0.0       0.0 -10.0 0.0       8       8       1       1.1225          1       0.1 

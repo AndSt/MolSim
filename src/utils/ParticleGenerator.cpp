@@ -78,9 +78,14 @@ void ParticleGenerator::extractCuboids(const string filename)
 {
   try
   {
+	cuboidList.clear();
 	auto_ptr<cuboids_t> h (cuboids (filename, xml_schema::flags::dont_validate));
+	double mesh = h->meshWidth();
+	double m = h->mass();
+	double meanV = h->meanV();
+	
 	cuboids_t::cuboid_const_iterator i;
-    	for (i = h->cuboid().begin (); i != h->cuboid().end(); ++i)
+    	for (i = h->cuboid().begin(); i != h->cuboid().end(); ++i)
     	{		
 		double a[] = {i->originVector().oriX(), i->originVector().oriY(), i->originVector().oriZ()};
 		utils::Vector<double, 3> ori(a);
@@ -89,10 +94,7 @@ void ParticleGenerator::extractCuboids(const string filename)
 		int hei = i->size3D().height();
 		int w = i->size3D().width();
 		int d = i->size3D().depth();
-		int mesh = h->meshWidth();
-		double m = h->mass();
-		double meanV = h->meanV();
-
+		
       		Cuboid c(hei, w, d, mesh, m, ori, vel, meanV);
 		cuboidList.push_back(c);
     	}
@@ -109,6 +111,7 @@ void ParticleGenerator::extractParticles(const string filename)
 {
   try
   {
+	particleList.clear();
 	auto_ptr<particles_t> h (particles (filename, xml_schema::flags::dont_validate));
 	particles_t::particle_const_iterator i;
     	for (i = h->particle().begin (); i != h->particle().end(); ++i)
@@ -119,7 +122,7 @@ void ParticleGenerator::extractParticles(const string filename)
 		utils::Vector<double, 3> vel(b);
 		double m = i->mass();
 
-      		Particle p(pos, vel, m, 1);
+      		Particle p(pos, vel, m, 0);
 		particleList.push_back(p);
     	}
 	
