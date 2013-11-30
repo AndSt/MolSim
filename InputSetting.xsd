@@ -14,6 +14,47 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 		</xs:sequence>
 	</xs:complexType>
 	
+	<xs:complexType name="lc_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The lc_t (Linked Cell Algorithm) type consists of domain size (3D vector), cutoff radius 
+				and boundary condtions ("outflow" or "reflecting").
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:sequence>
+			<xs:element name="domainsize" type="domainsize_t"/>
+			<xs:element name="rcutoff" type="xs:decimal"/>
+			<xs:element name="condition" type="condition_t"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="domainsize_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The domainsize_t type consists of 3 coordinates of the diagonally right upper corner of the domain.
+				The other opposite corner is (0, 0, 0).
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:sequence>
+			<xs:element name="domainX" type="xs:decimal"/>
+			<xs:element name="domainY" type="xs:decimal"/>
+			<xs:element name="domainZ" type="xs:decimal"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="condition_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The condition_t type is an enumeration consisting of "outflow" or "reflecting".
+				Each value gives the type of boundary condition we should apply.
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="outflow"/>
+			<xs:enumeration value="reflecting"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:complexType name="inputfile_t">
 			<xs:annotation>
 			  <xs:documentation>
@@ -67,6 +108,7 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 			<xs:element name="t_end" type="xs:decimal"/>
 			<xs:element name="delta_t" type="xs:decimal"/>
 			<xs:element name="ljf" type="ljf_t"/>
+			<xs:element name="lc" type="lc_t"/>
 			<xs:element name="inputfile" type="inputfile_t"/>
 			<xs:element name="outputfile" type="outputfile_t"/>
 		</xs:sequence>

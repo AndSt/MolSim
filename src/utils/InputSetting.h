@@ -222,6 +222,9 @@ namespace xml_schema
 // Forward declarations.
 //
 class ljf_t;
+class lc_t;
+class domainsize_t;
+class condition_t;
 class inputfile_t;
 class type_t;
 class outputfile_t;
@@ -301,6 +304,230 @@ class ljf_t: public ::xml_schema::type
   protected:
   ::xsd::cxx::tree::one< epsilon_type > epsilon_;
   ::xsd::cxx::tree::one< sigma_type > sigma_;
+};
+
+class lc_t: public ::xml_schema::type
+{
+  public:
+  // domainsize
+  // 
+  typedef ::domainsize_t domainsize_type;
+  typedef ::xsd::cxx::tree::traits< domainsize_type, char > domainsize_traits;
+
+  const domainsize_type&
+  domainsize () const;
+
+  domainsize_type&
+  domainsize ();
+
+  void
+  domainsize (const domainsize_type& x);
+
+  void
+  domainsize (::std::auto_ptr< domainsize_type > p);
+
+  // rcutoff
+  // 
+  typedef ::xml_schema::decimal rcutoff_type;
+  typedef ::xsd::cxx::tree::traits< rcutoff_type, char, ::xsd::cxx::tree::schema_type::decimal > rcutoff_traits;
+
+  const rcutoff_type&
+  rcutoff () const;
+
+  rcutoff_type&
+  rcutoff ();
+
+  void
+  rcutoff (const rcutoff_type& x);
+
+  // condition
+  // 
+  typedef ::condition_t condition_type;
+  typedef ::xsd::cxx::tree::traits< condition_type, char > condition_traits;
+
+  const condition_type&
+  condition () const;
+
+  condition_type&
+  condition ();
+
+  void
+  condition (const condition_type& x);
+
+  void
+  condition (::std::auto_ptr< condition_type > p);
+
+  // Constructors.
+  //
+  lc_t (const domainsize_type&,
+        const rcutoff_type&,
+        const condition_type&);
+
+  lc_t (::std::auto_ptr< domainsize_type >&,
+        const rcutoff_type&,
+        const condition_type&);
+
+  lc_t (const ::xercesc::DOMElement& e,
+        ::xml_schema::flags f = 0,
+        ::xml_schema::container* c = 0);
+
+  lc_t (const lc_t& x,
+        ::xml_schema::flags f = 0,
+        ::xml_schema::container* c = 0);
+
+  virtual lc_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  virtual 
+  ~lc_t ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  ::xsd::cxx::tree::one< domainsize_type > domainsize_;
+  ::xsd::cxx::tree::one< rcutoff_type > rcutoff_;
+  ::xsd::cxx::tree::one< condition_type > condition_;
+};
+
+class domainsize_t: public ::xml_schema::type
+{
+  public:
+  // domainX
+  // 
+  typedef ::xml_schema::decimal domainX_type;
+  typedef ::xsd::cxx::tree::traits< domainX_type, char, ::xsd::cxx::tree::schema_type::decimal > domainX_traits;
+
+  const domainX_type&
+  domainX () const;
+
+  domainX_type&
+  domainX ();
+
+  void
+  domainX (const domainX_type& x);
+
+  // domainY
+  // 
+  typedef ::xml_schema::decimal domainY_type;
+  typedef ::xsd::cxx::tree::traits< domainY_type, char, ::xsd::cxx::tree::schema_type::decimal > domainY_traits;
+
+  const domainY_type&
+  domainY () const;
+
+  domainY_type&
+  domainY ();
+
+  void
+  domainY (const domainY_type& x);
+
+  // domainZ
+  // 
+  typedef ::xml_schema::decimal domainZ_type;
+  typedef ::xsd::cxx::tree::traits< domainZ_type, char, ::xsd::cxx::tree::schema_type::decimal > domainZ_traits;
+
+  const domainZ_type&
+  domainZ () const;
+
+  domainZ_type&
+  domainZ ();
+
+  void
+  domainZ (const domainZ_type& x);
+
+  // Constructors.
+  //
+  domainsize_t (const domainX_type&,
+                const domainY_type&,
+                const domainZ_type&);
+
+  domainsize_t (const ::xercesc::DOMElement& e,
+                ::xml_schema::flags f = 0,
+                ::xml_schema::container* c = 0);
+
+  domainsize_t (const domainsize_t& x,
+                ::xml_schema::flags f = 0,
+                ::xml_schema::container* c = 0);
+
+  virtual domainsize_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  virtual 
+  ~domainsize_t ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  ::xsd::cxx::tree::one< domainX_type > domainX_;
+  ::xsd::cxx::tree::one< domainY_type > domainY_;
+  ::xsd::cxx::tree::one< domainZ_type > domainZ_;
+};
+
+class condition_t: public ::xml_schema::string
+{
+  public:
+  enum value
+  {
+    outflow,
+    reflecting
+  };
+
+  condition_t (value v);
+
+  condition_t (const char* v);
+
+  condition_t (const ::std::string& v);
+
+  condition_t (const ::xml_schema::string& v);
+
+  condition_t (const ::xercesc::DOMElement& e,
+               ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  condition_t (const ::xercesc::DOMAttr& a,
+               ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  condition_t (const ::std::string& s,
+               const ::xercesc::DOMElement* e,
+               ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  condition_t (const condition_t& x,
+               ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  virtual condition_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  condition_t&
+  operator= (value v);
+
+  virtual
+  operator value () const
+  {
+    return _xsd_condition_t_convert ();
+  }
+
+  protected:
+  value
+  _xsd_condition_t_convert () const;
+
+  public:
+  static const char* const _xsd_condition_t_literals_[2];
+  static const value _xsd_condition_t_indexes_[2];
 };
 
 class inputfile_t: public ::xml_schema::type
@@ -557,6 +784,23 @@ class pse_t: public ::xml_schema::type
   void
   ljf (::std::auto_ptr< ljf_type > p);
 
+  // lc
+  // 
+  typedef ::lc_t lc_type;
+  typedef ::xsd::cxx::tree::traits< lc_type, char > lc_traits;
+
+  const lc_type&
+  lc () const;
+
+  lc_type&
+  lc ();
+
+  void
+  lc (const lc_type& x);
+
+  void
+  lc (::std::auto_ptr< lc_type > p);
+
   // inputfile
   // 
   typedef ::inputfile_t inputfile_type;
@@ -597,6 +841,7 @@ class pse_t: public ::xml_schema::type
          const t_end_type&,
          const delta_t_type&,
          const ljf_type&,
+         const lc_type&,
          const inputfile_type&,
          const outputfile_type&);
 
@@ -604,6 +849,7 @@ class pse_t: public ::xml_schema::type
          const t_end_type&,
          const delta_t_type&,
          ::std::auto_ptr< ljf_type >&,
+         ::std::auto_ptr< lc_type >&,
          ::std::auto_ptr< inputfile_type >&,
          ::std::auto_ptr< outputfile_type >&);
 
@@ -634,6 +880,7 @@ class pse_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< t_end_type > t_end_;
   ::xsd::cxx::tree::one< delta_t_type > delta_t_;
   ::xsd::cxx::tree::one< ljf_type > ljf_;
+  ::xsd::cxx::tree::one< lc_type > lc_;
   ::xsd::cxx::tree::one< inputfile_type > inputfile_;
   ::xsd::cxx::tree::one< outputfile_type > outputfile_;
 };

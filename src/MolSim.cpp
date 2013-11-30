@@ -78,7 +78,10 @@ int freq = 10;
 // For Lennard-Jones
 double SIGMA = 1.0;
 double EPSILON = 5.0;
+
+// For Linked Cell Algorithm
 double R_CUTOFF = 3.0;
+utils::Vector<double, 3> domainSize;
 
 list<Particle> particleList;
 utils::ParticleContainer container;
@@ -309,7 +312,8 @@ int main(int argc, char* argsv[]) {
 		else if (option1 == 3){
 			//doesn't care about option2
 			//getting information from InputSetting first
-			pgen.extractSetting(start_time, end_time, delta_t, EPSILON, SIGMA, inputName, inputType, outputMask, freq);
+			pgen.extractSetting(start_time, end_time, delta_t, EPSILON, SIGMA, inputName, inputType, outputMask, freq,
+ 								domainSize, R_CUTOFF);
 			if (inputType=="particles"){
 				cout << "[particles] has been chosen as input type." << endl;
 				cout << "Press enter to continue..." << endl;

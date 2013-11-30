@@ -135,7 +135,7 @@ void ParticleGenerator::extractParticles(const string filename)
 }
 
 void ParticleGenerator::extractSetting(double& start_time, double& end_time, double& delta_t, double& EPSILON, double& SIGMA, 
-	string& inputName, string& inputType, string& outputMask, int& outputFreq)
+	string& inputName, string& inputType, string& outputMask, int& outputFreq, utils::Vector<double, 3>& domainSize, double& r_cutoff)
 {
   try
   {
@@ -152,6 +152,11 @@ void ParticleGenerator::extractSetting(double& start_time, double& end_time, dou
 
 	outputMask = h->outputfile().name();
 	outputFreq = h->outputfile().freq();
+
+	double d[3] = {h->lc().domainsize().domainX(), h->lc().domainsize().domainY(), h->lc().domainsize().domainZ()};
+	domainSize = utils::Vector<double, 3> (d);
+
+	r_cutoff = h->lc().rcutoff();
   }
   catch (const xml_schema::exception& e)
   {

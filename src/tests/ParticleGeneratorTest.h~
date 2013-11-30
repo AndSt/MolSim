@@ -68,6 +68,10 @@ private:
 	 * Generator to test
 	 */
 	utils::ParticleGenerator generator;
+
+	double start_time, end_time, delta_t, EPSILON, SIGMA; 
+	string inputName, inputType, outputMask;
+	int outputFreq;
 };
 
 #endif /* PARTICLEGENERATORTEST_H_ */

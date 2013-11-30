@@ -54,7 +54,8 @@ public:
 	void extractParticles(const string filename);
 	
 	void extractSetting(double& start_time, double& end_time, double& delta_t, double& EPSILON, double& SIGMA, 
-				string& inputName, string& inputType, string& outputMask, int& outputFreq);
+				string& inputName, string& inputType, string& outputMask, int& outputFreq, 
+				utils::Vector<double, 3>& domainSize, double& r_cutoff);
 
 	/** Converts particle generator's list of cuboids into one single list of particles
 	 * @param[out] particleList The result will be stored here.

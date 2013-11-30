@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<xs:schema 
+xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!-- definition of small complex types -->
+	<xs:complexType name="ljf_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The ljf_t (Lennard-Jones Force) type consists of a set of 2 constants epsilon and sigma.
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:sequence>
+			<xs:element name="epsilon" type="xs:decimal"/>
+			<xs:element name="sigma" type="xs:decimal"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="lc_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The lc_t (Linked Cell Algorithm) type consists of domain size (3D vector), cutoff radius 
+				and boundary condtions ("outflow" or "reflecting").
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:sequence>
+			<xs:element name="domainsize" type="domainsize_t"/>
+			<xs:element name="rcutoff" type="xs:decimal"/>
+			<xs:element name="condition" type="condition_t"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="domainsize_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The domainsize_t type consists of 3 coordinates of the diagonally right upper corner of the domain.
+				The other opposite corner is (0, 0, 0).
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:sequence>
+			<xs:element name="domainX" type="xs:decimal"/>
+			<xs:element name="domainY" type="xs:decimal"/>
+			<xs:element name="domainZ" type="xs:decimal"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="condition_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The condition_t type is an enumeration consisting of "outflow" or "reflecting".
+				Each value gives the type of boundary condition we should apply.
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="outflow"/>
+			<xs:enumeration value="reflecting"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="inputfile_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The inputfile_t type consists of the name of the input file, which gives information of cuboids/particles etc.
+				Type = cuboids, particle,...
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="type" type="type_t"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:simpleType name="type_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The type_t type is an enumeration consisting of "cuboids", "particles" and "spheres".
+				Each value gives the type of objects we should deal with.
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="cuboids"/>
+			<xs:enumeration value="particles"/>
+			<xs:enumeration value="spheres"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:complexType name="outputfile_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The output_file type consists of the base name of vtk output files and their frequency.
+				freq = n: An output file will be exported every n time-iterations.
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="freq" type="xs:short"/>
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<!-- type of the biggest complex element -->
+	<xs:complexType name="pse_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The pse_t type consists of all information needed for a simple simulation.
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:sequence>
+			<xs:element name="start_time" type="xs:decimal"/>
+			<xs:element name="t_end" type="xs:decimal"/>
+			<xs:element name="delta_t" type="xs:decimal"/>
+			<xs:element name="ljf" type="ljf_t"/>
+			<xs:element name="lc" type="lc_t"/>
+			<xs:element name="inputfile" type="inputfile_t"/>
+			<xs:element name="outputfile" type="outputfile_t"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<!-- definition of the biggest complex element -->
+	<xs:element name="pse" type="pse_t"/>
+
+</xs:schema> 

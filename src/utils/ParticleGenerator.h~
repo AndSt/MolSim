@@ -49,9 +49,9 @@ public:
 	 */
 	void readCuboids(char* filename);
 
-	void extractCuboids();
+	void extractCuboids(const string filename);
 
-	void extractParticles();
+	void extractParticles(const string filename);
 	
 	void extractSetting(double& start_time, double& end_time, double& delta_t, double& EPSILON, double& SIGMA, 
 				string& inputName, string& inputType, string& outputMask, int& outputFreq);

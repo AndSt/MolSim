@@ -80,6 +80,179 @@ sigma (const sigma_type& x)
 }
 
 
+// lc_t
+// 
+
+const lc_t::domainsize_type& lc_t::
+domainsize () const
+{
+  return this->domainsize_.get ();
+}
+
+lc_t::domainsize_type& lc_t::
+domainsize ()
+{
+  return this->domainsize_.get ();
+}
+
+void lc_t::
+domainsize (const domainsize_type& x)
+{
+  this->domainsize_.set (x);
+}
+
+void lc_t::
+domainsize (::std::auto_ptr< domainsize_type > x)
+{
+  this->domainsize_.set (x);
+}
+
+const lc_t::rcutoff_type& lc_t::
+rcutoff () const
+{
+  return this->rcutoff_.get ();
+}
+
+lc_t::rcutoff_type& lc_t::
+rcutoff ()
+{
+  return this->rcutoff_.get ();
+}
+
+void lc_t::
+rcutoff (const rcutoff_type& x)
+{
+  this->rcutoff_.set (x);
+}
+
+const lc_t::condition_type& lc_t::
+condition () const
+{
+  return this->condition_.get ();
+}
+
+lc_t::condition_type& lc_t::
+condition ()
+{
+  return this->condition_.get ();
+}
+
+void lc_t::
+condition (const condition_type& x)
+{
+  this->condition_.set (x);
+}
+
+void lc_t::
+condition (::std::auto_ptr< condition_type > x)
+{
+  this->condition_.set (x);
+}
+
+
+// domainsize_t
+// 
+
+const domainsize_t::domainX_type& domainsize_t::
+domainX () const
+{
+  return this->domainX_.get ();
+}
+
+domainsize_t::domainX_type& domainsize_t::
+domainX ()
+{
+  return this->domainX_.get ();
+}
+
+void domainsize_t::
+domainX (const domainX_type& x)
+{
+  this->domainX_.set (x);
+}
+
+const domainsize_t::domainY_type& domainsize_t::
+domainY () const
+{
+  return this->domainY_.get ();
+}
+
+domainsize_t::domainY_type& domainsize_t::
+domainY ()
+{
+  return this->domainY_.get ();
+}
+
+void domainsize_t::
+domainY (const domainY_type& x)
+{
+  this->domainY_.set (x);
+}
+
+const domainsize_t::domainZ_type& domainsize_t::
+domainZ () const
+{
+  return this->domainZ_.get ();
+}
+
+domainsize_t::domainZ_type& domainsize_t::
+domainZ ()
+{
+  return this->domainZ_.get ();
+}
+
+void domainsize_t::
+domainZ (const domainZ_type& x)
+{
+  this->domainZ_.set (x);
+}
+
+
+// condition_t
+// 
+
+condition_t::
+condition_t (value v)
+: ::xml_schema::string (_xsd_condition_t_literals_[v])
+{
+}
+
+condition_t::
+condition_t (const char* v)
+: ::xml_schema::string (v)
+{
+}
+
+condition_t::
+condition_t (const ::std::string& v)
+: ::xml_schema::string (v)
+{
+}
+
+condition_t::
+condition_t (const ::xml_schema::string& v)
+: ::xml_schema::string (v)
+{
+}
+
+condition_t::
+condition_t (const condition_t& v,
+             ::xml_schema::flags f,
+             ::xml_schema::container* c)
+: ::xml_schema::string (v, f, c)
+{
+}
+
+condition_t& condition_t::
+operator= (value v)
+{
+  static_cast< ::xml_schema::string& > (*this) = 
+  ::xml_schema::string (_xsd_condition_t_literals_[v]);
+
+  return *this;
+}
+
+
 // inputfile_t
 // 
 
@@ -304,6 +477,30 @@ ljf (::std::auto_ptr< ljf_type > x)
   this->ljf_.set (x);
 }
 
+const pse_t::lc_type& pse_t::
+lc () const
+{
+  return this->lc_.get ();
+}
+
+pse_t::lc_type& pse_t::
+lc ()
+{
+  return this->lc_.get ();
+}
+
+void pse_t::
+lc (const lc_type& x)
+{
+  this->lc_.set (x);
+}
+
+void pse_t::
+lc (::std::auto_ptr< lc_type > x)
+{
+  this->lc_.set (x);
+}
+
 const pse_t::inputfile_type& pse_t::
 inputfile () const
 {
@@ -453,6 +650,335 @@ ljf_t::
 ~ljf_t ()
 {
 }
+
+// lc_t
+//
+
+lc_t::
+lc_t (const domainsize_type& domainsize,
+      const rcutoff_type& rcutoff,
+      const condition_type& condition)
+: ::xml_schema::type (),
+  domainsize_ (domainsize, ::xml_schema::flags (), this),
+  rcutoff_ (rcutoff, ::xml_schema::flags (), this),
+  condition_ (condition, ::xml_schema::flags (), this)
+{
+}
+
+lc_t::
+lc_t (::std::auto_ptr< domainsize_type >& domainsize,
+      const rcutoff_type& rcutoff,
+      const condition_type& condition)
+: ::xml_schema::type (),
+  domainsize_ (domainsize, ::xml_schema::flags (), this),
+  rcutoff_ (rcutoff, ::xml_schema::flags (), this),
+  condition_ (condition, ::xml_schema::flags (), this)
+{
+}
+
+lc_t::
+lc_t (const lc_t& x,
+      ::xml_schema::flags f,
+      ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  domainsize_ (x.domainsize_, f, this),
+  rcutoff_ (x.rcutoff_, f, this),
+  condition_ (x.condition_, f, this)
+{
+}
+
+lc_t::
+lc_t (const ::xercesc::DOMElement& e,
+      ::xml_schema::flags f,
+      ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  domainsize_ (f, this),
+  rcutoff_ (f, this),
+  condition_ (f, this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, true, false);
+    this->parse (p, f);
+  }
+}
+
+void lc_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  for (; p.more_elements (); p.next_element ())
+  {
+    const ::xercesc::DOMElement& i (p.cur_element ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    // domainsize
+    //
+    if (n.name () == "domainsize" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< domainsize_type > r (
+        domainsize_traits::create (i, f, this));
+
+      if (!domainsize_.present ())
+      {
+        this->domainsize_.set (r);
+        continue;
+      }
+    }
+
+    // rcutoff
+    //
+    if (n.name () == "rcutoff" && n.namespace_ ().empty ())
+    {
+      if (!rcutoff_.present ())
+      {
+        this->rcutoff_.set (rcutoff_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // condition
+    //
+    if (n.name () == "condition" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< condition_type > r (
+        condition_traits::create (i, f, this));
+
+      if (!condition_.present ())
+      {
+        this->condition_.set (r);
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!domainsize_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "domainsize",
+      "");
+  }
+
+  if (!rcutoff_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "rcutoff",
+      "");
+  }
+
+  if (!condition_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "condition",
+      "");
+  }
+}
+
+lc_t* lc_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class lc_t (*this, f, c);
+}
+
+lc_t::
+~lc_t ()
+{
+}
+
+// domainsize_t
+//
+
+domainsize_t::
+domainsize_t (const domainX_type& domainX,
+              const domainY_type& domainY,
+              const domainZ_type& domainZ)
+: ::xml_schema::type (),
+  domainX_ (domainX, ::xml_schema::flags (), this),
+  domainY_ (domainY, ::xml_schema::flags (), this),
+  domainZ_ (domainZ, ::xml_schema::flags (), this)
+{
+}
+
+domainsize_t::
+domainsize_t (const domainsize_t& x,
+              ::xml_schema::flags f,
+              ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  domainX_ (x.domainX_, f, this),
+  domainY_ (x.domainY_, f, this),
+  domainZ_ (x.domainZ_, f, this)
+{
+}
+
+domainsize_t::
+domainsize_t (const ::xercesc::DOMElement& e,
+              ::xml_schema::flags f,
+              ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  domainX_ (f, this),
+  domainY_ (f, this),
+  domainZ_ (f, this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, true, false);
+    this->parse (p, f);
+  }
+}
+
+void domainsize_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  for (; p.more_elements (); p.next_element ())
+  {
+    const ::xercesc::DOMElement& i (p.cur_element ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    // domainX
+    //
+    if (n.name () == "domainX" && n.namespace_ ().empty ())
+    {
+      if (!domainX_.present ())
+      {
+        this->domainX_.set (domainX_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // domainY
+    //
+    if (n.name () == "domainY" && n.namespace_ ().empty ())
+    {
+      if (!domainY_.present ())
+      {
+        this->domainY_.set (domainY_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // domainZ
+    //
+    if (n.name () == "domainZ" && n.namespace_ ().empty ())
+    {
+      if (!domainZ_.present ())
+      {
+        this->domainZ_.set (domainZ_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!domainX_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "domainX",
+      "");
+  }
+
+  if (!domainY_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "domainY",
+      "");
+  }
+
+  if (!domainZ_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "domainZ",
+      "");
+  }
+}
+
+domainsize_t* domainsize_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class domainsize_t (*this, f, c);
+}
+
+domainsize_t::
+~domainsize_t ()
+{
+}
+
+// condition_t
+//
+
+condition_t::
+condition_t (const ::xercesc::DOMElement& e,
+             ::xml_schema::flags f,
+             ::xml_schema::container* c)
+: ::xml_schema::string (e, f, c)
+{
+  _xsd_condition_t_convert ();
+}
+
+condition_t::
+condition_t (const ::xercesc::DOMAttr& a,
+             ::xml_schema::flags f,
+             ::xml_schema::container* c)
+: ::xml_schema::string (a, f, c)
+{
+  _xsd_condition_t_convert ();
+}
+
+condition_t::
+condition_t (const ::std::string& s,
+             const ::xercesc::DOMElement* e,
+             ::xml_schema::flags f,
+             ::xml_schema::container* c)
+: ::xml_schema::string (s, e, f, c)
+{
+  _xsd_condition_t_convert ();
+}
+
+condition_t* condition_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class condition_t (*this, f, c);
+}
+
+condition_t::value condition_t::
+_xsd_condition_t_convert () const
+{
+  ::xsd::cxx::tree::enum_comparator< char > c (_xsd_condition_t_literals_);
+  const value* i (::std::lower_bound (
+                    _xsd_condition_t_indexes_,
+                    _xsd_condition_t_indexes_ + 2,
+                    *this,
+                    c));
+
+  if (i == _xsd_condition_t_indexes_ + 2 || _xsd_condition_t_literals_[*i] != *this)
+  {
+    throw ::xsd::cxx::tree::unexpected_enumerator < char > (*this);
+  }
+
+  return *i;
+}
+
+const char* const condition_t::
+_xsd_condition_t_literals_[2] =
+{
+  "outflow",
+  "reflecting"
+};
+
+const condition_t::value condition_t::
+_xsd_condition_t_indexes_[2] =
+{
+  ::condition_t::outflow,
+  ::condition_t::reflecting
+};
 
 // inputfile_t
 //
@@ -741,6 +1267,7 @@ pse_t (const start_time_type& start_time,
        const t_end_type& t_end,
        const delta_t_type& delta_t,
        const ljf_type& ljf,
+       const lc_type& lc,
        const inputfile_type& inputfile,
        const outputfile_type& outputfile)
 : ::xml_schema::type (),
@@ -748,6 +1275,7 @@ pse_t (const start_time_type& start_time,
   t_end_ (t_end, ::xml_schema::flags (), this),
   delta_t_ (delta_t, ::xml_schema::flags (), this),
   ljf_ (ljf, ::xml_schema::flags (), this),
+  lc_ (lc, ::xml_schema::flags (), this),
   inputfile_ (inputfile, ::xml_schema::flags (), this),
   outputfile_ (outputfile, ::xml_schema::flags (), this)
 {
@@ -758,6 +1286,7 @@ pse_t (const start_time_type& start_time,
        const t_end_type& t_end,
        const delta_t_type& delta_t,
        ::std::auto_ptr< ljf_type >& ljf,
+       ::std::auto_ptr< lc_type >& lc,
        ::std::auto_ptr< inputfile_type >& inputfile,
        ::std::auto_ptr< outputfile_type >& outputfile)
 : ::xml_schema::type (),
@@ -765,6 +1294,7 @@ pse_t (const start_time_type& start_time,
   t_end_ (t_end, ::xml_schema::flags (), this),
   delta_t_ (delta_t, ::xml_schema::flags (), this),
   ljf_ (ljf, ::xml_schema::flags (), this),
+  lc_ (lc, ::xml_schema::flags (), this),
   inputfile_ (inputfile, ::xml_schema::flags (), this),
   outputfile_ (outputfile, ::xml_schema::flags (), this)
 {
@@ -779,6 +1309,7 @@ pse_t (const pse_t& x,
   t_end_ (x.t_end_, f, this),
   delta_t_ (x.delta_t_, f, this),
   ljf_ (x.ljf_, f, this),
+  lc_ (x.lc_, f, this),
   inputfile_ (x.inputfile_, f, this),
   outputfile_ (x.outputfile_, f, this)
 {
@@ -793,6 +1324,7 @@ pse_t (const ::xercesc::DOMElement& e,
   t_end_ (f, this),
   delta_t_ (f, this),
   ljf_ (f, this),
+  lc_ (f, this),
   inputfile_ (f, this),
   outputfile_ (f, this)
 {
@@ -860,6 +1392,20 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
+    // lc
+    //
+    if (n.name () == "lc" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< lc_type > r (
+        lc_traits::create (i, f, this));
+
+      if (!lc_.present ())
+      {
+        this->lc_.set (r);
+        continue;
+      }
+    }
+
     // inputfile
     //
     if (n.name () == "inputfile" && n.namespace_ ().empty ())
@@ -916,6 +1462,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
   {
     throw ::xsd::cxx::tree::expected_element< char > (
       "ljf",
+      "");
+  }
+
+  if (!lc_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "lc",
       "");
   }
 
