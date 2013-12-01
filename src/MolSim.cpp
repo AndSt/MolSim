@@ -333,8 +333,9 @@ int main(int argc, char* argsv[]) {
 					cout << i << ". " << "[spheres] has been chosen as input type." << endl;
 					pgen.extractSpheres(*itN);
 					pgen.spheresToList();
-					particleList.insert(particleList.end(), 
-							pgen.getParticleList().begin(), pgen.getParticleList().end());
+					particleList = pgen.getParticleList();					
+					//particleList.insert(particleList.end(), 
+					//		pgen.getParticleList().begin(), pgen.getParticleList().end());
 				}
 				itT++;
 				i++;

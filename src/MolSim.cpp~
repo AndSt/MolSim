@@ -314,7 +314,7 @@ int main(int argc, char* argsv[]) {
 			//getting information from InputSetting first
 			pgen.extractSetting(start_time, end_time, delta_t, EPSILON, SIGMA, inputNames, inputTypes, outputMask, freq,
  								domainSize, R_CUTOFF);
-			//particleList.clear();
+			particleList.clear();
 			list<string>::iterator itT = inputTypes.begin();
 			int i = 1;
 			for (list<string>::iterator itN = inputNames.begin(); itN != inputNames.end(); itN++){
@@ -326,15 +326,15 @@ int main(int argc, char* argsv[]) {
 				}else if (*itT=="cuboids"){
 					cout << i << ". " << "[cuboids] has been chosen as input type." << endl;
 					pgen.extractCuboids(*itN);
-					//particleList = pgen.getParticleList();					
+					pgen.cuboidsToList();					
 					particleList.insert(particleList.end(), 
 							pgen.getParticleList().begin(), pgen.getParticleList().end());
 				}else{
 					cout << i << ". " << "[spheres] has been chosen as input type." << endl;
 					pgen.extractSpheres(*itN);
-					particleList = pgen.getParticleList();
-					//particleList.insert(particleList.end(), 
-					//		pgen.getParticleList().begin(), pgen.getParticleList().end());
+					pgen.spheresToList();
+					particleList.insert(particleList.end(), 
+							pgen.getParticleList().begin(), pgen.getParticleList().end());
 				}
 				itT++;
 				i++;
