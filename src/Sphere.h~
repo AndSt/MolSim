@@ -83,11 +83,11 @@ public:
 
 	double& getM();
 
-	int& getRadius();
+	int getRadius();
 
 	double& getMeshWidth();
 
-	std::list<Particle>& getParticleList();
+	std::list<Particle>& getSphere();
 
 	virtual ~Sphere();
 };

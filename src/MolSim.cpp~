@@ -331,6 +331,8 @@ int main(int argc, char* argsv[]) {
 				}else{
 					cout << i << ". input file: " << "[spheres]" << endl;
 					pgen.extractSpheres(*itN);
+					cout << (*pgen.getSphereList().begin()).getRadius() << endl;
+					cin.ignore();
 					pgen.spheresToList();				
 					pgen.mergeWithParticleList(particleList);
 				}

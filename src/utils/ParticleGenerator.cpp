@@ -152,9 +152,9 @@ void ParticleGenerator::extractSpheres(const string filename){
 			utils::Vector<double, 3> centerP(a);
 			double b[] = {i->startVel().vX(), i->startVel().vY(), i->startVel().vZ()};
 			utils::Vector<double, 3> vel(b);
-			int radius = i->radiusS();
+			int radiuss = (int) i->radiussph();
 		
-	      		Sphere s(centerP, vel, meanV, m, radius, mesh);
+	      		Sphere s(centerP, vel, meanV, m, radiuss, mesh);
 			sphereList.push_back(s);
 	    	}
 	

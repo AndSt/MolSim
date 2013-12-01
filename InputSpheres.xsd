@@ -37,9 +37,9 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 			  </xs:documentation>
 			</xs:annotation>
 		<xs:sequence>
+			<xs:element name="radiussph" type="xs:int"/>
 			<xs:element name="centerPos" type="centerPos_t"/>
 			<xs:element name="startVel" type="startVel_t"/>
-			<xs:element name="radiusS" type="xs:int"/>
 		</xs:sequence>
 	</xs:complexType>
 

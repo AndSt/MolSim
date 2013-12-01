@@ -159,6 +159,24 @@ vZ (const vZ_type& x)
 // sphere_t
 // 
 
+const sphere_t::radiussph_type& sphere_t::
+radiussph () const
+{
+  return this->radiussph_.get ();
+}
+
+sphere_t::radiussph_type& sphere_t::
+radiussph ()
+{
+  return this->radiussph_.get ();
+}
+
+void sphere_t::
+radiussph (const radiussph_type& x)
+{
+  this->radiussph_.set (x);
+}
+
 const sphere_t::centerPos_type& sphere_t::
 centerPos () const
 {
@@ -205,24 +223,6 @@ void sphere_t::
 startVel (::std::auto_ptr< startVel_type > x)
 {
   this->startVel_.set (x);
-}
-
-const sphere_t::radiusS_type& sphere_t::
-radiusS () const
-{
-  return this->radiusS_.get ();
-}
-
-sphere_t::radiusS_type& sphere_t::
-radiusS ()
-{
-  return this->radiusS_.get ();
-}
-
-void sphere_t::
-radiusS (const radiusS_type& x)
-{
-  this->radiusS_.set (x);
 }
 
 
@@ -550,24 +550,24 @@ startVel_t::
 //
 
 sphere_t::
-sphere_t (const centerPos_type& centerPos,
-          const startVel_type& startVel,
-          const radiusS_type& radiusS)
+sphere_t (const radiussph_type& radiussph,
+          const centerPos_type& centerPos,
+          const startVel_type& startVel)
 : ::xml_schema::type (),
+  radiussph_ (radiussph, ::xml_schema::flags (), this),
   centerPos_ (centerPos, ::xml_schema::flags (), this),
-  startVel_ (startVel, ::xml_schema::flags (), this),
-  radiusS_ (radiusS, ::xml_schema::flags (), this)
+  startVel_ (startVel, ::xml_schema::flags (), this)
 {
 }
 
 sphere_t::
-sphere_t (::std::auto_ptr< centerPos_type >& centerPos,
-          ::std::auto_ptr< startVel_type >& startVel,
-          const radiusS_type& radiusS)
+sphere_t (const radiussph_type& radiussph,
+          ::std::auto_ptr< centerPos_type >& centerPos,
+          ::std::auto_ptr< startVel_type >& startVel)
 : ::xml_schema::type (),
+  radiussph_ (radiussph, ::xml_schema::flags (), this),
   centerPos_ (centerPos, ::xml_schema::flags (), this),
-  startVel_ (startVel, ::xml_schema::flags (), this),
-  radiusS_ (radiusS, ::xml_schema::flags (), this)
+  startVel_ (startVel, ::xml_schema::flags (), this)
 {
 }
 
@@ -576,9 +576,9 @@ sphere_t (const sphere_t& x,
           ::xml_schema::flags f,
           ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
+  radiussph_ (x.radiussph_, f, this),
   centerPos_ (x.centerPos_, f, this),
-  startVel_ (x.startVel_, f, this),
-  radiusS_ (x.radiusS_, f, this)
+  startVel_ (x.startVel_, f, this)
 {
 }
 
@@ -587,9 +587,9 @@ sphere_t (const ::xercesc::DOMElement& e,
           ::xml_schema::flags f,
           ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  radiussph_ (f, this),
   centerPos_ (f, this),
-  startVel_ (f, this),
-  radiusS_ (f, this)
+  startVel_ (f, this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -607,6 +607,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     const ::xercesc::DOMElement& i (p.cur_element ());
     const ::xsd::cxx::xml::qualified_name< char > n (
       ::xsd::cxx::xml::dom::name< char > (i));
+
+    // radiussph
+    //
+    if (n.name () == "radiussph" && n.namespace_ ().empty ())
+    {
+      if (!radiussph_.present ())
+      {
+        this->radiussph_.set (radiussph_traits::create (i, f, this));
+        continue;
+      }
+    }
 
     // centerPos
     //
@@ -636,18 +647,14 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
-    // radiusS
-    //
-    if (n.name () == "radiusS" && n.namespace_ ().empty ())
-    {
-      if (!radiusS_.present ())
-      {
-        this->radiusS_.set (radiusS_traits::create (i, f, this));
-        continue;
-      }
-    }
-
     break;
+  }
+
+  if (!radiussph_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "radiussph",
+      "");
   }
 
   if (!centerPos_.present ())
@@ -661,13 +668,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
   {
     throw ::xsd::cxx::tree::expected_element< char > (
       "startVel",
-      "");
-  }
-
-  if (!radiusS_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "radiusS",
       "");
   }
 }

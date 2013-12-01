@@ -33,6 +33,12 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 		<!-- particles/cuboids/spheres -->
 		<type>cuboids</type>
 	</inputfile>
+
+	<inputfile>
+		<name>InputSpheres.xml</name>
+		<!-- particles/cuboids/spheres -->
+		<type>spheres</type>
+	</inputfile>
 	
 	<outputfile>
 		<name>MolSimVTK</name>

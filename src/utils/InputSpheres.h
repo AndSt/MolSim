@@ -400,6 +400,20 @@ class startVel_t: public ::xml_schema::type
 class sphere_t: public ::xml_schema::type
 {
   public:
+  // radiussph
+  // 
+  typedef ::xml_schema::int_ radiussph_type;
+  typedef ::xsd::cxx::tree::traits< radiussph_type, char > radiussph_traits;
+
+  const radiussph_type&
+  radiussph () const;
+
+  radiussph_type&
+  radiussph ();
+
+  void
+  radiussph (const radiussph_type& x);
+
   // centerPos
   // 
   typedef ::centerPos_t centerPos_type;
@@ -434,29 +448,15 @@ class sphere_t: public ::xml_schema::type
   void
   startVel (::std::auto_ptr< startVel_type > p);
 
-  // radiusS
-  // 
-  typedef ::xml_schema::int_ radiusS_type;
-  typedef ::xsd::cxx::tree::traits< radiusS_type, char > radiusS_traits;
-
-  const radiusS_type&
-  radiusS () const;
-
-  radiusS_type&
-  radiusS ();
-
-  void
-  radiusS (const radiusS_type& x);
-
   // Constructors.
   //
-  sphere_t (const centerPos_type&,
-            const startVel_type&,
-            const radiusS_type&);
+  sphere_t (const radiussph_type&,
+            const centerPos_type&,
+            const startVel_type&);
 
-  sphere_t (::std::auto_ptr< centerPos_type >&,
-            ::std::auto_ptr< startVel_type >&,
-            const radiusS_type&);
+  sphere_t (const radiussph_type&,
+            ::std::auto_ptr< centerPos_type >&,
+            ::std::auto_ptr< startVel_type >&);
 
   sphere_t (const ::xercesc::DOMElement& e,
             ::xml_schema::flags f = 0,
@@ -481,9 +481,9 @@ class sphere_t: public ::xml_schema::type
          ::xml_schema::flags);
 
   protected:
+  ::xsd::cxx::tree::one< radiussph_type > radiussph_;
   ::xsd::cxx::tree::one< centerPos_type > centerPos_;
   ::xsd::cxx::tree::one< startVel_type > startVel_;
-  ::xsd::cxx::tree::one< radiusS_type > radiusS_;
 };
 
 class spheres_t: public ::xml_schema::type

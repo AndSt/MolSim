@@ -29,9 +29,9 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 	</lc>	
 	
 	<inputfile>
-		<name>InputSpheres.xml</name>
+		<name>InputCuboids.xml</name>
 		<!-- particles/cuboids/spheres -->
-		<type>spheres</type>
+		<type>cuboids</type>
 	</inputfile>
 	
 	<outputfile>

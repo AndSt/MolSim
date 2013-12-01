@@ -19,9 +19,9 @@ Sphere::Sphere(utils::Vector<double, 3> center, utils::Vector<double, 3> startV,
 	this->meshWidth = meshWidth;
 
 	// Draw the biggest circle, which center belongs
-	listOfCenters.clear();
-	listOfRadii.clear();
-	sph.clear();
+	//listOfCenters.clear();
+	//listOfRadii.clear();
+	//sph.clear();
 	
 	drawCircleArea(center, radius); //the biggest one
 	// now the lisOfCenters and listOfRadii are fully initialized

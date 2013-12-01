@@ -141,6 +141,14 @@ void ParticleGeneratorTest::testExtractSpheres(){
 		CPPUNIT_ASSERT(pow(p.getX()[0]-cen[0],2) + pow(p.getX()[1]-cen[1],2) + pow(p.getX()[2]-cen[2],2) <= rDouble*rDouble);
 	}
 	
+	CPPUNIT_ASSERT(sp.getCenter()[0]==60);
+	CPPUNIT_ASSERT(sp.getCenter()[1]==25);
+	CPPUNIT_ASSERT(sp.getCenter()[2]==0);
+	CPPUNIT_ASSERT(sp.getRadius()==15);
+	CPPUNIT_ASSERT(sp.getStartV()[0]==0);
+	CPPUNIT_ASSERT(sp.getStartV()[1]==-10);
+	CPPUNIT_ASSERT(sp.getStartV()[2]==0);
+	
 }
 	
 void ParticleGeneratorTest::testExtractParticles(){
@@ -163,6 +171,10 @@ void ParticleGeneratorTest::testExtractParticles(){
 void ParticleGeneratorTest::testExtractSetting(){
 	double start_timeT, end_timeT, delta_tT, EPSILONT, SIGMAT; 
 	std::list<string> inputNamesT, inputTypesT;
+	inputNamesT.push_back("InputCuboids.xml");
+	inputNamesT.push_back("InputSpheres.xml");
+	inputTypesT.push_back("cuboids");
+	inputTypesT.push_back("spheres");
 	string outputMaskT;
 	int outputFreqT;
 	utils::Vector<double, 3> domainSizeT;

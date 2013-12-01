@@ -37,9 +37,9 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 			  </xs:documentation>
 			</xs:annotation>
 		<xs:sequence>
+			<xs:element name="radiusS" type="xs:int"/>
 			<xs:element name="centerPos" type="centerPos_t"/>
 			<xs:element name="startVel" type="startVel_t"/>
-			<xs:element name="radius" type="xs:int"/>
 		</xs:sequence>
 	</xs:complexType>
 
@@ -51,9 +51,9 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 			  </xs:documentation>
 			</xs:annotation>
 		<xs:sequence>
-			<xs:element name="meshWidth" type="xs:decimal"/>
-			<xs:element name="mass" type="xs:decimal"/>
-			<xs:element name="meanV" type="xs:decimal"/>
+			<xs:element name="meshWidthS" type="xs:decimal"/>
+			<xs:element name="massS" type="xs:decimal"/>
+			<xs:element name="meanVS" type="xs:decimal"/>
 			<xs:element name="sphere" type="sphere_t" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>

@@ -9,6 +9,7 @@ xsi:noNamespaceSchemaLocation="InputSpheres.xsd">
 	<meanVS>0.1</meanVS>
 
 	<sphere>
+		<radiusS>15</radiusS>
 		<centerPos>
 			<x>60.0</x>
 			<y>25.0</y>
@@ -18,8 +19,7 @@ xsi:noNamespaceSchemaLocation="InputSpheres.xsd">
 			<vX>0.0</vX>
 			<vY>-10.0</vY>
 			<vZ>0.0</vZ>
-		</startVel>
-		<radiusS>15</radiusS>		
+		</startVel>		
 	</sphere>
 
 </spheres> 

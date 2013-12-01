@@ -186,7 +186,7 @@ double& Sphere::getM(){
 }
 
 int& Sphere::getRadius(){
-	radius;
+	return radius;
 }
 
 double& Sphere::getMeshWidth(){

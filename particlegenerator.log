@@ -1,1 +1,21 @@
-2013-12-01 19:39:46,833 INFO  (src/utils/ParticleGenerator.cpp:65) - Doing cuboidsToList.
+2013-12-01 20:42:35,285 INFO  (src/utils/ParticleGenerator.cpp:59) - Reading Cuboids.
+2013-12-01 20:42:35,285 INFO  (src/utils/ParticleGenerator.cpp:93) - Returning cuboid list.
+2013-12-01 20:42:35,285 INFO  (src/utils/ParticleGenerator.cpp:93) - Returning cuboid list.
+2013-12-01 20:42:35,286 INFO  (src/utils/ParticleGenerator.cpp:59) - Reading Cuboids.
+2013-12-01 20:42:35,288 INFO  (src/utils/ParticleGenerator.cpp:93) - Returning cuboid list.
+2013-12-01 20:42:35,288 INFO  (src/utils/ParticleGenerator.cpp:93) - Returning cuboid list.
+2013-12-01 20:42:35,288 INFO  (src/utils/ParticleGenerator.cpp:59) - Reading Cuboids.
+2013-12-01 20:42:35,289 INFO  (src/utils/ParticleGenerator.cpp:102) - Returning particle list.
+2013-12-01 20:42:35,289 INFO  (src/utils/ParticleGenerator.cpp:102) - Returning particle list.
+2013-12-01 20:42:35,289 INFO  (src/utils/ParticleGenerator.cpp:102) - Returning particle list.
+2013-12-01 20:42:35,289 INFO  (src/utils/ParticleGenerator.cpp:102) - Returning particle list.
+2013-12-01 20:42:35,289 INFO  (src/utils/ParticleGenerator.cpp:102) - Returning particle list.
+2013-12-01 20:42:35,289 INFO  (src/utils/ParticleGenerator.cpp:102) - Returning particle list.
+2013-12-01 20:42:35,289 INFO  (src/utils/ParticleGenerator.cpp:59) - Reading Cuboids.
+2013-12-01 20:42:35,291 INFO  (src/utils/ParticleGenerator.cpp:59) - Reading Cuboids.
+2013-12-01 20:42:35,306 INFO  (src/utils/ParticleGenerator.cpp:102) - Returning particle list.
+2013-12-01 20:42:35,312 INFO  (src/utils/ParticleGenerator.cpp:48) - Destructed.
+2013-12-01 20:42:35,312 INFO  (src/utils/ParticleGenerator.cpp:48) - Destructed.
+2013-12-01 20:42:35,312 INFO  (src/utils/ParticleGenerator.cpp:48) - Destructed.
+2013-12-01 20:42:35,312 INFO  (src/utils/ParticleGenerator.cpp:48) - Destructed.
+2013-12-01 20:42:35,312 INFO  (src/utils/ParticleGenerator.cpp:48) - Destructed.

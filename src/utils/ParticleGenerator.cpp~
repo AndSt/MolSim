@@ -48,6 +48,12 @@ ParticleGenerator::~ParticleGenerator() {
 	LOG4CXX_INFO(particlegeneratorlogger,"Destructed.");
 }
 
+void ParticleGenerator::mergeWithParticleList(std::list<Particle>& before){
+	for (std::list<Particle>::iterator it = particleList.begin(); it!=particleList.end(); it++){
+		before.push_back(*it);
+	}
+}
+
 void ParticleGenerator::readCuboids(char* filename){
 	FileReader fileReader;
 	LOG4CXX_INFO(particlegeneratorlogger,"Reading Cuboids.");
@@ -146,9 +152,9 @@ void ParticleGenerator::extractSpheres(const string filename){
 			utils::Vector<double, 3> centerP(a);
 			double b[] = {i->startVel().vX(), i->startVel().vY(), i->startVel().vZ()};
 			utils::Vector<double, 3> vel(b);
-			int radius = i->radiusS();
+			int radiuss = i->radiussph();
 		
-	      		Sphere s(centerP, vel, meanV, m, radius, mesh);
+	      		Sphere s(centerP, vel, meanV, m, radiuss, mesh);
 			sphereList.push_back(s);
 	    	}
 	
