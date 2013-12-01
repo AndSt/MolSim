@@ -21,6 +21,7 @@ Sphere::Sphere(utils::Vector<double, 3> center, utils::Vector<double, 3> startV,
 	// Draw the biggest circle, which center belongs
 	listOfCenters.clear();
 	listOfRadii.clear();
+	sph.clear();
 	
 	drawCircleArea(center, radius); //the biggest one
 	// now the lisOfCenters and listOfRadii are fully initialized
@@ -164,7 +165,7 @@ void Sphere::drawCircleArea(utils::Vector<double, 3> tempCenter, int radius){
 	}	
 }
 
-std::list<Particle>& Sphere::getParticleList(){
+std::list<Particle>& Sphere::getSphere(){
 	return sph;
 }
 

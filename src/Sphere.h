@@ -87,7 +87,7 @@ public:
 
 	double& getMeshWidth();
 
-	std::list<Particle>& getParticleList();
+	std::list<Particle>& getSphere();
 
 	virtual ~Sphere();
 };

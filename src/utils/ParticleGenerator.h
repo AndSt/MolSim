@@ -47,6 +47,8 @@ public:
 
 	ParticleGenerator(std::list<Particle>& parList);
 
+	ParticleGenerator(std::list<Sphere>& sphList);
+
 	/** The reading procedure, which can convert information from a given input file into particle generator's list of cuboids.
 	 * @param[in] filename The full name of the input file in the project folder, e.g: "eingabe-brownian.txt".
 	 */
@@ -66,6 +68,8 @@ public:
 	 * @param[out] particleList The result will be stored here.
 	 */
 	void cuboidsToList();
+
+	void spheresToList();
 
 	/** \return Particle generator's list of cuboids.
 	 */

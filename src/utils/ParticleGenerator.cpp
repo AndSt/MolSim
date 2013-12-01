@@ -40,6 +40,10 @@ ParticleGenerator::ParticleGenerator(std::list<Particle>& parList){
 	particleList = parList;
 }
 
+ParticleGenerator::ParticleGenerator(std::list<Sphere>& sphList){
+	sphereList = sphList;
+}
+
 ParticleGenerator::~ParticleGenerator() {
 	LOG4CXX_INFO(particlegeneratorlogger,"Destructed.");
 }
@@ -65,9 +69,27 @@ void ParticleGenerator::cuboidsToList() {
 	}
 }
 
+void ParticleGenerator::spheresToList() {
+	std::list<Sphere>::iterator iterator;
+	particleList.clear();
+	for (iterator = sphereList.begin(); iterator != sphereList.end(); iterator++) {
+		Sphere& temp = *iterator;
+		std::list<Particle>::iterator iterator1;
+		for (iterator1 = temp.getSphere().begin();
+				iterator1 != temp.getSphere().end(); iterator1++) {
+			Particle& tempP = *iterator1;
+			particleList.push_back(tempP);
+		}
+	}
+}
+
 std::list<Cuboid>& ParticleGenerator::getCuboidList(){
 	LOG4CXX_INFO(particlegeneratorlogger,"Returning cuboid list.");
 	return cuboidList;
+}
+
+std::list<Sphere>& ParticleGenerator::getSphereList(){
+	return sphereList;
 }
 
 std::list<Particle>& ParticleGenerator::getParticleList(){

@@ -40,6 +40,10 @@ ParticleGenerator::ParticleGenerator(std::list<Particle>& parList){
 	particleList = parList;
 }
 
+ParticleGenerator::ParticleGenerator(std::list<Sphere>& sphList){
+	sphereList = sphList;
+}
+
 ParticleGenerator::~ParticleGenerator() {
 	LOG4CXX_INFO(particlegeneratorlogger,"Destructed.");
 }
@@ -59,6 +63,20 @@ void ParticleGenerator::cuboidsToList() {
 		std::list<Particle>::iterator iterator1;
 		for (iterator1 = temp.getCuboid().begin();
 				iterator1 != temp.getCuboid().end(); iterator1++) {
+			Particle& tempP = *iterator1;
+			particleList.push_back(tempP);
+		}
+	}
+}
+
+void ParticleGenerator::spheresToList() {
+	std::list<Sphere>::iterator iterator;
+	particleList.clear();
+	for (iterator = sphereList.begin(); iterator != sphereList.end(); iterator++) {
+		Sphere& temp = *iterator;
+		std::list<Particle>::iterator iterator1;
+		for (iterator1 = temp.getSphere().begin();
+				iterator1 != temp.getSphere().end(); iterator1++) {
 			Particle& tempP = *iterator1;
 			particleList.push_back(tempP);
 		}
@@ -153,8 +171,8 @@ void ParticleGenerator::extractSetting(double& start_time, double& end_time, dou
 		//inputTypes.clear();
 		pse_t::inputfile_const_iterator it;
 		for (it = h->inputfile().begin(); it != h->inputfile().end(); ++it){
-			inputNames.pushBack(it->name());
-			inputTypes.pushBack(it->type());
+			inputNames.push_back(it->name());
+			inputTypes.push_back(it->type());
 		}
 
 		outputMask = h->outputfile().name();

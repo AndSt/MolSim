@@ -79,13 +79,13 @@ public:
 	 */
 	utils::Vector<double, 3>& getStartV();
 
-	double getMeanV();
+	double& getMeanV();
 
-	double getM();
+	double& getM();
 
-	int getRadius();
+	int& getRadius();
 
-	double getMeshWidth();
+	double& getMeshWidth();
 
 	std::list<Particle>& getParticleList();
 
