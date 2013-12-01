@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<spheres
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="InputSpheres.xsd">
+
+	<meshWidth>1.1225</meshWidth>
+	<mass>1.0</mass>
+	<meanV>0.1</meanV>
+
+	<sphere>
+		<centerPos>
+			<x>60.0</x>
+			<y>25.0</y>
+			<z>0.0</z>
+		</centerPos>
+		<startVel>
+			<vX>0.0</vX>
+			<vY>-10.0</vY>
+			<vZ>0.0</vZ>
+		</startVel>
+		<radius>15</radius>		
+	</sphere>
+
+</spheres> 

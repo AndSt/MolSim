@@ -501,28 +501,22 @@ lc (::std::auto_ptr< lc_type > x)
   this->lc_.set (x);
 }
 
-const pse_t::inputfile_type& pse_t::
+const pse_t::inputfile_sequence& pse_t::
 inputfile () const
 {
-  return this->inputfile_.get ();
+  return this->inputfile_;
 }
 
-pse_t::inputfile_type& pse_t::
+pse_t::inputfile_sequence& pse_t::
 inputfile ()
 {
-  return this->inputfile_.get ();
+  return this->inputfile_;
 }
 
 void pse_t::
-inputfile (const inputfile_type& x)
+inputfile (const inputfile_sequence& s)
 {
-  this->inputfile_.set (x);
-}
-
-void pse_t::
-inputfile (::std::auto_ptr< inputfile_type > x)
-{
-  this->inputfile_.set (x);
+  this->inputfile_ = s;
 }
 
 const pse_t::outputfile_type& pse_t::
@@ -1268,7 +1262,6 @@ pse_t (const start_time_type& start_time,
        const delta_t_type& delta_t,
        const ljf_type& ljf,
        const lc_type& lc,
-       const inputfile_type& inputfile,
        const outputfile_type& outputfile)
 : ::xml_schema::type (),
   start_time_ (start_time, ::xml_schema::flags (), this),
@@ -1276,7 +1269,7 @@ pse_t (const start_time_type& start_time,
   delta_t_ (delta_t, ::xml_schema::flags (), this),
   ljf_ (ljf, ::xml_schema::flags (), this),
   lc_ (lc, ::xml_schema::flags (), this),
-  inputfile_ (inputfile, ::xml_schema::flags (), this),
+  inputfile_ (::xml_schema::flags (), this),
   outputfile_ (outputfile, ::xml_schema::flags (), this)
 {
 }
@@ -1287,7 +1280,6 @@ pse_t (const start_time_type& start_time,
        const delta_t_type& delta_t,
        ::std::auto_ptr< ljf_type >& ljf,
        ::std::auto_ptr< lc_type >& lc,
-       ::std::auto_ptr< inputfile_type >& inputfile,
        ::std::auto_ptr< outputfile_type >& outputfile)
 : ::xml_schema::type (),
   start_time_ (start_time, ::xml_schema::flags (), this),
@@ -1295,7 +1287,7 @@ pse_t (const start_time_type& start_time,
   delta_t_ (delta_t, ::xml_schema::flags (), this),
   ljf_ (ljf, ::xml_schema::flags (), this),
   lc_ (lc, ::xml_schema::flags (), this),
-  inputfile_ (inputfile, ::xml_schema::flags (), this),
+  inputfile_ (::xml_schema::flags (), this),
   outputfile_ (outputfile, ::xml_schema::flags (), this)
 {
 }
@@ -1413,11 +1405,8 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       ::std::auto_ptr< inputfile_type > r (
         inputfile_traits::create (i, f, this));
 
-      if (!inputfile_.present ())
-      {
-        this->inputfile_.set (r);
-        continue;
-      }
+      this->inputfile_.push_back (r);
+      continue;
     }
 
     // outputfile
@@ -1469,13 +1458,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
   {
     throw ::xsd::cxx::tree::expected_element< char > (
       "lc",
-      "");
-  }
-
-  if (!inputfile_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "inputfile",
       "");
   }
 

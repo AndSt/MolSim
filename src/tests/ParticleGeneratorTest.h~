@@ -72,6 +72,8 @@ private:
 	double start_time, end_time, delta_t, EPSILON, SIGMA; 
 	string inputName, inputType, outputMask;
 	int outputFreq;
+	utils::Vector<double, 3> domainSize;
+	double rcutoff;
 };
 
 #endif /* PARTICLEGENERATORTEST_H_ */

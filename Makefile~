@@ -11,6 +11,7 @@ include files.mk
 LIB_SET = "input/cxx/tree/setting"
 LIB_PAR = "input/cxx/tree/particles"
 LIB_CUB = "input/cxx/tree/cuboids"
+LIB_SPH = "input/cxx/tree/spheres"
 UTILS = "src/utils"
 
 INP_SET_XML = "InputSetting.xml"
@@ -19,6 +20,8 @@ INP_PAR_XML = "InputParticles.xml"
 INP_PAR_XSD = "InputParticles.xsd"
 INP_CUB_XML = "InputCuboids.xml"
 INP_CUB_XSD = "InputCuboids.xsd"
+INP_SPH_XML = "InputSpheres.xml"
+INP_SPH_XSD = "InputSpheres.xsd"
 
 
 # Compiler flags
@@ -40,12 +43,6 @@ MY_INP_CUB = $(INP_CUB_XML) $(INP_CUB_XSD)
 
 .PHONY: $(MY_TARGETS)
 all: replacing $(SOURCES) $(EXECUTABLE)
-
-.PHONY: list
-	find src -name *.cpp -printf '%p\\\n' > files.mk.tmp
-	echo "SOURCES=\\" > files.mk
-	cat files.mk.tmp >> files.mk
-	rm files.mk.tmp
 
 .PHONY: replacing
 replacing: cloning

@@ -70,7 +70,8 @@ private:
 	utils::ParticleGenerator generator;
 
 	double start_time, end_time, delta_t, EPSILON, SIGMA; 
-	string inputName, inputType, outputMask;
+	std::list<string> inputNames, inputTypes;
+	string outputMask;
 	int outputFreq;
 	utils::Vector<double, 3> domainSize;
 	double rcutoff;

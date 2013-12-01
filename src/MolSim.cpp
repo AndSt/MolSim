@@ -66,11 +66,11 @@ double start_time = 0;
 double end_time = 1000;
 double delta_t = 0.014;
 
-//{InputCuboids, InputParticles}
-string inputName = "InputCuboids";
+//{InputCuboids, InputParticles, InputSpheres}
+list<string> inputNames;
 
 //{cuboids, particles, spheres}
-string inputType = "cuboids";
+list<string> inputTypes;
 
 string outputMask = "MD_vtk";
 int freq = 10;
@@ -312,25 +312,34 @@ int main(int argc, char* argsv[]) {
 		else if (option1 == 3){
 			//doesn't care about option2
 			//getting information from InputSetting first
-			pgen.extractSetting(start_time, end_time, delta_t, EPSILON, SIGMA, inputName, inputType, outputMask, freq,
+			pgen.extractSetting(start_time, end_time, delta_t, EPSILON, SIGMA, inputNames, inputTypes, outputMask, freq,
  								domainSize, R_CUTOFF);
-			if (inputType=="particles"){
-				cout << "[particles] has been chosen as input type." << endl;
-				cout << "Press enter to continue..." << endl;
-				cin.ignore();
-				pgen.extractParticles(inputName);
-				particleList = pgen.getParticleList();
-			}else if (inputType=="cuboids"){
-				cout << "[cuboids] has been chosen as input type." << endl;
-				cout << "Press enter to continue" << endl;
-				cin.ignore();
-				pgen.extractCuboids(inputName);
-				pgen.cuboidsToList();
-				particleList = pgen.getParticleList();
-			}else{
-			//"spheres":
-			
+			//particleList.clear();
+			list<string>::iterator itT = inputTypes.begin();
+			int i = 1;
+			for (list<string>::iterator itN = inputNames.begin(); itN != inputNames.end(); itN++){
+				if (*itT=="particles"){
+					cout << i << ". " << "[particles] has been chosen as input type." << endl;
+					pgen.extractParticles(*itN);
+					particleList.insert(particleList.end(), 
+							pgen.getParticleList().begin(), pgen.getParticleList().end());
+				}else if (*itT=="cuboids"){
+					cout << i << ". " << "[cuboids] has been chosen as input type." << endl;
+					pgen.extractCuboids(*itN);
+					//particleList = pgen.getParticleList();					
+					particleList.insert(particleList.end(), 
+							pgen.getParticleList().begin(), pgen.getParticleList().end());
+				}else{
+					cout << i << ". " << "[spheres] has been chosen as input type." << endl;
+					pgen.extractSpheres(*itN);
+					particleList.insert(particleList.end(), 
+							pgen.getParticleList().begin(), pgen.getParticleList().end());
+				}
+				itT++;
+				i++;
 			}
+			cout << "Press enter to continue..." << endl;
+			cin.ignore();
 		}
 
 		cout << "Reading input file..." << endl;

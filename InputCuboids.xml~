@@ -5,7 +5,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:noNamespaceSchemaLocation="cuboids.xsd">
 
 	<meshWidth>1.1225</meshWidth>
-	<mass>1.012</mass>
+	<mass>1.0</mass>
 	<meanV>0.1</meanV>
 
 	<cuboid>

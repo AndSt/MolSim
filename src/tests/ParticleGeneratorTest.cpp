@@ -76,9 +76,11 @@ void ParticleGeneratorTest::setUp() {
  	end_time = 5.0;
 	delta_t = 0.0002;
 	EPSILON = 5.0;
-	SIGMA = 1.0; 
-	inputName = "InputCuboids.xml";
-	inputType="cuboids";
+	SIGMA = 1.0;
+	inputNames.clear();
+	inputNames.push_back("InputCuboids.xml"); 
+	inputTypes.clear();
+	inputTypes.push_back("cuboids");
 	outputMask = "MolSimVTK";
 	outputFreq = 10;
 
@@ -124,6 +126,13 @@ void ParticleGeneratorTest::testExtractCuboids(){
 	this->testReadCuboids();
 }
 
+/*
+void ParticleGeneratorTest::testExtractSpheres(){
+	
+	generator.extractSpheres("InputCuboids.xml");
+}
+*/	
+
 void ParticleGeneratorTest::testExtractParticles(){
 	generator.extractParticles("InputParticles.xml");
 	std::list<Particle>::iterator iterator = particles.begin();
@@ -143,12 +152,13 @@ void ParticleGeneratorTest::testExtractParticles(){
 	
 void ParticleGeneratorTest::testExtractSetting(){
 	double start_timeT, end_timeT, delta_tT, EPSILONT, SIGMAT; 
-	string inputNameT, inputTypeT, outputMaskT;
+	std::list<string> inputNamesT, inputTypesT;
+	string outputMaskT;
 	int outputFreqT;
 	utils::Vector<double, 3> domainSizeT;
 	double rcutoffT;
 	
-	generator.extractSetting(start_timeT, end_timeT, delta_tT, EPSILONT, SIGMAT, inputNameT, inputTypeT, outputMaskT, outputFreqT,
+	generator.extractSetting(start_timeT, end_timeT, delta_tT, EPSILONT, SIGMAT, inputNamesT, inputTypesT, outputMaskT, outputFreqT,
 							domainSizeT, rcutoffT);
 
 	CPPUNIT_ASSERT(start_time==start_timeT);
@@ -156,8 +166,19 @@ void ParticleGeneratorTest::testExtractSetting(){
 	CPPUNIT_ASSERT(delta_t==delta_tT);
 	CPPUNIT_ASSERT(EPSILON==EPSILONT);
 	CPPUNIT_ASSERT(SIGMA==SIGMAT);
-	CPPUNIT_ASSERT(inputName==inputNameT);
-	CPPUNIT_ASSERT(inputType==inputTypeT);
+
+	std::list<string>::iterator itN = inputNames.begin();
+	for (std::list<string>::iterator it = inputNamesT.begin(); it != inputNamesT.end(); it++){
+		CPPUNIT_ASSERT(*itN == *it);
+		itN++;
+	}
+
+	std::list<string>::iterator itT = inputTypes.begin();
+	for (std::list<string>::iterator it = inputTypesT.begin(); it != inputTypesT.end(); it++){
+		CPPUNIT_ASSERT(*itT == *it);
+		itN++;
+	}
+
 	CPPUNIT_ASSERT(outputMask==outputMaskT);
 	CPPUNIT_ASSERT(outputFreq==outputFreqT);
 	CPPUNIT_ASSERT(domainSizeT==domainSizeT);

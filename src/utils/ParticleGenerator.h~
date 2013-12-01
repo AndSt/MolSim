@@ -10,6 +10,7 @@
 
 #include "Cuboid.h"
 #include "Particle.h"
+#include "Sphere.h"
 
 #include <list>
 #include <string>
@@ -30,6 +31,8 @@ private:
 	 */
 	std::list<Cuboid> cuboidList;
 
+	std::list<Sphere> sphereList;
+
 	std::list<Particle> particleList;
 
 public:
@@ -48,13 +51,16 @@ public:
 	 * @param[in] filename The full name of the input file in the project folder, e.g: "eingabe-brownian.txt".
 	 */
 	void readCuboids(char* filename);
+	
+	void extractSetting(double& start_time, double& end_time, double& delta_t, double& EPSILON, double& SIGMA, 
+				std::list<string>& inputNames, std::list<string>& inputTypes, string& outputMask, int& outputFreq, 
+				utils::Vector<double, 3>& domainSize, double& r_cutoff);
+
+	void extractParticles(const string filename);
 
 	void extractCuboids(const string filename);
 
-	void extractParticles(const string filename);
-	
-	void extractSetting(double& start_time, double& end_time, double& delta_t, double& EPSILON, double& SIGMA, 
-				string& inputName, string& inputType, string& outputMask, int& outputFreq);
+	void extractSpheres(const string filename);
 
 	/** Converts particle generator's list of cuboids into one single list of particles
 	 * @param[out] particleList The result will be stored here.
@@ -64,6 +70,8 @@ public:
 	/** \return Particle generator's list of cuboids.
 	 */
 	std::list<Cuboid>& getCuboidList();
+
+	std::list<Sphere>& getSphereList();
 
 	std::list<Particle>& getParticleList();
 

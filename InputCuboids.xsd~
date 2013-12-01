@@ -60,7 +60,7 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:complexType name="cuboids_t">
 			<xs:annotation>
 			  <xs:documentation>
-				The cuboids_t type consists of a set of 3 variables of a list of cuboids.
+				The cuboids_t type consists of a set of 3 variables and a list of cuboids.
 			  </xs:documentation>
 			</xs:annotation>
 		<xs:sequence>
