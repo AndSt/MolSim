@@ -317,29 +317,32 @@ int main(int argc, char* argsv[]) {
 			particleList.clear();
 			list<string>::iterator itT = inputTypes.begin();
 			int i = 1;
-			for (list<string>::iterator itN = inputNames.begin(); itN != inputNames.end(); itN++){
+			cout << i << ". input file: " << "[spheres]" << endl;
+			pgen.extractSpheres("InputSpheres.xml");
+			pgen.spheresToList();
+			particleList = pgen.getParticleList();
+			/*for (list<string>::iterator itN = inputNames.begin(); itN != inputNames.end(); itN++){
 				if (*itT=="particles"){
-					cout << i << ". " << "[particles] has been chosen as input type." << endl;
+					cout << i << ". input file: " << "[particles]." << endl;
 					pgen.extractParticles(*itN);
 					particleList.insert(particleList.end(), 
 							pgen.getParticleList().begin(), pgen.getParticleList().end());
 				}else if (*itT=="cuboids"){
-					cout << i << ". " << "[cuboids] has been chosen as input type." << endl;
+					cout << i << ". input file: " << "[cuboids]" << endl;
 					pgen.extractCuboids(*itN);
 					pgen.cuboidsToList();					
 					particleList.insert(particleList.end(), 
 							pgen.getParticleList().begin(), pgen.getParticleList().end());
 				}else{
-					cout << i << ". " << "[spheres] has been chosen as input type." << endl;
+					cout << i << ". input file: " << "[spheres]" << endl;
 					pgen.extractSpheres(*itN);
-					pgen.spheresToList();
-					particleList = pgen.getParticleList();					
-					//particleList.insert(particleList.end(), 
-					//		pgen.getParticleList().begin(), pgen.getParticleList().end());
+					pgen.spheresToList();				
+					particleList.insert(particleList.end(), 
+							pgen.getParticleList().begin(), pgen.getParticleList().end());
 				}
 				itT++;
 				i++;
-			}
+			}*/
 			cout << "Press enter to continue..." << endl;
 			cin.ignore();
 		}
