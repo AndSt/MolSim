@@ -1,2 +1,4 @@
-2013-12-01 20:42:34,642 INFO  src/MolSim.cpp:102 - Arrived @ main.
-2013-12-01 20:42:34,642 INFO  src/MolSim.cpp:123 - Arrived @ testsuite.
+2013-12-01 22:35:16,975 INFO  src/MolSim.cpp:102 - Arrived @ main.
+2013-12-01 22:35:16,975 INFO  src/MolSim.cpp:184 - Arrived @ filedecision.
+2013-12-01 22:35:19,904 INFO  src/MolSim.cpp:348 - Arrived @ initialization call.
+2013-12-01 22:35:19,905 INFO  src/MolSim.cpp:352 - Arrived @ simulation call.

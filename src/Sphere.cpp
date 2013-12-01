@@ -19,17 +19,17 @@ Sphere::Sphere(utils::Vector<double, 3> center, utils::Vector<double, 3> startV,
 	this->meshWidth = meshWidth;
 
 	// Draw the biggest circle, which center belongs
-	//listOfCenters.clear();
-	//listOfRadii.clear();
-	//sph.clear();
+	listOfCenters.clear();
+	listOfRadii.clear();
+	sph.clear();
+	this->drawCircleArea(center, radius); //the biggest one
 	
-	drawCircleArea(center, radius); //the biggest one
 	// now the lisOfCenters and listOfRadii are fully initialized
-	std::list<utils::Vector<double, 3> >::iterator itC = listOfCenters.begin();
+	/*std::list<utils::Vector<double, 3> >::iterator itC = listOfCenters.begin();
 	for (std::list<int>::iterator itR = listOfRadii.begin(); itR != listOfRadii.end(); ++itR){
-		drawCircleArea(*itC, *itR);
-		itC++;
-	}
+		this->drawCircleArea(*itC, *itR);
+		++itC;
+	}*/
 }
 
 void Sphere::plot(utils::Vector<double, 3> tempCenter, double x, double y){
@@ -58,7 +58,7 @@ void Sphere::drawCircleArea(utils::Vector<double, 3> tempCenter, int radius){
 	//plot(tempCenter, 0, (-1)*r);
 	// Draw all the points in this vertical line		
 	for (double i = (-1)*r; i <= r; i += meshWidth){
-		plot(tempCenter, 0, i);
+		this->plot(tempCenter, 0, i);
 	}
 
 	plot(tempCenter, r, 0);
@@ -66,11 +66,12 @@ void Sphere::drawCircleArea(utils::Vector<double, 3> tempCenter, int radius){
 
 	double F = (1.25*meshWidth - r)*meshWidth;
 	
-	if (radius == this->radius){
+	if (radius == this->getRadius()){
 	// The biggest circle
 		while (x<y){
-			if (F<0)
+			if (F<0){
 				F = F + 2*x*meshWidth + meshWidth*meshWidth;
+			}
 			else{
 				F = F + 2*meshWidth*(x - y + meshWidth);
 				y = y - meshWidth;
@@ -81,7 +82,7 @@ void Sphere::drawCircleArea(utils::Vector<double, 3> tempCenter, int radius){
 			//plot(tempCenter, x, (-1)*y);
 			// Draw all the points in this vertical line		
 			for (double i = (-1)*y; i <= y; i += meshWidth){
-				plot(tempCenter, x, i);
+				this->plot(tempCenter, x, i);
 			}
 			utils::Vector<double, 3> savCenter = tempCenter;
 			savCenter[2] += x;
@@ -92,7 +93,7 @@ void Sphere::drawCircleArea(utils::Vector<double, 3> tempCenter, int radius){
 			//plot(tempCenter, (-1)*x, (-1)*y);
 			// Draw all the points in this vertical line		
 			for (double i = (-1)*y; i <= y; i += meshWidth){
-				plot(tempCenter, (-1)*x, i);
+				this->plot(tempCenter, (-1)*x, i);
 			}
 			savCenter = tempCenter;
 			savCenter[2] += (-1)*x;
@@ -103,7 +104,7 @@ void Sphere::drawCircleArea(utils::Vector<double, 3> tempCenter, int radius){
 			//plot(tempCenter, y, (-1)*x);
 			// Draw all the points in this vertical line		
 			for (double i = (-1)*x; i <= x; i += meshWidth){
-				plot(tempCenter, y, i);
+				this->plot(tempCenter, y, i);
 			}
 			savCenter = tempCenter;
 			savCenter[2] += y;
@@ -114,7 +115,7 @@ void Sphere::drawCircleArea(utils::Vector<double, 3> tempCenter, int radius){
 			//plot(tempCenter, (-1)*y, (-1)*x);
 			// Draw all the points in this vertical line		
 			for (double i = (-1)*x; i <= x; i += meshWidth){
-				plot(tempCenter, (-1)*y, i);
+				this->plot(tempCenter, (-1)*y, i);
 			}
 			savCenter = tempCenter;
 			savCenter[2] += (-1)*y;
@@ -126,8 +127,9 @@ void Sphere::drawCircleArea(utils::Vector<double, 3> tempCenter, int radius){
 	{
 	// Smaller circles
 		while (x<y){
-			if (F<0)
+			if (F<0){
 				F = F + 2*x*meshWidth + meshWidth*meshWidth;
+			}
 			else{
 				F = F + 2*meshWidth*(x - y + meshWidth);
 				y = y - meshWidth;
@@ -138,28 +140,28 @@ void Sphere::drawCircleArea(utils::Vector<double, 3> tempCenter, int radius){
 			//plot(tempCenter, x, (-1)*y);
 			// Draw all the points in this vertical line		
 			for (double i = (-1)*y; i <= y; i += meshWidth){
-				plot(tempCenter, x, i);
+				this->plot(tempCenter, x, i);
 			}
 
 			//plot(tempCenter, (-1)*x, y);
 			//plot(tempCenter, (-1)*x, (-1)*y);
 			// Draw all the points in this vertical line		
 			for (double i = (-1)*y; i <= y; i += meshWidth){
-				plot(tempCenter, (-1)*x, i);
+				this->plot(tempCenter, (-1)*x, i);
 			}
 
 			//plot(tempCenter, y, x);
 			//plot(tempCenter, y, (-1)*x);
 			// Draw all the points in this vertical line		
 			for (double i = (-1)*x; i <= x; i += meshWidth){
-				plot(tempCenter, y, i);
+				this->plot(tempCenter, y, i);
 			}
 
 			//plot(tempCenter, (-1)*y, x);
 			//plot(tempCenter, (-1)*y, (-1)*x);
 			// Draw all the points in this vertical line		
 			for (double i = (-1)*x; i <= x; i += meshWidth){
-				plot(tempCenter, (-1)*y, i);
+				this->plot(tempCenter, (-1)*y, i);
 			}		
 		}
 	}	

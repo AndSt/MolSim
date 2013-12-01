@@ -235,6 +235,7 @@ int main(int argc, char* argsv[]) {
 				 	\n\t\t and output frequency." << endl;
 			cout << "\tInputParticles: contains all information needed for particles." << endl;
 			cout << "\tInputCuboids: contains all information needed for cuboids." << endl;
+			cout << "\tInputSpheres: contains all information needed for spheres." << endl;
 			cout << "Press 1 to continue." << endl;
 			break;
 		}
@@ -331,8 +332,6 @@ int main(int argc, char* argsv[]) {
 				}else{
 					cout << i << ". input file: " << "[spheres]" << endl;
 					pgen.extractSpheres(*itN);
-					cout << (*pgen.getSphereList().begin()).getRadius() << endl;
-					cin.ignore();
 					pgen.spheresToList();				
 					pgen.mergeWithParticleList(particleList);
 				}
@@ -355,6 +354,7 @@ int main(int argc, char* argsv[]) {
 		cout << "Running simulation..." << endl;
 
 		simulate();
+
 		LOG4CXX_INFO(molsimlogger, "Arrived @ ending simulation.");
 	}
 	return 0;
@@ -364,6 +364,8 @@ int main(int argc, char* argsv[]) {
 void simulate() {
 // the forces are needed to calculate x, but are not given in the input file.
 //calculateF();
+	cout << "Starting force calculation for the first time..." << endl;
+	cout << "Size of container: " << container.size() << " particles..." << endl;
 	calculateFLJ();
 
 	double current_time = start_time;
@@ -372,13 +374,17 @@ void simulate() {
 
 // for this loop, we assume: current x, current f and current v are known
 	while (current_time < end_time) {
+		cout << "Iteration " << iteration + 1 << ": " << endl;
 		// calculate new x
-		calculateX();
+		cout << "\tcalculating X..." << endl;
+		calculateX(); 
 
 		// calculate new f
+		cout << "\tcalculating F..." << endl;
 		calculateFLJ();
 
 		// calculate new v
+		cout << "\tcalculating V..." << endl;
 		calculateV();
 
 		iteration++;

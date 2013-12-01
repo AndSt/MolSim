@@ -207,8 +207,8 @@ void ParticleGenerator::extractSetting(double& start_time, double& end_time, dou
 		EPSILON = h->ljf().epsilon();
 		SIGMA = h->ljf().sigma();
 
-		//inputNames.clear();
-		//inputTypes.clear();
+		inputNames.clear();
+		inputTypes.clear();
 		pse_t::inputfile_const_iterator it;
 		for (it = h->inputfile().begin(); it != h->inputfile().end(); ++it){
 			inputNames.push_back(it->name());

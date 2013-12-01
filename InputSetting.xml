@@ -27,12 +27,6 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 		<!-- outflow, reflecting -->
 		<condition>outflow</condition>
 	</lc>	
-	
-	<inputfile>
-		<name>InputCuboids.xml</name>
-		<!-- particles/cuboids/spheres -->
-		<type>cuboids</type>
-	</inputfile>
 
 	<inputfile>
 		<name>InputSpheres.xml</name>
