@@ -4,9 +4,9 @@
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:noNamespaceSchemaLocation="InputSpheres.xsd">
 
-	<meshWidth>1.1225</meshWidth>
-	<mass>1.0</mass>
-	<meanV>0.1</meanV>
+	<meshWidthS>1.1225</meshWidthS>
+	<massS>1.0</massS>
+	<meanVS>0.1</meanVS>
 
 	<sphere>
 		<centerPos>
@@ -19,7 +19,7 @@ xsi:noNamespaceSchemaLocation="InputSpheres.xsd">
 			<vY>-10.0</vY>
 			<vZ>0.0</vZ>
 		</startVel>
-		<radius>15</radius>		
+		<radiusS>15</radiusS>		
 	</sphere>
 
 </spheres> 

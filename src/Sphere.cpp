@@ -27,7 +27,7 @@ Sphere::Sphere(utils::Vector<double, 3> center, utils::Vector<double, 3> startV,
 	std::list<utils::Vector<double, 3> >::iterator itC = listOfCenters.begin();
 	for (std::list<int>::iterator itR = listOfRadii.begin(); itR != listOfRadii.end(); ++itR){
 		drawCircleArea(*itC, *itR);
-		itR++;
+		itC++;
 	}
 }
 

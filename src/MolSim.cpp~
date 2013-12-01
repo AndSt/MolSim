@@ -320,23 +320,17 @@ int main(int argc, char* argsv[]) {
 			for (list<string>::iterator itN = inputNames.begin(); itN != inputNames.end(); itN++){
 				if (*itT=="particles"){
 					cout << i << ". " << "[particles] has been chosen as input type." << endl;
-					cout << "Press enter to continue..." << endl;
-					cin.ignore();
 					pgen.extractParticles(*itN);
 					particleList.insert(particleList.end(), 
 							pgen.getParticleList().begin(), pgen.getParticleList().end());
 				}else if (*itT=="cuboids"){
 					cout << i << ". " << "[cuboids] has been chosen as input type." << endl;
-					cout << "Press enter to continue" << endl;
-					cin.ignore();
 					pgen.extractCuboids(*itN);
 					//particleList = pgen.getParticleList();					
 					particleList.insert(particleList.end(), 
 							pgen.getParticleList().begin(), pgen.getParticleList().end());
 				}else{
 					cout << i << ". " << "[spheres] has been chosen as input type." << endl;
-					cout << "Press enter to continue" << endl;
-					cin.ignore();
 					pgen.extractSpheres(*itN);
 					particleList.insert(particleList.end(), 
 							pgen.getParticleList().begin(), pgen.getParticleList().end());
@@ -344,6 +338,8 @@ int main(int argc, char* argsv[]) {
 				itT++;
 				i++;
 			}
+			cout << "Press enter to continue..." << endl;
+			cin.ignore();
 		}
 
 		cout << "Reading input file..." << endl;
