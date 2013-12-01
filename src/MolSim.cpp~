@@ -364,8 +364,8 @@ int main(int argc, char* argsv[]) {
 void simulate() {
 // the forces are needed to calculate x, but are not given in the input file.
 //calculateF();
-	cout << "Starting force calculation for the first time..." << endl;
 	cout << "Size of container: " << container.size() << " particles..." << endl;
+	cout << "Starting force calculation for the first time..." << endl;
 	calculateFLJ();
 
 	double current_time = start_time;
@@ -374,7 +374,7 @@ void simulate() {
 
 // for this loop, we assume: current x, current f and current v are known
 	while (current_time < end_time) {
-		cout << "Iteration " << iteration + 1 << ": " << endl;
+		cout << "Iteration " << iteration << ": " << endl;
 		// calculate new x
 		cout << "\tcalculating X..." << endl;
 		calculateX(); 

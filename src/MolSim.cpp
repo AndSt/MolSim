@@ -364,8 +364,10 @@ int main(int argc, char* argsv[]) {
 void simulate() {
 // the forces are needed to calculate x, but are not given in the input file.
 //calculateF();
-	cout << "Starting force calculation for the first time..." << endl;
 	cout << "Size of container: " << container.size() << " particles..." << endl;
+	cout << "Press enter to continue..." << endl;
+	cin.ignore();
+	cout << "Starting force calculation for the first time..." << endl;
 	calculateFLJ();
 
 	double current_time = start_time;
