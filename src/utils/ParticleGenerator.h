@@ -71,6 +71,9 @@ public:
 
 	void spheresToList();
 
+	// particleList stands behind
+	void mergeWithParticleList(std::list<Particle>& before);
+
 	/** \return Particle generator's list of cuboids.
 	 */
 	std::list<Cuboid>& getCuboidList();

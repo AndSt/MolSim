@@ -126,13 +126,23 @@ void ParticleGeneratorTest::testExtractCuboids(){
 	this->testReadCuboids();
 }
 
-/*
+
 void ParticleGeneratorTest::testExtractSpheres(){
 	
-	generator.extractSpheres("InputCuboids.xml");
-}
-*/	
+	generator.extractSpheres("InputSpheres.xml");
+	Sphere sp = *generator.getSphereList().begin();
+	double rDouble = sp.getRadius() * sp.getMeshWidth();
+	utils::Vector<double, 3> cen = sp.getCenter();
+	generator.spheresToList();
+	std::list<Particle> parList = generator.getParticleList();
 
+	for (std::list<Particle>::iterator it = parList.begin(); it != parList.end(); it++){
+		Particle p = *it;		
+		CPPUNIT_ASSERT(pow(p.getX()[0]-cen[0],2) + pow(p.getX()[1]-cen[1],2) + pow(p.getX()[2]-cen[2],2) <= rDouble*rDouble);
+	}
+	
+}
+	
 void ParticleGeneratorTest::testExtractParticles(){
 	generator.extractParticles("InputParticles.xml");
 	std::list<Particle>::iterator iterator = particles.begin();
@@ -200,5 +210,8 @@ CppUnit::Test *ParticleGeneratorTest::suite() {
 	testSuite->addTest(
 			new CppUnit::TestCaller<ParticleGeneratorTest>("testExtractSetting",
 					&ParticleGeneratorTest::testExtractSetting));
+	testSuite->addTest(
+			new CppUnit::TestCaller<ParticleGeneratorTest>("testExtractSpheres",
+					&ParticleGeneratorTest::testExtractSpheres));
 	return testSuite;
 }

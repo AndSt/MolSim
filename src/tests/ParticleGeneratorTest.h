@@ -21,6 +21,7 @@
 #include <utils/Vector.h>
 #include <FileReader.h>
 #include "Particle.h"
+#include "Sphere.h"
 
 class ParticleGeneratorTest : CppUnit::TestCase {
 public:
@@ -41,6 +42,8 @@ public:
 	 * Tests the readCuboids() method
 	 */
 	void testReadCuboids();
+
+	void testExtractSpheres();
 
 	void testExtractCuboids();
 

@@ -317,32 +317,26 @@ int main(int argc, char* argsv[]) {
 			particleList.clear();
 			list<string>::iterator itT = inputTypes.begin();
 			int i = 1;
-			cout << i << ". input file: " << "[spheres]" << endl;
-			pgen.extractSpheres("InputSpheres.xml");
-			pgen.spheresToList();
-			particleList = pgen.getParticleList();
-			/*for (list<string>::iterator itN = inputNames.begin(); itN != inputNames.end(); itN++){
+			
+			for (list<string>::iterator itN = inputNames.begin(); itN != inputNames.end(); itN++){
 				if (*itT=="particles"){
 					cout << i << ". input file: " << "[particles]." << endl;
 					pgen.extractParticles(*itN);
-					particleList.insert(particleList.end(), 
-							pgen.getParticleList().begin(), pgen.getParticleList().end());
+					pgen.mergeWithParticleList(particleList);					
 				}else if (*itT=="cuboids"){
 					cout << i << ". input file: " << "[cuboids]" << endl;
 					pgen.extractCuboids(*itN);
-					pgen.cuboidsToList();					
-					particleList.insert(particleList.end(), 
-							pgen.getParticleList().begin(), pgen.getParticleList().end());
+					pgen.cuboidsToList();
+					pgen.mergeWithParticleList(particleList);
 				}else{
 					cout << i << ". input file: " << "[spheres]" << endl;
 					pgen.extractSpheres(*itN);
 					pgen.spheresToList();				
-					particleList.insert(particleList.end(), 
-							pgen.getParticleList().begin(), pgen.getParticleList().end());
+					pgen.mergeWithParticleList(particleList);
 				}
 				itT++;
 				i++;
-			}*/
+			}
 			cout << "Press enter to continue..." << endl;
 			cin.ignore();
 		}

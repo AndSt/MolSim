@@ -48,6 +48,12 @@ ParticleGenerator::~ParticleGenerator() {
 	LOG4CXX_INFO(particlegeneratorlogger,"Destructed.");
 }
 
+void ParticleGenerator::mergeWithParticleList(std::list<Particle>& before){
+	for (std::list<Particle>::iterator it = particleList.begin(); it!=particleList.end(); it++){
+		before.push_back(*it);
+	}
+}
+
 void ParticleGenerator::readCuboids(char* filename){
 	FileReader fileReader;
 	LOG4CXX_INFO(particlegeneratorlogger,"Reading Cuboids.");
@@ -130,6 +136,36 @@ void ParticleGenerator::extractCuboids(const string filename)
   	}
 }
 
+void ParticleGenerator::extractSpheres(const string filename){
+	try
+  	{
+		sphereList.clear();
+		auto_ptr<spheres_t> h (spheres (filename, xml_schema::flags::dont_validate));
+		double mesh = h->meshWidthS();
+		double m = h->massS();
+		double meanV = h->meanVS();
+	
+		spheres_t::sphere_const_iterator i;
+	    	for (i = h->sphere().begin(); i != h->sphere().end(); ++i)
+	    	{		
+			double a[] = {i->centerPos().x(), i->centerPos().y(), i->centerPos().z()};
+			utils::Vector<double, 3> centerP(a);
+			double b[] = {i->startVel().vX(), i->startVel().vY(), i->startVel().vZ()};
+			utils::Vector<double, 3> vel(b);
+			int radius = i->radiusS();
+		
+	      		Sphere s(centerP, vel, meanV, m, radius, mesh);
+			sphereList.push_back(s);
+	    	}
+	
+  	}
+  	catch (const xml_schema::exception& e)
+  	{
+	    cerr << e << endl;
+	    exit(-1);
+  	}
+}
+
 void ParticleGenerator::extractParticles(const string filename)
 {
   	try
@@ -191,35 +227,5 @@ void ParticleGenerator::extractSetting(double& start_time, double& end_time, dou
   	{
 		cerr << e << endl;
 		exit(-1);
-  	}
-}
-
-void ParticleGenerator::extractSpheres(const string filename){
-	try
-  	{
-		sphereList.clear();
-		auto_ptr<spheres_t> h (spheres (filename, xml_schema::flags::dont_validate));
-		double mesh = h->meshWidthS();
-		double m = h->massS();
-		double meanV = h->meanVS();
-	
-		spheres_t::sphere_const_iterator i;
-	    	for (i = h->sphere().begin(); i != h->sphere().end(); ++i)
-	    	{		
-			double a[] = {i->centerPos().x(), i->centerPos().y(), i->centerPos().z()};
-			utils::Vector<double, 3> centerP(a);
-			double b[] = {i->startVel().vX(), i->startVel().vY(), i->startVel().vZ()};
-			utils::Vector<double, 3> vel(b);
-			int radius = i->radiusS();
-		
-	      		Sphere s(centerP, vel, meanV, m, radius, mesh);
-			sphereList.push_back(s);
-	    	}
-	
-  	}
-  	catch (const xml_schema::exception& e)
-  	{
-	    cerr << e << endl;
-	    exit(-1);
   	}
 }

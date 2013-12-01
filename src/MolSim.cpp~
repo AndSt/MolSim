@@ -317,25 +317,22 @@ int main(int argc, char* argsv[]) {
 			particleList.clear();
 			list<string>::iterator itT = inputTypes.begin();
 			int i = 1;
+			
 			for (list<string>::iterator itN = inputNames.begin(); itN != inputNames.end(); itN++){
 				if (*itT=="particles"){
 					cout << i << ". input file: " << "[particles]." << endl;
 					pgen.extractParticles(*itN);
-					particleList.insert(particleList.end(), 
-							pgen.getParticleList().begin(), pgen.getParticleList().end());
+					pgen.mergeWithParticleList(particleList);					
 				}else if (*itT=="cuboids"){
 					cout << i << ". input file: " << "[cuboids]" << endl;
 					pgen.extractCuboids(*itN);
-					pgen.cuboidsToList();					
-					particleList.insert(particleList.end(), 
-							pgen.getParticleList().begin(), pgen.getParticleList().end());
+					pgen.cuboidsToList();
+					pgen.mergeWithParticleList(particleList);
 				}else{
 					cout << i << ". input file: " << "[spheres]" << endl;
 					pgen.extractSpheres(*itN);
-					pgen.spheresToList();
-					particleList = pgen.getParticleList();					
-					//particleList.insert(particleList.end(), 
-					//		pgen.getParticleList().begin(), pgen.getParticleList().end());
+					pgen.spheresToList();				
+					pgen.mergeWithParticleList(particleList);
 				}
 				itT++;
 				i++;
