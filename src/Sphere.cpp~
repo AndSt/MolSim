@@ -6,6 +6,7 @@
  */
 
 #include "Sphere.h"
+#include "MaxwellBoltzmannDistribution.h"
 
 Sphere::Sphere(){}
 
@@ -36,6 +37,7 @@ void Sphere::plot(utils::Vector<double, 3> tempCenter, double x, double y){
 
 	// Being used in the beginning --> v = startV
 	Particle p(pos, startV, m, 0);
+	MaxwellBoltzmannDistribution(p, meanV, 2);
 	sph.push_back(p);
 }
 

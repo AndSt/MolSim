@@ -1,4 +1,5 @@
-2013-12-01 01:02:53,255 INFO  (src/utils/ParticleGenerator.cpp:74) - Returning particle list.
-2013-12-01 01:02:53,255 INFO  (src/utils/ParticleGenerator.cpp:74) - Returning particle list.
-2013-12-01 01:02:53,259 INFO  (src/utils/ParticleGenerator.cpp:74) - Returning particle list.
-2013-12-01 01:02:53,259 INFO  (src/utils/ParticleGenerator.cpp:74) - Returning particle list.
+2013-12-01 01:32:19,603 INFO  (src/utils/ParticleGenerator.cpp:74) - Returning particle list.
+2013-12-01 01:32:19,603 INFO  (src/utils/ParticleGenerator.cpp:74) - Returning particle list.
+2013-12-01 01:32:19,610 INFO  (src/utils/ParticleGenerator.cpp:74) - Returning particle list.
+2013-12-01 01:32:19,610 INFO  (src/utils/ParticleGenerator.cpp:74) - Returning particle list.
+2013-12-01 01:32:21,826 INFO  (src/utils/ParticleGenerator.cpp:44) - Destructed.
