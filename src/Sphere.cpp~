@@ -23,6 +23,8 @@ Sphere::Sphere(utils::Vector<double, 3> center, utils::Vector<double, 3> startV,
 	int l = 2*radius + 1;
 	double o[3] = {center[0] - radius + 1, center[1] - radius + 1, center[2] - radius + 1};
 	utils::Vector<double, 3> ori(o);
+	
+	/*	
 	Cuboid c(l, l, l, meshWidth, m,	ori, startV, meanV);
 	
 	std::list<Particle>::iterator it;
@@ -30,26 +32,27 @@ Sphere::Sphere(utils::Vector<double, 3> center, utils::Vector<double, 3> startV,
 		double x = pow((*it).getX()[0] - center[0],2);
 		double y = pow((*it).getX()[1] - center[1],2);
 		double z = pow((*it).getX()[2] - center[2],2);
+
+		double diag = meshWidth/sqrt(2);
 		
-		if (x + y + z <= radius*radius)
-			sph.push_back(it);
+		if (x + y + z - radius*radius <= diag)
+			sph.push_back(*it);
 	}
-	
+	*/
 	
 	// Draw the biggest circle, which center belongs
-	/*
+	
 	listOfCenters.clear();
 	listOfRadii.clear();
 	sph.clear();
 	this->drawCircleArea(center, radius); //the biggest one
-	*/
 	
 	// now the lisOfCenters and listOfRadii are fully initialized
-	/*std::list<utils::Vector<double, 3> >::iterator itC = listOfCenters.begin();
+	std::list<utils::Vector<double, 3> >::iterator itC = listOfCenters.begin();
 	for (std::list<int>::iterator itR = listOfRadii.begin(); itR != listOfRadii.end(); ++itR){
 		this->drawCircleArea(*itC, *itR);
 		++itC;
-	}*/
+	}
 }
 
 void Sphere::plot(utils::Vector<double, 3> tempCenter, double x, double y){
@@ -65,7 +68,7 @@ void Sphere::plot(utils::Vector<double, 3> tempCenter, double x, double y){
 
 // tempCenter != center
 // all tempCenter lie on Oz axis (the circles are parallel to each other and also to Oxy, distance =  meshWidth)
-/*
+
 void Sphere::drawCircleArea(utils::Vector<double, 3> tempCenter, int rad){
 	// Implementing Bresenham's Algorithm 1 (see GAD Lecture)
 	double x = 0.0;
@@ -87,7 +90,7 @@ void Sphere::drawCircleArea(utils::Vector<double, 3> tempCenter, int rad){
 
 	double F = (1.25*meshWidth - r)*meshWidth;
 	
-	if (rad == radius()){
+	if (rad == radius){
 	// The biggest circle
 		while (x<y){
 			if (F<0){
@@ -187,7 +190,7 @@ void Sphere::drawCircleArea(utils::Vector<double, 3> tempCenter, int rad){
 		}
 	}	
 }
-*/
+
 std::list<Particle>& Sphere::getSphere(){
 	return sph;
 }
