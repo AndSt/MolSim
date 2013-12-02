@@ -236,7 +236,8 @@ int main(int argc, char* argsv[]) {
 			cout << "\tInputParticles: contains all information needed for particles." << endl;
 			cout << "\tInputCuboids: contains all information needed for cuboids." << endl;
 			cout << "\tInputSpheres: contains all information needed for spheres." << endl;
-			cout << "Press 1 to continue." << endl;
+			cout << "\nPress 1 to see what is imported." << endl;
+			cout << "Press 2 to go directly to the simulation." << endl;
 			break;
 		}
 
@@ -311,7 +312,6 @@ int main(int argc, char* argsv[]) {
 
 		//for XML input:
 		else if (option1 == 3){
-			//doesn't care about option2
 			//getting information from InputSetting first
 			pgen.extractSetting(start_time, end_time, delta_t, EPSILON, SIGMA, inputNames, inputTypes, outputMask, freq,
  								domainSize, R_CUTOFF);
@@ -321,16 +321,19 @@ int main(int argc, char* argsv[]) {
 			
 			for (list<string>::iterator itN = inputNames.begin(); itN != inputNames.end(); itN++){
 				if (*itT=="particles"){
-					cout << i << ". input file: " << "[particles]." << endl;
+					if (option2 == 1)
+						cout << i << ". input file: " << "[particles]." << endl;
 					pgen.extractParticles(*itN);
 					pgen.mergeWithParticleList(particleList);					
 				}else if (*itT=="cuboids"){
-					cout << i << ". input file: " << "[cuboids]" << endl;
+					if (option2 == 1)
+						cout << i << ". input file: " << "[cuboids]" << endl;
 					pgen.extractCuboids(*itN);
 					pgen.cuboidsToList();
 					pgen.mergeWithParticleList(particleList);
 				}else{
-					cout << i << ". input file: " << "[spheres]" << endl;
+					if (option2 == 1)
+						cout << i << ". input file: " << "[spheres]" << endl;
 					pgen.extractSpheres(*itN);
 					pgen.spheresToList();				
 					pgen.mergeWithParticleList(particleList);
@@ -338,8 +341,10 @@ int main(int argc, char* argsv[]) {
 				itT++;
 				i++;
 			}
-			cout << "Press enter to continue..." << endl;
-			cin.ignore();
+			if (option2 == 1){
+				cout << "Press enter to continue..." << endl;
+				cin.ignore();
+			}
 		}
 
 		cout << "Reading input file..." << endl;
@@ -378,15 +383,15 @@ void simulate() {
 	while (current_time < end_time) {
 		cout << "Iteration " << iteration << ": " << endl;
 		// calculate new x
-		cout << "\tcalculating X..." << endl;
+		cout << "\tcalculating X" << endl;
 		calculateX(); 
 
 		// calculate new f
-		cout << "\tcalculating F..." << endl;
+		cout << "\tcalculating F" << endl;
 		calculateFLJ();
 
 		// calculate new v
-		cout << "\tcalculating V..." << endl;
+		cout << "\tcalculating V.\n" << endl;
 		calculateV();
 
 		iteration++;

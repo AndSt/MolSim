@@ -24,8 +24,7 @@ Sphere::Sphere(utils::Vector<double, 3> center, utils::Vector<double, 3> startV,
 	double o[3] = {center[0] - radius + 1, center[1] - radius + 1, center[2] - radius + 1};
 	utils::Vector<double, 3> ori(o);
 	
-	// ALTERNATIVE 1 =================================
-	/*	
+	// ALTERNATIVE 1 =================================	
 	Cuboid c(l, l, l, meshWidth, m,	ori, startV, meanV);
 	
 	std::list<Particle>::iterator it;
@@ -39,14 +38,11 @@ Sphere::Sphere(utils::Vector<double, 3> center, utils::Vector<double, 3> startV,
 		if (x + y + z - radius*radius <= diag)
 			sph.push_back(*it);
 	}
-	*/
 	// ================================= ALTERNATIVE 1
 	
+	/*
 	// ALTERNATIVE 2 =================================
 	// Draw the biggest circle, which center belongs
-	
-	listOfCenters.clear();
-	listOfRadii.clear();
 	sph.clear();
 	this->drawCircleArea(center, radius); //the biggest one
 	
@@ -57,6 +53,7 @@ Sphere::Sphere(utils::Vector<double, 3> center, utils::Vector<double, 3> startV,
 		++itC;
 	}
 	// ================================= ALTERNATIVE 2
+	*/
 }
 
 void Sphere::plot(utils::Vector<double, 3> tempCenter, double x, double y){
@@ -96,6 +93,8 @@ void Sphere::drawCircleArea(utils::Vector<double, 3> tempCenter, int rad){
 	
 	if (rad == radius){
 	// The biggest circle
+		listOfCenters.clear();
+		listOfRadii.clear();
 		while (x<y){
 			if (F<0){
 				F = F + 2*x*meshWidth + meshWidth*meshWidth;

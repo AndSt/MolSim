@@ -7,6 +7,7 @@
 
 #include "ParticleGeneratorTest.h"
 #include <iostream>
+#include <string>
 
 ParticleGeneratorTest::ParticleGeneratorTest() {
 
@@ -170,12 +171,7 @@ void ParticleGeneratorTest::testExtractParticles(){
 	
 void ParticleGeneratorTest::testExtractSetting(){
 	double start_timeT, end_timeT, delta_tT, EPSILONT, SIGMAT; 
-	std::list<string> inputNamesT, inputTypesT;
-	inputNames.clear();
-	inputNames.push_back("InputCuboids.xml");
-	inputNames.push_back("InputSpheres.xml");
-	inputTypes.push_back("cuboids");
-	inputTypes.push_back("spheres");
+	std::list<std::string> inputNamesT, inputTypesT;
 	string outputMaskT;
 	int outputFreqT;
 	utils::Vector<double, 3> domainSizeT;
@@ -190,16 +186,10 @@ void ParticleGeneratorTest::testExtractSetting(){
 	CPPUNIT_ASSERT(EPSILON==EPSILONT);
 	CPPUNIT_ASSERT(SIGMA==SIGMAT);
 
-	std::list<string>::iterator itN = inputNames.begin();
-	std::list<string>::iterator itT = inputTypes.begin();
-	std::list<string>::iterator itNT = inputNamesT.begin();
-	std::list<string>::iterator itTT = inputTypesT.begin();
-	CPPUNIT_ASSERT(*itN == *itNT);
-	CPPUNIT_ASSERT(*itT == *itTT);
-	itN++;	itNT++;
-	itT++;	itTT++;
-	CPPUNIT_ASSERT(*itN == *itNT);
-	CPPUNIT_ASSERT(*itT == *itTT);
+	list<string>::iterator itN = inputNamesT.begin();
+	list<string>::iterator itT = inputTypesT.begin();
+	CPPUNIT_ASSERT(*itN == "InputSpheres.xml");
+	CPPUNIT_ASSERT(*itT == "spheres");
 
 	CPPUNIT_ASSERT(outputMask==outputMaskT);
 	CPPUNIT_ASSERT(outputFreq==outputFreqT);

@@ -1,4 +1,1 @@
-2013-12-02 00:26:03,618 DEBUG src/outputWriter/VTKWriter.cpp:25 - Constructed.
-2013-12-02 00:26:04,005 DEBUG src/outputWriter/VTKWriter.cpp:30 - Destructed.
-2013-12-02 00:29:42,437 DEBUG src/outputWriter/VTKWriter.cpp:25 - Constructed.
-2013-12-02 00:29:42,823 DEBUG src/outputWriter/VTKWriter.cpp:30 - Destructed.
+2013-12-02 01:24:47,475 DEBUG src/outputWriter/VTKWriter.cpp:25 - Constructed.
