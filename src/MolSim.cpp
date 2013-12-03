@@ -533,6 +533,10 @@ void plotVTK(int iteration) {
 	writer.initializeOutput(container.size());
 	while (iterator != container.end()) {
 		Particle& p = *iterator;
+		//cout << "Check X: " << p.getX() << endl;
+		//cout << "Check V: " << p.getV() << endl;
+		//cout << "Check F: " << p.getF() << endl;
+		//cin.ignore();		
 
 		writer.plotParticle(p);
 		++iterator;

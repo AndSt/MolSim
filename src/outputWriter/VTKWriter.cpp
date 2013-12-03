@@ -29,7 +29,7 @@ VTKWriter::VTKWriter() {
 VTKWriter::~VTKWriter() {
 	LOG4CXX_DEBUG(vtkwriterlogger,"Destructed.");
 }
-
+//Changed all Float 32 --> Float64
 void VTKWriter::initializeOutput(int numParticles) {
 
 	vtkFile = new VTKFile_t("UnstructuredGrid");

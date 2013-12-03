@@ -11,6 +11,7 @@
 #include "utils/Vector.h"
 #include "Particle.h"
 #include <list>
+#include <vector>
 
 
 
@@ -37,18 +38,26 @@ private:
 	std::list<Particle> sph;
 
 	// List of (2*radius + 1) centers used to draw the circles
-	std::list<utils::Vector<double, 3> > listOfCenters;
+	std::vector<utils::Vector<double, 3> > listOfCenters;
 
 	// List of (2*radius + 1) radii used to draw the circles
 	// INT !!!
-	std::list<int> listOfRadii;	
+	std::vector<int> listOfRadii;
+
+	// Prepare before calling drawBiggestCircleArea();
+	void initListOfCenters();
+	void initListOfRadii();
 	
 	// Draw a point/particle in position (x, y) WITH ORIGIN tempCenter (not (0,0,0) !!!)
 	// In each circle, we need only x and y (z = tempCenter[2] and will not be changed in this circle)
 	// x and y are not int; x = k*meshWidth with k int for example
-	void plot(utils::Vector<double, 3> tempCenter, double x, double y);
+	void plot(utils::Vector<double, 3> tempCenter, int x, int y);
 
-	void drawCircleArea(utils::Vector<double, 3> tempCenter, int radius);
+	void drawVerticalLine(utils::Vector<double, 3> tempCenter, int upperHeight);
+
+	void drawCircleArea(utils::Vector<double, 3> tempCenter, int rad);
+
+	void drawBiggestCircleArea();
 
 public:
 	/** Default constructor.
