@@ -195,7 +195,8 @@ void ParticleGenerator::extractParticles(const string filename)
 
 void ParticleGenerator::extractSetting(double& start_time, double& end_time, double& delta_t, double& EPSILON, double& SIGMA, 
 		std::list<string>& inputNames, std::list<string>& inputTypes, string& outputMask, int& outputFreq, 
-			utils::Vector<double, 3>& domainSize, double& r_cutoff, string& cond)
+			utils::Vector<double, 3>& domainSize, double& r_cutoff, 
+			std::vector<string>& domainBoundCond)
 {
   	try
   	{
@@ -214,6 +215,15 @@ void ParticleGenerator::extractSetting(double& start_time, double& end_time, dou
 			inputNames.push_back(it->name());
 			inputTypes.push_back(it->type());
 		}
+	
+		domainBoundCond.resize(6, "outflow");
+		lc_t::condition_const_iterator ct;
+		int i = 0;
+		// 0 left, 1 right, 2 upper, 3 ground, 4 front, 5 behind
+		for (ct = h->lc().condition().begin(); ct != h->lc().condition().end(); ct++){
+			domainBoundCond[i] = *ct;
+			i++;
+		}
 
 		outputMask = h->outputfile().name();
 		outputFreq = h->outputfile().freq();
@@ -222,7 +232,6 @@ void ParticleGenerator::extractSetting(double& start_time, double& end_time, dou
 		domainSize = utils::Vector<double, 3> (d);
 
 		r_cutoff = h->lc().rcutoff();
-		cond = h->lc().condition();
   	}
   	catch (const xml_schema::exception& e)
   	{

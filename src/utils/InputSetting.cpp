@@ -125,28 +125,22 @@ rcutoff (const rcutoff_type& x)
   this->rcutoff_.set (x);
 }
 
-const lc_t::condition_type& lc_t::
+const lc_t::condition_sequence& lc_t::
 condition () const
 {
-  return this->condition_.get ();
+  return this->condition_;
 }
 
-lc_t::condition_type& lc_t::
+lc_t::condition_sequence& lc_t::
 condition ()
 {
-  return this->condition_.get ();
+  return this->condition_;
 }
 
 void lc_t::
-condition (const condition_type& x)
+condition (const condition_sequence& s)
 {
-  this->condition_.set (x);
-}
-
-void lc_t::
-condition (::std::auto_ptr< condition_type > x)
-{
-  this->condition_.set (x);
+  this->condition_ = s;
 }
 
 
@@ -650,23 +644,21 @@ ljf_t::
 
 lc_t::
 lc_t (const domainsize_type& domainsize,
-      const rcutoff_type& rcutoff,
-      const condition_type& condition)
+      const rcutoff_type& rcutoff)
 : ::xml_schema::type (),
   domainsize_ (domainsize, ::xml_schema::flags (), this),
   rcutoff_ (rcutoff, ::xml_schema::flags (), this),
-  condition_ (condition, ::xml_schema::flags (), this)
+  condition_ (::xml_schema::flags (), this)
 {
 }
 
 lc_t::
 lc_t (::std::auto_ptr< domainsize_type >& domainsize,
-      const rcutoff_type& rcutoff,
-      const condition_type& condition)
+      const rcutoff_type& rcutoff)
 : ::xml_schema::type (),
   domainsize_ (domainsize, ::xml_schema::flags (), this),
   rcutoff_ (rcutoff, ::xml_schema::flags (), this),
-  condition_ (condition, ::xml_schema::flags (), this)
+  condition_ (::xml_schema::flags (), this)
 {
 }
 
@@ -739,11 +731,8 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       ::std::auto_ptr< condition_type > r (
         condition_traits::create (i, f, this));
 
-      if (!condition_.present ())
-      {
-        this->condition_.set (r);
-        continue;
-      }
+      this->condition_.push_back (r);
+      continue;
     }
 
     break;
@@ -760,13 +749,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
   {
     throw ::xsd::cxx::tree::expected_element< char > (
       "rcutoff",
-      "");
-  }
-
-  if (!condition_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "condition",
       "");
   }
 }

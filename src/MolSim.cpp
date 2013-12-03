@@ -30,6 +30,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <memory>
+#include <vector>
 
 using namespace std;
 using namespace log4cxx;
@@ -87,7 +88,12 @@ list<Particle> particleList;
 utils::ParticleContainer container;
 utils::ParticleGenerator pgen;
 
-string boundCond;
+vector<string> boundCond;
+// 0: left	1: right
+// 2: upper	3: ground/lower
+// 4: front	5: behind/gear
+// default = "outflow"
+
 string fileName;
 
 log4cxx::LoggerPtr molsimlogger(log4cxx::Logger::getLogger("molsim"));
@@ -314,8 +320,9 @@ int main(int argc, char* argsv[]) {
 		//for XML input:
 		else if (option1 == 3){
 			//getting information from InputSetting first
-			pgen.extractSetting(start_time, end_time, delta_t, EPSILON, SIGMA, inputNames, inputTypes, outputMask, freq,
- 								domainSize, R_CUTOFF, boundCond);
+			pgen.extractSetting(start_time, end_time, delta_t, EPSILON, SIGMA, 
+						inputNames, inputTypes, outputMask, freq,
+ 							domainSize, R_CUTOFF, boundCond);
 			particleList.clear();
 			list<string>::iterator itT = inputTypes.begin();
 			int i = 1;

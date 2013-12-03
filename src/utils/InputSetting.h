@@ -343,29 +343,27 @@ class lc_t: public ::xml_schema::type
   // condition
   // 
   typedef ::condition_t condition_type;
+  typedef ::xsd::cxx::tree::sequence< condition_type > condition_sequence;
+  typedef condition_sequence::iterator condition_iterator;
+  typedef condition_sequence::const_iterator condition_const_iterator;
   typedef ::xsd::cxx::tree::traits< condition_type, char > condition_traits;
 
-  const condition_type&
+  const condition_sequence&
   condition () const;
 
-  condition_type&
+  condition_sequence&
   condition ();
 
   void
-  condition (const condition_type& x);
-
-  void
-  condition (::std::auto_ptr< condition_type > p);
+  condition (const condition_sequence& s);
 
   // Constructors.
   //
   lc_t (const domainsize_type&,
-        const rcutoff_type&,
-        const condition_type&);
+        const rcutoff_type&);
 
   lc_t (::std::auto_ptr< domainsize_type >&,
-        const rcutoff_type&,
-        const condition_type&);
+        const rcutoff_type&);
 
   lc_t (const ::xercesc::DOMElement& e,
         ::xml_schema::flags f = 0,
@@ -392,7 +390,7 @@ class lc_t: public ::xml_schema::type
   protected:
   ::xsd::cxx::tree::one< domainsize_type > domainsize_;
   ::xsd::cxx::tree::one< rcutoff_type > rcutoff_;
-  ::xsd::cxx::tree::one< condition_type > condition_;
+  condition_sequence condition_;
 };
 
 class domainsize_t: public ::xml_schema::type

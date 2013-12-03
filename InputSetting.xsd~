@@ -109,7 +109,7 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 			<xs:element name="delta_t" type="xs:decimal"/>
 			<xs:element name="ljf" type="ljf_t"/>
 			<xs:element name="lc" type="lc_t"/>
-			<xs:element name="inputfile" type="inputfile_t"/>
+			<xs:element name="inputfile" type="inputfile_t" maxOccurs="unbounded"/>
 			<xs:element name="outputfile" type="outputfile_t"/>
 		</xs:sequence>
 	</xs:complexType>

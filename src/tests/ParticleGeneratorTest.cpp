@@ -8,6 +8,7 @@
 #include "ParticleGeneratorTest.h"
 #include <iostream>
 #include <string>
+#include <vector>
 
 ParticleGeneratorTest::ParticleGeneratorTest() {
 
@@ -75,7 +76,7 @@ void ParticleGeneratorTest::setUp() {
 	/*FOR TESTEXTRACTSETTING*/
 	start_time = 0.0;
  	end_time = 5.0;
-	delta_t = 0.0002;
+	delta_t = 0.00005;
 	EPSILON = 5.0;
 	SIGMA = 1.0;
 	inputNames.clear();
@@ -176,7 +177,7 @@ void ParticleGeneratorTest::testExtractSetting(){
 	int outputFreqT;
 	utils::Vector<double, 3> domainSizeT;
 	double rcutoffT;
-	string cond;
+	std::vector<string> cond;
 	
 	generator.extractSetting(start_timeT, end_timeT, delta_tT, EPSILONT, SIGMAT, inputNamesT, inputTypesT, outputMaskT, outputFreqT,
 							domainSizeT, rcutoffT, cond);
@@ -191,7 +192,13 @@ void ParticleGeneratorTest::testExtractSetting(){
 	list<string>::iterator itT = inputTypesT.begin();
 	CPPUNIT_ASSERT(*itN == "InputSpheres.xml");
 	CPPUNIT_ASSERT(*itT == "spheres");
-	CPPUNIT_ASSERT(cond == "reflecting");
+
+	CPPUNIT_ASSERT(cond[0] == "outflow");
+	CPPUNIT_ASSERT(cond[1] == "reflecting");
+	CPPUNIT_ASSERT(cond[2] == "outflow");
+	CPPUNIT_ASSERT(cond[3] == "outflow");
+	CPPUNIT_ASSERT(cond[4] == "outflow");
+	CPPUNIT_ASSERT(cond[5] == "outflow");	
 
 	CPPUNIT_ASSERT(outputMask==outputMaskT);
 	CPPUNIT_ASSERT(outputFreq==outputFreqT);

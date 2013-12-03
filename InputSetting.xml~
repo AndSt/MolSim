@@ -20,11 +20,27 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 		<domainsize>
 			<domainX>120.0</domainX>
 			<domainY>50.0</domainY>
-			<domainZ>0.0</domainZ>
+			<domainZ>3.0</domainZ>
 		</domainsize>
 		<rcutoff>3.0</rcutoff>
 	
-		<!-- outflow, reflecting -->
+		<!-- outflow, reflecting for 6 boundaries -->
+		<!-- upper side -->
+		<condition>outflow</condition>
+
+		<!-- ground -->
+		<condition>reflecting</condition>
+
+		<!-- front -->
+		<condition>outflow</condition>
+
+		<!-- right -->
+		<condition>outflow</condition>
+
+		<!-- behind -->
+		<condition>outflow</condition>
+
+		<!-- left -->
 		<condition>outflow</condition>
 	</lc>	
 
