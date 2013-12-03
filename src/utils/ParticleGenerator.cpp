@@ -195,7 +195,7 @@ void ParticleGenerator::extractParticles(const string filename)
 
 void ParticleGenerator::extractSetting(double& start_time, double& end_time, double& delta_t, double& EPSILON, double& SIGMA, 
 		std::list<string>& inputNames, std::list<string>& inputTypes, string& outputMask, int& outputFreq, 
-			utils::Vector<double, 3>& domainSize, double& r_cutoff)
+			utils::Vector<double, 3>& domainSize, double& r_cutoff, string& cond)
 {
   	try
   	{
@@ -222,6 +222,7 @@ void ParticleGenerator::extractSetting(double& start_time, double& end_time, dou
 		domainSize = utils::Vector<double, 3> (d);
 
 		r_cutoff = h->lc().rcutoff();
+		cond = h->lc().condition();
   	}
   	catch (const xml_schema::exception& e)
   	{

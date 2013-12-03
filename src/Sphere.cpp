@@ -41,20 +41,13 @@ Sphere::Sphere(utils::Vector<double, 3> center1, utils::Vector<double, 3> startV
 			sph.push_back(*it);
 	}
 	// ================================= ALTERNATIVE 1
-
+	
 	/*
 	// ALTERNATIVE 2 =================================	
 	// Draw the biggest circle, which center belongs
 	sph.clear();
 	
-	drawVerticalLine(center, radius);
-	for(std::list<Particle>::iterator it = sph.begin(); it != sph.end(); it++){
-		std::cout << (*it).getX() << std::endl;
-		std::cout << (*it).getV() << std::endl;
-		std::cin.ignore();
-	}
-	
-	//drawBiggestCircleArea();
+	drawBiggestCircleArea();
 
 	// now the lisOfCenters and listOfRadii are fully initialized
 	for (int i = 0; i<= 2*radius; i++){

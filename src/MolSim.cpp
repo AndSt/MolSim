@@ -87,6 +87,7 @@ list<Particle> particleList;
 utils::ParticleContainer container;
 utils::ParticleGenerator pgen;
 
+string boundCond;
 string fileName;
 
 log4cxx::LoggerPtr molsimlogger(log4cxx::Logger::getLogger("molsim"));
@@ -314,7 +315,7 @@ int main(int argc, char* argsv[]) {
 		else if (option1 == 3){
 			//getting information from InputSetting first
 			pgen.extractSetting(start_time, end_time, delta_t, EPSILON, SIGMA, inputNames, inputTypes, outputMask, freq,
- 								domainSize, R_CUTOFF);
+ 								domainSize, R_CUTOFF, boundCond);
 			particleList.clear();
 			list<string>::iterator itT = inputTypes.begin();
 			int i = 1;

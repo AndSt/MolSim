@@ -176,9 +176,10 @@ void ParticleGeneratorTest::testExtractSetting(){
 	int outputFreqT;
 	utils::Vector<double, 3> domainSizeT;
 	double rcutoffT;
+	string cond;
 	
 	generator.extractSetting(start_timeT, end_timeT, delta_tT, EPSILONT, SIGMAT, inputNamesT, inputTypesT, outputMaskT, outputFreqT,
-							domainSizeT, rcutoffT);
+							domainSizeT, rcutoffT, cond);
 
 	CPPUNIT_ASSERT(start_time==start_timeT);
 	CPPUNIT_ASSERT(end_time==end_timeT);
@@ -190,6 +191,7 @@ void ParticleGeneratorTest::testExtractSetting(){
 	list<string>::iterator itT = inputTypesT.begin();
 	CPPUNIT_ASSERT(*itN == "InputSpheres.xml");
 	CPPUNIT_ASSERT(*itT == "spheres");
+	CPPUNIT_ASSERT(cond == "reflecting");
 
 	CPPUNIT_ASSERT(outputMask==outputMaskT);
 	CPPUNIT_ASSERT(outputFreq==outputFreqT);

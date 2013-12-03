@@ -56,7 +56,7 @@ public:
 	
 	void extractSetting(double& start_time, double& end_time, double& delta_t, double& EPSILON, double& SIGMA, 
 				std::list<string>& inputNames, std::list<string>& inputTypes, string& outputMask, int& outputFreq, 
-				utils::Vector<double, 3>& domainSize, double& r_cutoff);
+				utils::Vector<double, 3>& domainSize, double& r_cutoff, string& cond);
 
 	void extractParticles(const string filename);
 
