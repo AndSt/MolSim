@@ -1,11 +1,17 @@
 #include "outputWriter/VTKWriter.h"
 #include "FileReader.h"
+
 #include "Particle.h"
 #include "Cuboid.h"
+#include "Sphere.h"
+
 #include "utils/Vector.h"
 #include "utils/ParticleContainer.h"
 #include "utils/ParticleIterator.h"
 #include "utils/ParticleGenerator.h"
+#include "utils/LCParticleContainer.h"
+#include "utils/LCInnerParticleIterator.h"
+#include "utils/LCOuterParticleIterator.h"
 
 #include <log4cxx/logger.h>
 #include <log4cxx/propertyconfigurator.h>
@@ -40,21 +46,27 @@ using namespace log4cxx::helpers;
 /**** forward declaration of the calculation functions ****/
 
 void simulate();
+void LCsimulate();
 
 /**
  * calculate the force for all particles, according to Lennard-Jones
  */
 void calculateFLJ();
+void LCcalculateFLJ();
 
 /**
  * calculate the position for all particles
  */
 void calculateX();
+void LCcalculateX();
 
 /**
  * calculate the velocity for all particles
  */
 void calculateV();
+void LCcalculateV();
+
+void computeForce(Particle& p1, Particle& p2);
 
 void getIntegerInput(string &str, int &input);
 
@@ -62,6 +74,7 @@ void getDoubleInput(string &str, double &input);
 
 // plot the particles to VTKWriter-File
 void plotVTK(int iteration);
+void LCplotVTK(int iteration);
 
 double start_time = 0;
 double end_time = 1000;
@@ -83,12 +96,14 @@ double EPSILON = 5.0;
 // For Linked Cell Algorithm
 double R_CUTOFF = 3.0;
 utils::Vector<double, 3> domainSize;
+bool outflow_flag = false;
 
 list<Particle> particleList;
 utils::ParticleContainer container;
 utils::ParticleGenerator pgen;
+utils::LCParticleContainer lcContainer;
 
-vector<int> boundCond;
+vector<int> domainCondition;
 // 0: left	1: right
 // 2: upper	3: ground/lower
 // 4: front	5: behind/gear
@@ -192,7 +207,7 @@ int main(int argc, char* argsv[]) {
 		LOG4CXX_INFO(molsimlogger, "Arrived @ filedecision.");
 		string str;
 		FileReader fileReader;
-		cout << "Hello from MolSim for PSE!" << endl;
+		cout << "Hello from Andreas, Matthias and Son!" << endl;
 		cout << endl;
 		//variable for Level 1 Options:
 		int option1;
@@ -244,8 +259,8 @@ int main(int argc, char* argsv[]) {
 			cout << "\tInputParticles: contains all information needed for particles." << endl;
 			cout << "\tInputCuboids: contains all information needed for cuboids." << endl;
 			cout << "\tInputSpheres: contains all information needed for spheres." << endl;
-			cout << "\nPress 1 to see what is imported." << endl;
-			cout << "Press 2 to go directly to the simulation." << endl;
+			cout << "\nPress 1 to use Linked Cell Algorithm." << endl;
+			cout << "Press 2 to simulate without Linked Cell Algorithm." << endl;
 			break;
 		}
 
@@ -323,26 +338,23 @@ int main(int argc, char* argsv[]) {
 			//getting information from InputSetting first
 			pgen.extractSetting(start_time, end_time, delta_t, EPSILON, SIGMA, 
 						inputNames, inputTypes, outputMask, freq,
- 							domainSize, R_CUTOFF, boundCond);
+ 							domainSize, R_CUTOFF, domainCondition);
 			particleList.clear();
 			list<string>::iterator itT = inputTypes.begin();
 			int i = 1;
 			
 			for (list<string>::iterator itN = inputNames.begin(); itN != inputNames.end(); itN++){
 				if (*itT=="particles"){
-					if (option2 == 1)
-						cout << i << ". input file: " << "[particles]." << endl;
+					cout << i << ". input file: " << "[particles]." << endl;
 					pgen.extractParticles(*itN);
-					pgen.mergeWithParticleList(particleList);					
+					pgen.mergeWithParticleList(particleList);
 				}else if (*itT=="cuboids"){
-					if (option2 == 1)
-						cout << i << ". input file: " << "[cuboids]" << endl;
+					cout << i << ". input file: " << "[cuboids]" << endl;
 					pgen.extractCuboids(*itN);
 					pgen.cuboidsToList();
 					pgen.mergeWithParticleList(particleList);
 				}else{
-					if (option2 == 1)
-						cout << i << ". input file: " << "[spheres]" << endl;
+					cout << i << ". input file: " << "[spheres]" << endl;
 					pgen.extractSpheres(*itN);
 					pgen.spheresToList();				
 					pgen.mergeWithParticleList(particleList);
@@ -350,24 +362,31 @@ int main(int argc, char* argsv[]) {
 				itT++;
 				i++;
 			}
-			if (option2 == 1){
-				cout << "Press enter to continue..." << endl;
-				cin.ignore();
-			}
+			
+			cout << "Press enter to continue..." << endl;
+			cin.ignore();
 		}
 
 		cout << "Reading input file..." << endl;
 
 		//inintialize container with particle list
 		LOG4CXX_INFO(molsimlogger, "Arrived @ initialization call.");
-		container.initialize(particleList);
+		if (option2==2)
+			container.initialize(particleList);
+		else
+			//LC
+			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
 
 		//start simulation
 		LOG4CXX_INFO(molsimlogger, "Arrived @ simulation call.");
 
 		cout << "Running simulation..." << endl;
 
-		simulate();
+		if (option2==2)
+			simulate();
+		else
+			//LC
+			LCsimulate();
 
 		LOG4CXX_INFO(molsimlogger, "Arrived @ ending simulation.");
 	}
@@ -547,6 +566,251 @@ void plotVTK(int iteration) {
 		//cout << "Check F: " << p.getF() << endl;
 		//cin.ignore();		
 
+		writer.plotParticle(p);
+		++iterator;
+	}
+	string out_name(outputMask);
+	writer.writeFile(out_name, iteration);
+}
+
+//=========================================================
+// LINKED CELL ALGORITHM
+void LCsimulate() {
+// the forces are needed to calculate x, but are not given in the input file.
+//calculateF();
+	cout << lcContainer.size() << endl;
+	cout << particleList.size() << endl;
+	assert(lcContainer.size() == particleList.size());
+	LCcalculateFLJ();
+	double current_time = start_time;
+
+	int iteration = 0;
+// for this loop, we assume: current x, current f and current v are known
+	while (current_time < end_time) {
+		// calculate new x
+		LCcalculateX();
+		// calculate new f
+		LCcalculateFLJ();
+		// calculate new v
+		LCcalculateV();
+
+		iteration++;
+		if (iteration % freq == 0 || outflow_flag) {
+			lcContainer.updateCells();
+			outflow_flag = false;
+		}
+		if (iteration % freq == 0) {
+			LCplotVTK(iteration);
+		}
+		cout << "Iteration " << iteration << " finished." << endl;
+
+		current_time += delta_t;
+	}
+
+	cout << "Output written. Terminating..." << endl;
+}
+
+void LCcalculateFLJ() {	
+	const double h = (pow(2, (1 / 6)) * SIGMA);
+	int depth = 0;
+	
+	utils::Vector<double, 3> zero((double) 0);
+	utils::Vector<double, 3> sumF((double) 0);
+	utils::LCOuterParticleIterator iterator = lcContainer.beginOuter();
+	int i = 0;
+	while (iterator != lcContainer.endOuter()) {
+		i = iterator.getCellNumber();
+		if (i > (lcContainer.endOuter()).getCellNumber()) {
+			break;
+		}
+		sumF = zero;
+		utils::LCInnerParticleIterator innerIterator = lcContainer.beginInner(
+				iterator);
+		while (innerIterator != lcContainer.endInner(i)) {
+			assert(innerIterator != lcContainer.endInner(i));
+			if (innerIterator.getCellNumber()
+					> lcContainer.endInner(i).getCellNumber()
+					|| innerIterator.getCellNumber()
+							> lcContainer.endOuter().getCellNumber()) {
+				break;
+			}
+			Particle& p1 = *iterator;
+			Particle& p2 = *innerIterator;
+			/*			cout << "Element: " << innerIterator.getCellNumber() << " "
+			 //					<< p2.toString() << endl;
+			 //			cout << "EndInner: " << ((*(lcContainer.endInner(i))).toString())
+			 //					<< endl;*/
+			if (p1 == p2) {
+				++innerIterator;
+				continue;
+			} else {
+				assert(!(p1 == p2));
+
+				computeForce(p1, p2);
+
+				++innerIterator;
+			}
+		}
+
+		/* check if the left boundary will affect the force threw reflection */
+		if ((*iterator).getX()[0] <= h) {
+			if (domainCondition[0] == 1) {
+				double x_arg[3] = { 0, (*iterator).getX()[1],
+						(*iterator).getX()[2] };
+				utils::Vector<double, 3> x(x_arg);
+				utils::Vector<double, 3> v(0.0);
+				Particle p(x, v, 1);
+				computeForce((*iterator), p);
+			} else if (domainCondition[0] == 2) {
+				if ((*iterator).getX()[0] < 0) {
+					outflow_flag = true;
+				}
+			}
+		}
+		/* check if the right boundary will affect the force threw reflection */
+		else if ((*iterator).getX()[0] >= domainSize[0] - h) {
+			if (domainCondition[1] == 1) {
+				double x_arg[3] = { domainSize[0], (*iterator).getX()[1],
+						(*iterator).getX()[2] };
+				utils::Vector<double, 3> x(x_arg);
+				utils::Vector<double, 3> v(0.0);
+				Particle p(x, v, 1);
+				computeForce((*iterator), p);
+			} else if (domainCondition[0] == 2) {
+				if ((*iterator).getX()[0] >= domainSize[0]) {
+					outflow_flag = true;
+				}
+			}
+		}
+		/* check if the bottom boundary will affect the force threw reflection */
+		if ((*iterator).getX()[1] <= h) {
+			if (domainCondition[2] == 1) {
+				double x_arg[3] = { (*iterator).getX()[0], 0,
+						(*iterator).getX()[2] };
+				utils::Vector<double, 3> x(x_arg);
+				utils::Vector<double, 3> v(0.0);
+				Particle p(x, v, 1);
+				computeForce((*iterator), p);
+			} else if (domainCondition[0] == 2) {
+				if ((*iterator).getX()[1] < 0) {
+					outflow_flag = true;
+				}
+			}
+		}
+		/* check if the upper boundary will affect the force threw reflection */
+		else if ((*iterator).getX()[1] >= domainSize[1] - h) {
+			if (domainCondition[3] == 1) {
+				double x_arg[3] = { (*iterator).getX()[0], domainSize[1],
+						(*iterator).getX()[2] };
+				utils::Vector<double, 3> x(x_arg);
+				utils::Vector<double, 3> v(0.0);
+				Particle p(x, v, 1);
+				computeForce((*iterator), p);
+			} else if (domainCondition[0] == 2) {
+				if ((*iterator).getX()[1] >= domainSize[1]) {
+					outflow_flag = true;
+				}
+			}
+		}
+		/* check if the front boundary will affect the force threw reflection */
+		if ((*iterator).getX()[2] <= h && depth > 0) {
+			if (domainCondition[4] == 1) {
+				double x_arg[3] = { (*iterator).getX()[0],
+						(*iterator).getX()[1], 0 };
+				utils::Vector<double, 3> x(x_arg);
+				utils::Vector<double, 3> v(0.0);
+				Particle p(x, v, 1);
+				computeForce((*iterator), p);
+			} else if (domainCondition[0] == 2) {
+				if ((*iterator).getX()[2] < 0) {
+					outflow_flag = true;
+				}
+			}
+		}
+		/* check if the rear boundary will affect the force threw reflection */
+		else if ((*iterator).getX()[2] >= domainSize[2] - h && depth > 0) {
+			if (domainCondition[5] == 1) {
+				double x_arg[3] = { (*iterator).getX()[0],
+						(*iterator).getX()[1], domainSize[2] };
+				utils::Vector<double, 3> x(x_arg);
+				utils::Vector<double, 3> v(0.0);
+				Particle p(x, v, 1);
+				computeForce((*iterator), p);
+			} else if (domainCondition[0] == 2) {
+				if ((*iterator).getX()[2] >= domainSize[2]) {
+					outflow_flag = true;
+				}
+			}
+		}
+		(*iterator).setF((*iterator).getTempF());
+		(*iterator).deleteTempF();
+		++iterator;
+	}
+}
+
+void LCcalculateX() {
+
+	utils::LCOuterParticleIterator iterator = lcContainer.beginOuter();
+	while (iterator != lcContainer.endOuter()) {
+		int i = iterator.getCellNumber();
+		if (i > (lcContainer.endOuter()).getCellNumber()) {
+			break;
+		}
+		Particle& p = *iterator;
+
+		utils::Vector<double, 3> tempX = p.getX() + delta_t * p.getV()
+				+ ((delta_t) * (delta_t) / (2 * p.getM())) * p.getOldF();
+
+		if (tempX[0] < 0 || tempX[1] < 0) {
+			cout << iterator.getCellNumber() << " " << (*iterator).toString();
+		}
+		p.getX() = tempX;
+
+		++iterator;
+	}
+}
+
+void LCcalculateV() {
+
+	utils::LCOuterParticleIterator iterator = lcContainer.beginOuter();
+	while (iterator != lcContainer.endOuter()) {
+
+		int i = iterator.getCellNumber();
+		if (i > (lcContainer.endOuter()).getCellNumber()) {
+			break;
+		}
+		Particle& p = *iterator;
+
+		utils::Vector<double, 3> tempV = p.getV()
+				+ (delta_t / (2 * p.getM())) * (p.getF() + p.getOldF());
+
+		p.getV() = tempV;
+		++iterator;
+	}
+}
+
+/**
+ *
+ * @param p1 the particle of the outer iterator
+ * @param p2 the particle of the inner iterator
+ */
+void computeForce(Particle& p1, Particle& p2) {
+	utils::Vector<double, 3> tempD = p2.getX() - p1.getX();
+	double tempDNorm = tempD.L2Norm();
+	double tempDSigDivNorm = pow(SIGMA / tempDNorm, 6);
+	utils::Vector<double, 3> tempF = 24 * EPSILON * pow(1 / tempDNorm, 2)
+			* (tempDSigDivNorm - 2 * pow(tempDSigDivNorm, 2)) * tempD;
+	p2.updateTempF((-1) * tempF);
+	p1.updateTempF(tempF);
+}
+
+void LCplotVTK(int iteration) {
+
+	outputWriter::VTKWriter writer;
+	list<Particle>::iterator iterator = (lcContainer.getList()).begin();
+	writer.initializeOutput((lcContainer.getList()).size());
+	while (iterator != (lcContainer.getList()).end()) {
+		Particle& p = *iterator;
 		writer.plotParticle(p);
 		++iterator;
 	}

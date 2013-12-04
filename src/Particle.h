@@ -23,6 +23,9 @@ private:
 	/** the force effective on this particle */
 	utils::Vector<double, 3> f;
 
+
+	utils::Vector<double, 3> temp_f;
+
 	/** the force which WAS effective on this particle */
 	utils::Vector<double, 3> old_f;
 
@@ -58,6 +61,8 @@ public:
 
 	utils::Vector<double, 3>& getV();
 
+	utils::Vector<double, 3> getTempF();
+
 	double getM();
 	void setM(double newMass);
 
@@ -68,6 +73,10 @@ public:
 	std::string toString();
 
 	void setF(utils::Vector<double, 3> newF);
+
+	void deleteTempF();
+
+	void updateTempF(utils::Vector<double, 3> newF);
 };
 
 std::ostream& operator<<(std::ostream& stream, Particle& p);
