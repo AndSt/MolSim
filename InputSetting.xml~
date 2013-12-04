@@ -25,22 +25,22 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 		<rcutoff>3.0</rcutoff>
 	
 		<!-- outflow, reflecting for 6 boundaries -->
-		<!-- upper side -->
+		<!-- left side -->
+		<condition>outflow</condition>
+
+		<!-- right -->
+		<condition>reflecting</condition>
+
+		<!-- upper -->
 		<condition>outflow</condition>
 
 		<!-- ground -->
-		<condition>reflecting</condition>
+		<condition>outflow</condition>
 
 		<!-- front -->
 		<condition>outflow</condition>
 
-		<!-- right -->
-		<condition>outflow</condition>
-
 		<!-- behind -->
-		<condition>outflow</condition>
-
-		<!-- left -->
 		<condition>outflow</condition>
 	</lc>	
 
@@ -52,6 +52,6 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 	
 	<outputfile>
 		<name>MolSimVTK</name>
-		<freq>10</freq>
+		<freq>1</freq>
 	</outputfile>
 </pse>
