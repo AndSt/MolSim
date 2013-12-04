@@ -10,8 +10,8 @@ xsi:noNamespaceSchemaLocation="InputCuboids.xsd">
 
 	<cuboid>
 		<originVector>
-			<oriX>0.0</oriX>
-			<oriY>0.0</oriY>
+			<oriX>20.0</oriX>
+			<oriY>20.0</oriY>
 			<oriZ>0.0</oriZ>
 		</originVector>
 		<startVelocity>
@@ -20,16 +20,16 @@ xsi:noNamespaceSchemaLocation="InputCuboids.xsd">
 			<velZ>0.0</velZ>
 		</startVelocity>
 		<size3D>
-			<width>40</width>
-			<height>8</height>
+			<width>100</width>
+			<height>20</height>
 			<depth>1</depth>
 		</size3D>		
 	</cuboid>	
 
 	<cuboid>
 		<originVector>
-			<oriX>15.0</oriX>
-			<oriY>15.0</oriY>
+			<oriX>70.0</oriX>
+			<oriY>60.0</oriY>
 			<oriZ>0.0</oriZ>
 		</originVector>  		
 		<startVelocity>
@@ -38,8 +38,8 @@ xsi:noNamespaceSchemaLocation="InputCuboids.xsd">
 			<velZ>0.0</velZ>
 		</startVelocity>
 		<size3D>
-			<width>8</width>
-			<height>8</height>
+			<width>20</width>
+			<height>20</height>
 			<depth>1</depth>
 		</size3D>	
 	</cuboid>

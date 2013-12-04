@@ -2,7 +2,7 @@
 
 <cuboids
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:noNamespaceSchemaLocation="cuboids.xsd">
+xsi:noNamespaceSchemaLocation="InputCuboids.xsd">
 
 	<meshWidth>1.1225</meshWidth>
 	<mass>1.0</mass>
