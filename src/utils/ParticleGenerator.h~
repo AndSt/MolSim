@@ -114,22 +114,31 @@ public:
 	 */
 	void extractSpheres(const string filename);
 
-	/** Converts particle generator's list of cuboids into one single list of particles
+	/** Converts particle generator's list of cuboids into one single list of particles.
 	 * @param[out] particleList The result will be stored here.
 	 */
 	void cuboidsToList();
 
+	/** Converts particle generator's list of spheres into one single list of particles.
+	 * @param[out] particleList The result will be stored here.
+	 */
 	void spheresToList();
 
 	// particleList stands behind
+	/** Merge with a given list, which will stand BEFORE particleList.
+	 * @param[in] before This list will be merged.
+	 * @param[in] particleList All elements of this list will be added into the gear side of before.
+	 * @param[out] before The new elements will be pushed into before's back.
+	 */
 	void mergeWithParticleList(std::list<Particle>& before);
 
-	/** \return Particle generator's list of cuboids.
-	 */
+	/** \return Particle generator's list of cuboids.*/
 	std::list<Cuboid>& getCuboidList();
 
+	/** \return Particle generator's list of spheres.*/
 	std::list<Sphere>& getSphereList();
 
+	/** \return Particle generator's list of particles.*/
 	std::list<Particle>& getParticleList();
 
 	virtual ~ParticleGenerator();

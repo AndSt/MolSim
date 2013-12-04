@@ -472,22 +472,10 @@ class domainsize_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< domainZ_type > domainZ_;
 };
 
-class condition_t: public ::xml_schema::string
+class condition_t: public ::xsd::cxx::tree::fundamental_base< ::xml_schema::int_, char, ::xml_schema::simple_type >
 {
   public:
-  enum value
-  {
-    outflow,
-    reflecting
-  };
-
-  condition_t (value v);
-
-  condition_t (const char* v);
-
-  condition_t (const ::std::string& v);
-
-  condition_t (const ::xml_schema::string& v);
+  condition_t (::xml_schema::int_ v);
 
   condition_t (const ::xercesc::DOMElement& e,
                ::xml_schema::flags f = 0,
@@ -509,23 +497,6 @@ class condition_t: public ::xml_schema::string
   virtual condition_t*
   _clone (::xml_schema::flags f = 0,
           ::xml_schema::container* c = 0) const;
-
-  condition_t&
-  operator= (value v);
-
-  virtual
-  operator value () const
-  {
-    return _xsd_condition_t_convert ();
-  }
-
-  protected:
-  value
-  _xsd_condition_t_convert () const;
-
-  public:
-  static const char* const _xsd_condition_t_literals_[2];
-  static const value _xsd_condition_t_indexes_[2];
 };
 
 class inputfile_t: public ::xml_schema::type

@@ -193,10 +193,12 @@ void ParticleGenerator::extractParticles(const string filename)
   	}
 }
 
-void ParticleGenerator::extractSetting(double& start_time, double& end_time, double& delta_t, double& EPSILON, double& SIGMA, 
-		std::list<string>& inputNames, std::list<string>& inputTypes, string& outputMask, int& outputFreq, 
-			utils::Vector<double, 3>& domainSize, double& r_cutoff, 
-			std::vector<string>& domainBoundCond)
+void ParticleGenerator::extractSetting(double& start_time, double& end_time, 
+				double& delta_t, double& EPSILON, double& SIGMA,
+				std::list<string>& inputNames, std::list<string>& inputTypes, 
+				string& outputMask, int& outputFreq,
+				utils::Vector<double, 3>& domainSize, double& r_cutoff,
+				std::vector<int>& domainBoundCond)
 {
   	try
   	{
@@ -216,7 +218,7 @@ void ParticleGenerator::extractSetting(double& start_time, double& end_time, dou
 			inputTypes.push_back(it->type());
 		}
 	
-		domainBoundCond.resize(6, "outflow");
+		domainBoundCond.resize(6, 1);
 		lc_t::condition_const_iterator ct;
 		int i = 0;
 		// 0 left, 1 right, 2 upper, 3 ground, 4 front, 5 behind

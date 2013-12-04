@@ -52,6 +52,6 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 	
 	<outputfile>
 		<name>MolSimVTK</name>
-		<freq>1</freq>
+		<freq>10</freq>
 	</outputfile>
 </pse>

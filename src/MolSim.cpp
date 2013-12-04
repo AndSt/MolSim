@@ -88,10 +88,11 @@ list<Particle> particleList;
 utils::ParticleContainer container;
 utils::ParticleGenerator pgen;
 
-vector<string> boundCond;
+vector<int> boundCond;
 // 0: left	1: right
 // 2: upper	3: ground/lower
 // 4: front	5: behind/gear
+// Value: 1 = outflow, 2= reflecting
 // default = "outflow"
 
 string fileName;
@@ -332,7 +333,7 @@ int main(int argc, char* argsv[]) {
 					if (option2 == 1)
 						cout << i << ". input file: " << "[particles]." << endl;
 					pgen.extractParticles(*itN);
-					pgen.mergeWithParticleList(particleList);					
+					pgen.mergeWithParticleList(particleList);
 				}else if (*itT=="cuboids"){
 					if (option2 == 1)
 						cout << i << ". input file: " << "[cuboids]" << endl;

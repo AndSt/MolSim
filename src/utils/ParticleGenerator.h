@@ -88,7 +88,7 @@ public:
 				std::list<string>& inputNames, std::list<string>& inputTypes, 
 				string& outputMask, int& outputFreq, 
 				utils::Vector<double, 3>& domainSize, double& r_cutoff, 
-				std::vector<string>& domainBoundCond);
+				std::vector<int>& domainBoundCond);
 
 	/** The reading procedure, which can convert information 
 	 *  from a given XML input file into particle generator's list of unstructered particles.

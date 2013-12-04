@@ -206,26 +206,7 @@ domainZ (const domainZ_type& x)
 // 
 
 condition_t::
-condition_t (value v)
-: ::xml_schema::string (_xsd_condition_t_literals_[v])
-{
-}
-
-condition_t::
-condition_t (const char* v)
-: ::xml_schema::string (v)
-{
-}
-
-condition_t::
-condition_t (const ::std::string& v)
-: ::xml_schema::string (v)
-{
-}
-
-condition_t::
-condition_t (const ::xml_schema::string& v)
-: ::xml_schema::string (v)
+condition_t (::xml_schema::int_ v): ::xsd::cxx::tree::fundamental_base< ::xml_schema::int_, char, ::xml_schema::simple_type > (v)
 {
 }
 
@@ -233,17 +214,8 @@ condition_t::
 condition_t (const condition_t& v,
              ::xml_schema::flags f,
              ::xml_schema::container* c)
-: ::xml_schema::string (v, f, c)
+: ::xsd::cxx::tree::fundamental_base< ::xml_schema::int_, char, ::xml_schema::simple_type > (v, f, c)
 {
-}
-
-condition_t& condition_t::
-operator= (value v)
-{
-  static_cast< ::xml_schema::string& > (*this) = 
-  ::xml_schema::string (_xsd_condition_t_literals_[v]);
-
-  return *this;
 }
 
 
@@ -893,18 +865,16 @@ condition_t::
 condition_t (const ::xercesc::DOMElement& e,
              ::xml_schema::flags f,
              ::xml_schema::container* c)
-: ::xml_schema::string (e, f, c)
+: ::xsd::cxx::tree::fundamental_base< ::xml_schema::int_, char, ::xml_schema::simple_type > (e, f, c)
 {
-  _xsd_condition_t_convert ();
 }
 
 condition_t::
 condition_t (const ::xercesc::DOMAttr& a,
              ::xml_schema::flags f,
              ::xml_schema::container* c)
-: ::xml_schema::string (a, f, c)
+: ::xsd::cxx::tree::fundamental_base< ::xml_schema::int_, char, ::xml_schema::simple_type > (a, f, c)
 {
-  _xsd_condition_t_convert ();
 }
 
 condition_t::
@@ -912,9 +882,8 @@ condition_t (const ::std::string& s,
              const ::xercesc::DOMElement* e,
              ::xml_schema::flags f,
              ::xml_schema::container* c)
-: ::xml_schema::string (s, e, f, c)
+: ::xsd::cxx::tree::fundamental_base< ::xml_schema::int_, char, ::xml_schema::simple_type > (s, e, f, c)
 {
-  _xsd_condition_t_convert ();
 }
 
 condition_t* condition_t::
@@ -923,38 +892,6 @@ _clone (::xml_schema::flags f,
 {
   return new class condition_t (*this, f, c);
 }
-
-condition_t::value condition_t::
-_xsd_condition_t_convert () const
-{
-  ::xsd::cxx::tree::enum_comparator< char > c (_xsd_condition_t_literals_);
-  const value* i (::std::lower_bound (
-                    _xsd_condition_t_indexes_,
-                    _xsd_condition_t_indexes_ + 2,
-                    *this,
-                    c));
-
-  if (i == _xsd_condition_t_indexes_ + 2 || _xsd_condition_t_literals_[*i] != *this)
-  {
-    throw ::xsd::cxx::tree::unexpected_enumerator < char > (*this);
-  }
-
-  return *i;
-}
-
-const char* const condition_t::
-_xsd_condition_t_literals_[2] =
-{
-  "outflow",
-  "reflecting"
-};
-
-const condition_t::value condition_t::
-_xsd_condition_t_indexes_[2] =
-{
-  ::condition_t::outflow,
-  ::condition_t::reflecting
-};
 
 // inputfile_t
 //

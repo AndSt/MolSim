@@ -45,13 +45,14 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:simpleType name="condition_t">
 			<xs:annotation>
 			  <xs:documentation>
-				The condition_t type is an enumeration consisting of "outflow" or "reflecting".
+				The condition_t type is an enumeration 
+				consisting of "outflow" (1) or "reflecting" (2).
 				Each value gives the type of boundary condition we should apply.
 			  </xs:documentation>
 			</xs:annotation>
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="outflow"/>
-			<xs:enumeration value="reflecting"/>
+		<xs:restriction base="xs:int">
+			<xs:enumeration value="1"/>
+			<xs:enumeration value="2"/>
 		</xs:restriction>
 	</xs:simpleType>
 

@@ -24,7 +24,7 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 		<xs:sequence>
 			<xs:element name="domainsize" type="domainsize_t"/>
 			<xs:element name="rcutoff" type="xs:decimal"/>
-			<xs:element name="condition" type="condition_t"/>
+			<xs:element name="condition" type="condition_t" maxOccurs="6" minOccurs="6"/>
 		</xs:sequence>
 	</xs:complexType>
 
@@ -49,9 +49,9 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 				Each value gives the type of boundary condition we should apply.
 			  </xs:documentation>
 			</xs:annotation>
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="outflow"/>
-			<xs:enumeration value="reflecting"/>
+		<xs:restriction base="xs:int">
+			<xs:enumeration value="1"/>
+			<xs:enumeration value="2"/>
 		</xs:restriction>
 	</xs:simpleType>
 

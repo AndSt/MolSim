@@ -24,24 +24,24 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 		</domainsize>
 		<rcutoff>3.0</rcutoff>
 	
-		<!-- outflow, reflecting for 6 boundaries -->
+		<!-- 1=outflow, 2=reflecting for 6 boundaries -->
 		<!-- left side -->
-		<condition>outflow</condition>
+		<condition>1</condition>
 
 		<!-- right -->
-		<condition>reflecting</condition>
+		<condition>2</condition>
 
 		<!-- upper -->
-		<condition>outflow</condition>
+		<condition>1</condition>
 
 		<!-- ground -->
-		<condition>outflow</condition>
+		<condition>1</condition>
 
 		<!-- front -->
-		<condition>outflow</condition>
+		<condition>1</condition>
 
 		<!-- behind -->
-		<condition>outflow</condition>
+		<condition>1</condition>
 	</lc>	
 
 	<inputfile>

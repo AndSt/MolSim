@@ -177,10 +177,11 @@ void ParticleGeneratorTest::testExtractSetting(){
 	int outputFreqT;
 	utils::Vector<double, 3> domainSizeT;
 	double rcutoffT;
-	std::vector<string> cond;
+	std::vector<int> cond;
 	
-	generator.extractSetting(start_timeT, end_timeT, delta_tT, EPSILONT, SIGMAT, inputNamesT, inputTypesT, outputMaskT, outputFreqT,
-							domainSizeT, rcutoffT, cond);
+	generator.extractSetting(start_timeT, end_timeT, delta_tT, EPSILONT,
+	 			SIGMAT, inputNamesT, inputTypesT, outputMaskT, 
+				outputFreqT, domainSizeT, rcutoffT, cond);
 
 	CPPUNIT_ASSERT(start_time==start_timeT);
 	CPPUNIT_ASSERT(end_time==end_timeT);
@@ -193,12 +194,12 @@ void ParticleGeneratorTest::testExtractSetting(){
 	CPPUNIT_ASSERT(*itN == "InputSpheres.xml");
 	CPPUNIT_ASSERT(*itT == "spheres");
 
-	CPPUNIT_ASSERT(cond[0] == "outflow");
-	CPPUNIT_ASSERT(cond[1] == "reflecting");
-	CPPUNIT_ASSERT(cond[2] == "outflow");
-	CPPUNIT_ASSERT(cond[3] == "outflow");
-	CPPUNIT_ASSERT(cond[4] == "outflow");
-	CPPUNIT_ASSERT(cond[5] == "outflow");	
+	CPPUNIT_ASSERT(cond[0] == 1);
+	CPPUNIT_ASSERT(cond[1] == 2);
+	CPPUNIT_ASSERT(cond[2] == 1);
+	CPPUNIT_ASSERT(cond[3] == 1);
+	CPPUNIT_ASSERT(cond[4] == 1);
+	CPPUNIT_ASSERT(cond[5] == 1);	
 
 	CPPUNIT_ASSERT(outputMask==outputMaskT);
 	CPPUNIT_ASSERT(outputFreq==outputFreqT);
