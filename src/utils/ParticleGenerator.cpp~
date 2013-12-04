@@ -217,7 +217,7 @@ void ParticleGenerator::extractSetting(double& start_time, double& end_time, dou
 		}
 	
 		domainBoundCond.resize(6, "outflow");
-		pse_t::lc_t::condition_const_iterator ct;
+		lc_t::condition_const_iterator ct;
 		int i = 0;
 		// 0 left, 1 right, 2 upper, 3 ground, 4 front, 5 behind
 		for (ct = h->lc().condition().begin(); ct != h->lc().condition().end(); ct++){

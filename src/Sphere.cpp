@@ -21,7 +21,7 @@ Sphere::Sphere(utils::Vector<double, 3> center1, utils::Vector<double, 3> startV
 	m = m1;
 	radius = radius1;
 	meshWidth = meshWidth1;
-	
+	/*
 	// ALTERNATIVE 1 =================================
 	int l = 2*radius + 1;
 	double o[] = {center[0] - radius*meshWidth, center[1] - radius*meshWidth, center[2] - radius*meshWidth};
@@ -41,25 +41,34 @@ Sphere::Sphere(utils::Vector<double, 3> center1, utils::Vector<double, 3> startV
 			sph.push_back(*it);
 	}
 	// ================================= ALTERNATIVE 1
+	*/
 	
-	/*
 	// ALTERNATIVE 2 =================================	
-	// Draw the biggest circle, which center belongs
+	// Draw the biggest circle, which center belongs to
 	sph.clear();
-	
-	drawBiggestCircleArea();
 
-	// now the lisOfCenters and listOfRadii are fully initialized
+	drawBiggestCircleArea();
+	
+	// now the listOfRadii is fully initialized
+	/*utils::Vector<double, 3> temp(center);
+	temp[2] -= radius*meshWidth;
 	for (int i = 0; i<= 2*radius; i++){
+		if (i==radius) continue;
+		drawCircleArea(temp, listOfRadii[i]);
+		temp += meshWidth;
+	}
+	*/
+
+	for (int i=0; i<=2*radius; i++){
+		if (i==radius) continue;
 		drawCircleArea(listOfCenters[i], listOfRadii[i]);
 	}
-	
 	// ================================= ALTERNATIVE 2
-	*/
 }
 
+
 void Sphere::initListOfCenters(){
-	listOfCenters = std::vector<utils::Vector<double, 3> > (2*radius + 1, center);
+	listOfCenters = std::vector<utils::Vector<double, 3> > (2*radius + 1);
 	listOfCenters[radius] = center;
 	for (int i = 1; i <= radius; i++){
 		double front[] = {center[0], center[1], center[2] + i*meshWidth};
@@ -71,12 +80,12 @@ void Sphere::initListOfCenters(){
 
 // Default value = 0
 void Sphere::initListOfRadii(){
-	listOfRadii = std::vector<int> (2*radius + 1, 0);
+	listOfRadii = std::vector<int> (2*radius + 1);
 	listOfRadii[radius] = radius;
 }
 
 void Sphere::plot(utils::Vector<double, 3> tempCenter, int x, int y){
-	double a[] = {tempCenter[0]+x*meshWidth, tempCenter[1]+y*meshWidth, tempCenter[0]};	
+	double a[] = {tempCenter[0]+x*meshWidth, tempCenter[1]+y*meshWidth, tempCenter[2]};	
 	utils::Vector<double, 3> pos(a);
 
 	// Being used in the beginning --> v = startV
@@ -154,40 +163,41 @@ void Sphere::drawBiggestCircleArea(){
 
 void Sphere::drawCircleArea(utils::Vector<double, 3> tempCenter, int rad){
 	// Implementing Bresenham's Algorithm 1 (see GAD Lecture)
-	int x = 0;
-	int y = rad;
+	double x = 0.0;
+	int xx = 0;
+	double y = rad*meshWidth;
+	int yy = rad;
 	//z = center[2]
 
 	drawVerticalLine(tempCenter, rad);		// from (0,R) to (0,-R)
 
-	plot(tempCenter, rad, 0);
-	plot(tempCenter, (-1)*rad, 0);
+	double dToPointR[] = {meshWidth, rad*meshWidth - meshWidth/2, 0};
+	double F = dToPointR[0]*dToPointR[0] + dToPointR[1]*dToPointR[1] - pow(rad*meshWidth, 2);
 
-	double F = 1.25 - rad;
 		utils::Vector<double, 3> tempCenter1(tempCenter);
 		utils::Vector<double, 3> tempCenter2(tempCenter);
-		utils::Vector<double, 3> tempCenter3(tempCenter);
-		utils::Vector<double, 3> tempCenter4(tempCenter);
 
-		while (x<y){
+		while (x<=rad*meshWidth){
 			if (F<0){
-				F = F + 2*x + 1;
+				F = F + 2*x*meshWidth + meshWidth*meshWidth;
 			}
 			else{
-				F = F + 2*(x - y + 1);
-				y = y - 1;
+				F = F + 2*meshWidth*(x - y + meshWidth);
+				y = y - meshWidth;
+				yy--;
 			}
-			x = x + 1;
-
+			x = x + meshWidth;
+			xx++;
+			
 			tempCenter1[0] += meshWidth; 	// from (x,y) to (x,-y)
 			tempCenter2[0] -= meshWidth;	// from (-x,y) to (-x,-y)
-			tempCenter3[0] = y*meshWidth; 	// from (y,x) to (y,-x)
-			tempCenter4[0] = -y*meshWidth; 	// from (-y,x) to (-y,-x)
+			//tempCenter3[0] = y;	 	// from (y,x) to (y,-x)
+			//tempCenter4[0] = -y; 		// from (-y,x) to (-y,-x)
 
-			drawVerticalLine(tempCenter1, y);
-			drawVerticalLine(tempCenter2, y);
-			drawVerticalLine(tempCenter3, x);
-			drawVerticalLine(tempCenter4, x);
+			drawVerticalLine(tempCenter1, yy);
+			drawVerticalLine(tempCenter2, yy);
+			//drawVerticalLine(tempCenter3, xx);
+			//drawVerticalLine(tempCenter4, xx);
 		}
 }
 
