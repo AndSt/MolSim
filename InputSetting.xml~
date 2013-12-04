@@ -20,7 +20,7 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 		<domainsize>
 			<domainX>180.0</domainX>
 			<domainY>90.0</domainY>
-			<domainZ>3.0</domainZ>
+			<domainZ>0.0</domainZ>
 		</domainsize>
 		<rcutoff>3.0</rcutoff>
 	
