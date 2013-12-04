@@ -15,6 +15,9 @@ src/utils/ParticleContainer.cpp\
 src/utils/ParticleGenerator.cpp\
 src/utils/ParticleIterator.cpp\
 src/utils/InputSetting.cpp\
+src/utils/LCParticleContainer.cpp\
+src/utils/LCOuterParticleIterator.cpp\
 src/utils/InputParticles.cpp\
 src/utils/InputSpheres.cpp\
+src/utils/LCInnerParticleIterator.cpp\
 src/utils/InputCuboids.cpp\
