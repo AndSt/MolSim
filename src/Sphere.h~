@@ -44,6 +44,21 @@ private:
 	// INT !!!
 	std::vector<int> listOfRadii;
 
+	// Prepare before calling drawBiggestCircleArea();
+	void initListOfCenters();
+	void initListOfRadii();
+	
+	// Draw a point/particle in position (x, y) WITH ORIGIN tempCenter (not (0,0,0) !!!)
+	// In each circle, we need only x and y (z = tempCenter[2] and will not be changed in this circle)
+	// x and y are not int; x = k*meshWidth with k int for example
+	void plot(utils::Vector<double, 3> tempCenter, int x, int y);
+
+	void drawVerticalLine(utils::Vector<double, 3> tempCenter, int upperHeight);
+
+	void drawCircleArea(utils::Vector<double, 3> tempCenter, int rad);
+
+	void drawBiggestCircleArea();
+
 public:
 	/** Default constructor.
 	 */
@@ -82,21 +97,6 @@ public:
 	double& getMeshWidth();
 
 	std::list<Particle>& getSphere();
-
-	// Prepare before calling drawBiggestCircleArea();
-	void initListOfCenters();
-	void initListOfRadii();
-	
-	// Draw a point/particle in position (x, y) WITH ORIGIN tempCenter (not (0,0,0) !!!)
-	// In each circle, we need only x and y (z = tempCenter[2] and will not be changed in this circle)
-	// x and y are not int; x = k*meshWidth with k int for example
-	void plot(utils::Vector<double, 3> tempCenter, int x, int y);
-
-	void drawVerticalLine(utils::Vector<double, 3> tempCenter, int upperHeight);
-
-	void drawCircleArea(utils::Vector<double, 3> tempCenter, int rad);
-
-	void drawBiggestCircleArea();
 
 	virtual ~Sphere();
 };
