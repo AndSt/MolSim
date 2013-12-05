@@ -374,7 +374,7 @@ int main(int argc, char* argsv[]) {
 
 		//inintialize container with particle list
 		LOG4CXX_INFO(molsimlogger, "Arrived @ initialization call.");
-		if (option2==2)
+		if (option1 != 3 || option2 != 2)
 			container.initialize(particleList);
 		else
 			//LC
@@ -385,7 +385,7 @@ int main(int argc, char* argsv[]) {
 
 		cout << "Running simulation..." << endl;
 
-		if (option2==2)
+		if (option1 != 3 || option2 != 2)
 			simulate();
 		else
 			//LC
