@@ -1,11 +1,97 @@
-2013-12-05 14:38:26,017 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
-2013-12-05 14:38:26,426 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
-2013-12-05 14:38:26,426 DEBUG src/utils/LCParticleContainer.cpp:51 - Updated cells.
-2013-12-05 14:38:26,820 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
-2013-12-05 14:38:26,820 DEBUG src/utils/LCParticleContainer.cpp:51 - Updated cells.
-2013-12-05 14:38:27,214 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
-2013-12-05 14:38:27,214 DEBUG src/utils/LCParticleContainer.cpp:51 - Updated cells.
-2013-12-05 14:38:27,607 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
-2013-12-05 14:38:27,608 DEBUG src/utils/LCParticleContainer.cpp:51 - Updated cells.
-2013-12-05 14:38:28,002 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
-2013-12-05 14:38:28,002 DEBUG src/utils/LCParticleContainer.cpp:51 - Updated cells.
+2013-12-05 14:56:38,297 INFO  src/utils/ParticleGenerator.cpp:59 - Reading Cuboids.
+2013-12-05 14:56:38,297 INFO  src/utils/ParticleGenerator.cpp:93 - Returning cuboid list.
+2013-12-05 14:56:38,297 INFO  src/utils/ParticleGenerator.cpp:93 - Returning cuboid list.
+2013-12-05 14:56:38,298 INFO  src/utils/ParticleGenerator.cpp:59 - Reading Cuboids.
+2013-12-05 14:56:38,309 INFO  src/utils/ParticleGenerator.cpp:93 - Returning cuboid list.
+2013-12-05 14:56:38,311 INFO  src/utils/ParticleGenerator.cpp:59 - Reading Cuboids.
+2013-12-05 14:56:38,319 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:38,319 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:38,319 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:38,319 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:38,319 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:38,319 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:38,319 INFO  src/utils/ParticleGenerator.cpp:59 - Reading Cuboids.
+2013-12-05 14:56:38,323 INFO  src/utils/ParticleGenerator.cpp:59 - Reading Cuboids.
+2013-12-05 14:56:38,327 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:38,327 INFO  src/utils/ParticleGenerator.cpp:59 - Reading Cuboids.
+2013-12-05 14:56:38,328 INFO  src/utils/ParticleGenerator.cpp:65 - Doing cuboidsToList.
+2013-12-05 14:56:38,329 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:38,330 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:56:38,330 INFO  src/utils/ParticleGenerator.cpp:48 - Destructed.
+2013-12-05 14:56:38,954 INFO  src/utils/ParticleGenerator.cpp:59 - Reading Cuboids.
+2013-12-05 14:56:38,955 INFO  src/utils/ParticleGenerator.cpp:65 - Doing cuboidsToList.
+2013-12-05 14:56:38,955 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:38,957 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:56:38,957 INFO  src/utils/ParticleGenerator.cpp:48 - Destructed.
+2013-12-05 14:56:38,959 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:56:38,959 DEBUG src/utils/LCParticleContainer.cpp:51 - Updated cells.
+2013-12-05 14:56:38,959 INFO  src/utils/ParticleGenerator.cpp:59 - Reading Cuboids.
+2013-12-05 14:56:38,960 INFO  src/utils/ParticleGenerator.cpp:65 - Doing cuboidsToList.
+2013-12-05 14:56:38,960 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:38,961 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:56:38,961 INFO  src/utils/ParticleGenerator.cpp:48 - Destructed.
+2013-12-05 14:56:38,988 INFO  src/utils/ParticleGenerator.cpp:59 - Reading Cuboids.
+2013-12-05 14:56:38,989 INFO  src/utils/ParticleGenerator.cpp:65 - Doing cuboidsToList.
+2013-12-05 14:56:38,989 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:38,990 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:56:38,990 INFO  src/utils/ParticleGenerator.cpp:48 - Destructed.
+2013-12-05 14:56:38,990 INFO  src/utils/ParticleGenerator.cpp:59 - Reading Cuboids.
+2013-12-05 14:56:38,991 INFO  src/utils/ParticleGenerator.cpp:65 - Doing cuboidsToList.
+2013-12-05 14:56:38,992 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:38,993 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:56:38,993 INFO  src/utils/ParticleGenerator.cpp:48 - Destructed.
+2013-12-05 14:56:39,017 INFO  src/utils/ParticleGenerator.cpp:59 - Reading Cuboids.
+2013-12-05 14:56:39,018 INFO  src/utils/ParticleGenerator.cpp:65 - Doing cuboidsToList.
+2013-12-05 14:56:39,018 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:39,019 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:56:39,019 INFO  src/utils/ParticleGenerator.cpp:48 - Destructed.
+2013-12-05 14:56:39,019 INFO  src/utils/ParticleGenerator.cpp:59 - Reading Cuboids.
+2013-12-05 14:56:39,020 INFO  src/utils/ParticleGenerator.cpp:65 - Doing cuboidsToList.
+2013-12-05 14:56:39,020 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:39,021 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:56:39,022 INFO  src/utils/ParticleGenerator.cpp:48 - Destructed.
+2013-12-05 14:56:39,022 INFO  src/utils/ParticleGenerator.cpp:59 - Reading Cuboids.
+2013-12-05 14:56:39,023 INFO  src/utils/ParticleGenerator.cpp:65 - Doing cuboidsToList.
+2013-12-05 14:56:39,023 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:39,024 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:56:39,024 INFO  src/utils/ParticleGenerator.cpp:48 - Destructed.
+2013-12-05 14:56:39,025 INFO  src/utils/ParticleGenerator.cpp:59 - Reading Cuboids.
+2013-12-05 14:56:39,026 INFO  src/utils/ParticleGenerator.cpp:65 - Doing cuboidsToList.
+2013-12-05 14:56:39,026 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:39,027 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:56:39,027 INFO  src/utils/ParticleGenerator.cpp:48 - Destructed.
+2013-12-05 14:56:42,301 INFO  src/utils/ParticleGenerator.cpp:59 - Reading Cuboids.
+2013-12-05 14:56:42,302 INFO  src/utils/ParticleGenerator.cpp:65 - Doing cuboidsToList.
+2013-12-05 14:56:42,302 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:42,303 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:56:42,303 INFO  src/utils/ParticleGenerator.cpp:48 - Destructed.
+2013-12-05 14:56:42,304 INFO  src/utils/ParticleGenerator.cpp:59 - Reading Cuboids.
+2013-12-05 14:56:42,304 INFO  src/utils/ParticleGenerator.cpp:65 - Doing cuboidsToList.
+2013-12-05 14:56:42,305 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:42,306 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:56:42,306 INFO  src/utils/ParticleGenerator.cpp:48 - Destructed.
+2013-12-05 14:56:42,306 INFO  src/utils/ParticleGenerator.cpp:59 - Reading Cuboids.
+2013-12-05 14:56:42,307 INFO  src/utils/ParticleGenerator.cpp:65 - Doing cuboidsToList.
+2013-12-05 14:56:42,307 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:42,308 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:56:42,308 INFO  src/utils/ParticleGenerator.cpp:48 - Destructed.
+2013-12-05 14:56:42,308 INFO  src/utils/ParticleGenerator.cpp:59 - Reading Cuboids.
+2013-12-05 14:56:42,309 INFO  src/utils/ParticleGenerator.cpp:65 - Doing cuboidsToList.
+2013-12-05 14:56:42,309 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:42,310 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:56:42,311 INFO  src/utils/ParticleGenerator.cpp:48 - Destructed.
+2013-12-05 14:56:42,311 INFO  src/utils/ParticleGenerator.cpp:59 - Reading Cuboids.
+2013-12-05 14:56:42,312 INFO  src/utils/ParticleGenerator.cpp:65 - Doing cuboidsToList.
+2013-12-05 14:56:42,312 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:42,313 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:56:42,313 INFO  src/utils/ParticleGenerator.cpp:48 - Destructed.
+2013-12-05 14:56:42,315 INFO  src/utils/ParticleGenerator.cpp:59 - Reading Cuboids.
+2013-12-05 14:56:42,316 INFO  src/utils/ParticleGenerator.cpp:65 - Doing cuboidsToList.
+2013-12-05 14:56:42,316 INFO  src/utils/ParticleGenerator.cpp:102 - Returning particle list.
+2013-12-05 14:56:42,317 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:56:42,317 INFO  src/utils/ParticleGenerator.cpp:48 - Destructed.
+2013-12-05 14:56:42,318 INFO  src/utils/ParticleGenerator.cpp:48 - Destructed.
+2013-12-05 14:56:42,318 INFO  src/utils/ParticleGenerator.cpp:48 - Destructed.
+2013-12-05 14:56:42,318 INFO  src/utils/ParticleGenerator.cpp:48 - Destructed.
+2013-12-05 14:56:42,318 INFO  src/utils/ParticleGenerator.cpp:48 - Destructed.
+2013-12-05 14:56:42,318 INFO  src/utils/ParticleGenerator.cpp:48 - Destructed.

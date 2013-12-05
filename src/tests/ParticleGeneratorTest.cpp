@@ -75,8 +75,8 @@ void ParticleGeneratorTest::setUp() {
 
 	/*FOR TESTEXTRACTSETTING*/
 	start_time = 0.0;
- 	end_time = 5.0;
-	delta_t = 0.00005;
+ 	end_time = 25.0;
+	delta_t = 0.0005;
 	EPSILON = 5.0;
 	SIGMA = 1.0;
 	inputNames.clear();
@@ -140,7 +140,8 @@ void ParticleGeneratorTest::testExtractSpheres(){
 
 	for (std::list<Particle>::iterator it = parList.begin(); it != parList.end(); it++){
 		Particle p = *it;		
-		CPPUNIT_ASSERT(pow(p.getX()[0]-cen[0],2) + pow(p.getX()[1]-cen[1],2) + pow(p.getX()[2]-cen[2],2) <= pow(15*1.1225,2));
+		CPPUNIT_ASSERT(pow(p.getX()[0]-cen[0],2) + pow(p.getX()[1]-cen[1],2) + 
+				pow(p.getX()[2]-cen[2],2) - pow(15*1.1225,2) <= 1.1225/2);
 	}
 	
 	CPPUNIT_ASSERT(sp.getCenter()[0]==60);
