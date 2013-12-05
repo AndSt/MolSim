@@ -78,6 +78,56 @@ public:
 	std::list<Particle>& getHaloList();
 
 	/**
+	 * @return the leftBoundaryParticleList
+	 */
+	std::list<Particle>& getLeftBoundaryParticles();
+	/**
+	 * @return the rightBoundaryParticleList
+	 */
+	std::list<Particle>& getRightBoundaryParticles();
+	/**
+	 * @return the bottomBoundaryParticleList
+	 */
+	std::list<Particle>& getBottomBoundaryParticles();
+	/**
+	 * @return the topBoundaryParticleList
+	 */
+	std::list<Particle>& getTopBoundaryParticles();
+	/**
+	 * @return the frontBoundaryParticleList
+	 */
+	std::list<Particle>& getFrontBoundaryParticles();
+	/**
+	 * @return the backBoundaryParticleList
+	 */
+	std::list<Particle>& getBackBoundaryParticles();
+
+	/**
+	 * updates the leftBoundaryParticleList
+	 */	
+	void updateLeftBoundaryParticles();
+	/**
+	 * updates the rightBoundaryParticleList
+	 */
+	void updateRightBoundaryParticles();
+	/**
+	 * updates the bottomBoundaryParticleList
+	 */
+	void updateBottomBoundaryParticles();
+	/**
+	 * updates the topBoundaryParticleList
+	 */
+	void updateTopBoundaryParticles();
+	/**
+	 * updates the frontBoundaryParticleList
+	 */
+	void updateFrontBoundaryParticles();
+	/**
+	 * updates the backBoundaryParticleList
+	 */
+	void updateBackBoundaryParticles();
+
+	/**
 	 * @return number of particles within the domain
 	 */
 	int size();
@@ -135,6 +185,13 @@ private:
 	 * number of cells
 	 */
 	int num_of_cells;
+
+	std::list<Particle> leftBoundaryParticleList;
+	std::list<Particle> rightBoundaryParticleList;
+	std::list<Particle> bottomBoundaryParticleList;
+	std::list<Particle> topBoundaryParticleList;
+	std::list<Particle> frontBoundaryParticleList;
+	std::list<Particle> backBoundaryParticleList;
 };
 
 } /* namespace utils */
