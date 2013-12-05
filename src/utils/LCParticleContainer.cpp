@@ -30,7 +30,11 @@ void LCParticleContainer::initialize(std::list<Particle>& particles_arg,
 	width = domain_size[0] / cutoff_radius;
 	height = domain_size[1] / cutoff_radius;
 	depth = domain_size[2] / cutoff_radius;
-	num_of_cells = width * height * 1;
+	if (depth > 0 ) {
+		num_of_cells = width * height * depth;
+	} else {
+		num_of_cells = width * height;
+	}
 	cells.resize(num_of_cells);
 	for (int i = 0; i < num_of_cells; i++) {
 		cells[i] = std::list<Particle>();
