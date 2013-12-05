@@ -41,7 +41,6 @@ void LCParticleContainer::initialize(std::list<Particle>& particles_arg,
 	for (int i = 0; i < num_of_cells; i++) {
 		cells[i] = std::list<Particle>();
 	}
-
 	initializeCells();
 }
 
@@ -56,9 +55,8 @@ void LCParticleContainer::initializeCells() {
 	for (int i = 0; i < num_of_cells; i++) {
 		cells[i].clear();
 	}
-
-	for (std::list<Particle>::iterator iterator = particles.begin();
-			iterator != particles.end(); ++iterator) {
+	std::list<Particle>::iterator iterator = particles.begin();
+	while (iterator != particles.end()) {
 		//check if it's in the domain
 
 		if (((*iterator).getX())[0] <= domain_size[0]
@@ -72,14 +70,11 @@ void LCParticleContainer::initializeCells() {
 					+ ((int) (p.getX()[1] / cutoff_radius)) * width
 					+ ((int) (p.getX()[2] / cutoff_radius)) * width * height;
 			cells[i].push_back(*iterator);
-
 		} else {
 			halo.push_back(*iterator);
 		}
 		++iterator;
 	}
-
-	std::cout << "hier3" << std::endl;
 	LOG4CXX_DEBUG(lcparticlecontainerlogger, "Initialized cells.");
 }
 

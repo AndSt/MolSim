@@ -75,7 +75,7 @@ public:
 	/**
 	 * @return the halo list
 	 */
-	std::list<Particle>& LCParticleContainer::getHaloList()
+	std::list<Particle>& getHaloList();
 
 	/**
 	 * @return number of particles within the domain
