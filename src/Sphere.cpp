@@ -22,7 +22,7 @@ Sphere::Sphere(utils::Vector<double, 3> center1, utils::Vector<double, 3> startV
 	radius = radius1;
 	meshWidth = meshWidth1;
 	/*
-	// ALTERNATIVE 1 =================================
+//-->>	// ALTERNATIVE 1 =================================
 	int l = 2*radius + 1;
 	double o[] = {center[0] - radius*meshWidth, center[1] - radius*meshWidth, center[2] - radius*meshWidth};
 	utils::Vector<double, 3> ori(o);	
@@ -46,23 +46,16 @@ Sphere::Sphere(utils::Vector<double, 3> center1, utils::Vector<double, 3> startV
 	// ALTERNATIVE 2 =================================	
 	// Draw the biggest circle, which center belongs to
 	sph.clear();
-
+//2D
 	drawBiggestCircleArea();
-	
-	// now the listOfRadii is fully initialized
-	/*utils::Vector<double, 3> temp(center);
-	temp[2] -= radius*meshWidth;
-	for (int i = 0; i<= 2*radius; i++){
-		if (i==radius) continue;
-		drawCircleArea(temp, listOfRadii[i]);
-		temp += meshWidth;
-	}
-	*/
-
+//3D	
+//-->>	// now the listOfRadii is fully initialized
+	/*	
 	for (int i=0; i<=2*radius; i++){
 		if (i==radius) continue;
 		drawCircleArea(listOfCenters[i], listOfRadii[i]);
 	}
+	*/
 	// ================================= ALTERNATIVE 2
 }
 

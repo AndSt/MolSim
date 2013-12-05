@@ -50,14 +50,19 @@ Sphere::Sphere(utils::Vector<double, 3> center1, utils::Vector<double, 3> startV
 	drawBiggestCircleArea();
 	
 	// now the listOfRadii is fully initialized
-	utils::Vector<double, 3> temp(center);
+	/*utils::Vector<double, 3> temp(center);
 	temp[2] -= radius*meshWidth;
 	for (int i = 0; i<= 2*radius; i++){
 		if (i==radius) continue;
 		drawCircleArea(temp, listOfRadii[i]);
 		temp += meshWidth;
 	}
-	
+	*/
+
+	for (int i=0; i<=2*radius; i++){
+		if (i==radius) continue;
+		drawCircleArea(listOfCenters[i], listOfRadii[i]);
+	}
 	// ================================= ALTERNATIVE 2
 }
 
