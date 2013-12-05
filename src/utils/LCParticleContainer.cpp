@@ -37,9 +37,11 @@ void LCParticleContainer::initialize(std::list<Particle>& particles_arg,
 		num_of_cells = width * height;
 	}
 	cells.resize(num_of_cells);
+
 	for (int i = 0; i < num_of_cells; i++) {
 		cells[i] = std::list<Particle>();
 	}
+
 	initializeCells();
 }
 
@@ -54,25 +56,30 @@ void LCParticleContainer::initializeCells() {
 	for (int i = 0; i < num_of_cells; i++) {
 		cells[i].clear();
 	}
+
 	for (std::list<Particle>::iterator iterator = particles.begin();
 			iterator != particles.end(); ++iterator) {
 		//check if it's in the domain
-		if (((*iterator).getX())[0] < domain_size[0] && (*iterator).getX[0] > 0
-				&& (*iterator).getX()[1] < domain_size[1]
-				&& (*iterator).getX[1] > 0
-				&& (*iterator).getX()[2] < domain_size[2]
-				&& (*iterator).getX[2] > 0) {
+
+		if (((*iterator).getX())[0] <= domain_size[0]
+				&& (*iterator).getX()[1] <= domain_size[1]
+				&& (*iterator).getX()[2] <= domain_size[2]
+				&& (*iterator).getX()[0] >= 0 && ((*iterator).getX())[1] >= 0
+				&& (*iterator).getX()[2] >= 0) {
 
 			Particle& p = *iterator;
 			int i = (int) (p.getX()[0] / cutoff_radius)
 					+ ((int) (p.getX()[1] / cutoff_radius)) * width
 					+ ((int) (p.getX()[2] / cutoff_radius)) * width * height;
 			cells[i].push_back(*iterator);
+
 		} else {
 			halo.push_back(*iterator);
-			//std::cout << "hier" << std::endl;
 		}
+		++iterator;
 	}
+
+	std::cout << "hier3" << std::endl;
 	LOG4CXX_DEBUG(lcparticlecontainerlogger, "Initialized cells.");
 }
 
@@ -92,7 +99,6 @@ void LCParticleContainer::toList() {
 		particles.push_back(*iiterator);
 		++iiterator;
 	}
-	assert(particles.size() == size());
 }
 void LCParticleContainer::deleteHalo() {
 	halo.clear();
