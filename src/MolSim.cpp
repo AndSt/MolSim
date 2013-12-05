@@ -37,6 +37,7 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <time.h>
 
 using namespace std;
 using namespace log4cxx;
@@ -400,8 +401,6 @@ void simulate() {
 // the forces are needed to calculate x, but are not given in the input file.
 //calculateF();
 	LOG4CXX_INFO(molsimlogger, "Size of container: " << container.size() << " particles.");
-	cout << "Press enter to continue..." << endl;
-	cin.ignore();
 	LOG4CXX_DEBUG(molsimlogger, "Starting force calculation for the first time...");
 	calculateFLJ();
 
@@ -411,6 +410,8 @@ void simulate() {
 
 // for this loop, we assume: current x, current f and current v are known
 	while (current_time < end_time) {
+		//const clock_t beginTime = clock();
+		
 		//cout << "Iteration " << iteration << ": " << endl;
 		// calculate new x
 		//cout << "\tcalculating X" << endl;
@@ -428,10 +429,13 @@ void simulate() {
 		if (iteration % freq == 0) {
 			plotVTK(iteration);
 		}
-		//cout << "Iteration " << iteration << " finished." << endl;
+		cout << "Iteration " << iteration << " finished." << endl;
 		LOG4CXX_TRACE(molsimlogger, "Iteration " << iteration << " finished.");
 
 		current_time += delta_t;
+
+		//cout << float( clock () - beginTime ) /  CLOCKS_PER_SEC;
+		//cin.ignore();
 	}
 
 	cout << "Output written. Terminating..." << endl;
@@ -577,6 +581,12 @@ void plotVTK(int iteration) {
 
 //=========================================================
 // LINKED CELL ALGORITHM
+
+  /*! To compare the execution time between naive and LC Algorithm:
+   *  \image html Graph/GraphLCWithoutPlot.jpg
+   *  \image html Graph/GraphLCWithPlot.jpg
+   */
+
 void LCsimulate() {
 // the forces are needed to calculate x, but are not given in the input file.
 //calculateF();
@@ -589,6 +599,8 @@ void LCsimulate() {
 	int iteration = 0;
 // for this loop, we assume: current x, current f and current v are known
 	while (current_time < end_time) {
+		//const clock_t beginTime = clock();
+
 		// calculate new x
 		LCcalculateX();
 		// calculate new f
@@ -597,6 +609,7 @@ void LCsimulate() {
 		LCcalculateV();
 
 		iteration++;
+		cout << "Iteration " << iteration << " finished." << endl;
 		if (iteration % freq == 0 || outflow_flag) {
 			lcContainer.updateCells();
 			outflow_flag = false;
@@ -607,6 +620,9 @@ void LCsimulate() {
 		LOG4CXX_TRACE(molsimlogger, "Iteration " << iteration << " finished.");
 
 		current_time += delta_t;
+	
+		//cout << float( clock () - beginTime ) /  CLOCKS_PER_SEC;
+		//cin.ignore();
 	}
 
 	cout << "Output written. Terminating..." << endl;

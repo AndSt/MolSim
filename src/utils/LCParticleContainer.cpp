@@ -154,7 +154,7 @@ LCInnerParticleIterator LCParticleContainer::endInner(int i) {
 	assert(cells[i].size() != 0);
 	assert(cells[x].empty() == false);
 	assert(cells[x].size() != 0);
-	assert(x <= i + 61);
+	//assert(x <= i + 61);
 	return LCInnerParticleIterator(x, x, num_of_cells, width, height, depth,
 			cells[x].end(), cells);
 }
