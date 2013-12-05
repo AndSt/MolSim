@@ -1,1 +1,13 @@
-2013-12-05 03:49:46,096 INFO  src/utils/ParticleGenerator.cpp:65 - Doing cuboidsToList.
+2013-12-05 14:16:02,725 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:16:03,147 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:16:03,147 DEBUG src/utils/LCParticleContainer.cpp:51 - Updated cells.
+2013-12-05 14:16:03,557 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:16:03,557 DEBUG src/utils/LCParticleContainer.cpp:51 - Updated cells.
+2013-12-05 14:16:03,967 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:16:03,967 DEBUG src/utils/LCParticleContainer.cpp:51 - Updated cells.
+2013-12-05 14:16:04,377 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:16:04,378 DEBUG src/utils/LCParticleContainer.cpp:51 - Updated cells.
+2013-12-05 14:16:04,787 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:16:04,787 DEBUG src/utils/LCParticleContainer.cpp:51 - Updated cells.
+2013-12-05 14:16:05,201 DEBUG src/utils/LCParticleContainer.cpp:78 - Initialized cells.
+2013-12-05 14:16:05,202 DEBUG src/utils/LCParticleContainer.cpp:51 - Updated cells.

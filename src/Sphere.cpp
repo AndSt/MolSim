@@ -126,10 +126,10 @@ void Sphere::drawBiggestCircleArea(){
 		
 		while (x<=radius*meshWidth){
 			if (F<0){
-				F = F + 2*x*meshWidth + meshWidth*meshWidth;
+				F = F + 2*xx*meshWidth + meshWidth*meshWidth;
 			}
 			else{
-				F = F + 2*meshWidth*(x - y + meshWidth);
+				F = F + 2*meshWidth*(xx - yy + meshWidth);
 				y = y - meshWidth;
 				yy--;
 			}
@@ -172,10 +172,10 @@ void Sphere::drawCircleArea(utils::Vector<double, 3> tempCenter, int rad){
 
 		while (x<=rad*meshWidth){
 			if (F<0){
-				F = F + 2*x*meshWidth + meshWidth*meshWidth;
+				F = F + 2*xx*meshWidth + meshWidth*meshWidth;
 			}
 			else{
-				F = F + 2*meshWidth*(x - y + meshWidth);
+				F = F + 2*meshWidth*(xx - yy + meshWidth);
 				y = y - meshWidth;
 				yy--;
 			}
