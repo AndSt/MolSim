@@ -26,28 +26,28 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 	
 		<!-- 1=outflow, 2=reflecting for 6 boundaries -->
 		<!-- left side -->
-		<condition>1</condition>
+		<condition>2</condition>
 
 		<!-- right -->
 		<condition>2</condition>
 
-		<!-- upper -->
-		<condition>1</condition>
-
 		<!-- ground -->
-		<condition>1</condition>
+		<condition>2</condition>
+
+		<!-- upper -->
+		<condition>2</condition>
 
 		<!-- front -->
-		<condition>1</condition>
+		<condition>2</condition>
 
 		<!-- behind -->
-		<condition>1</condition>
+		<condition>2</condition>
 	</lc>	
 
 	<inputfile>
-		<name>InputCuboids.xml</name>
+		<name>InputSpheres.xml</name>
 		<!-- particles/cuboids/spheres -->
-		<type>cuboids</type>
+		<type>spheres</type>
 	</inputfile>
 	
 	<outputfile>

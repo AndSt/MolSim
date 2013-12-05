@@ -108,7 +108,7 @@ utils::LCParticleContainer lcContainer;
 
 vector<int> domainCondition;
 // 0: left	1: right
-// 2: upper	3: ground/lower
+// 2: ground/lower	3:upper
 // 4: front	5: behind/gear
 // Value: 1 = outflow, 2= reflecting
 // default = "outflow"
@@ -138,7 +138,8 @@ int main(int argc, char* argsv[]) {
 	bool test = false;
 	if (argc >= 2) {
 		string arg1 = argsv[1];
-		if(arg1 == "-test") test = true;
+		if (arg1 == "-test")
+			test = true;
 	}
 
 	/*
@@ -152,7 +153,8 @@ int main(int argc, char* argsv[]) {
 		int option = 0;
 
 		cout << "Here are the testing options: " << endl;
-		cout << "Tipp: If you Enter Option '1' or '2' you will get back to this menu";
+		cout
+				<< "Tipp: If you Enter Option '1' or '2' you will get back to this menu";
 		cout << endl << endl;
 		while (option != 3) {
 			cout << "Enter '1', if you want to test all unit tests." << endl;
@@ -223,7 +225,8 @@ int main(int argc, char* argsv[]) {
 				<< endl;
 		cout << "Enter '2', if you want to run program with a cuboid file."
 				<< endl;
-		cout << "Enter '3', if you want to run program with xml input files." << endl;
+		cout << "Enter '3', if you want to run program with xml input files."
+				<< endl;
 
 		getIntegerInput(str, option1);
 
@@ -256,14 +259,23 @@ int main(int argc, char* argsv[]) {
 		case 3:
 			cout << "XML input files are stored in MolSim." << endl;
 			cout << "There are 3 sources of input files:" << endl;
-			cout << "\tInputSetting: contains start_time, end_time, delta_t,\
+			cout
+					<< "\tInputSetting: contains start_time, end_time, delta_t,\
 					\n\t\t inputfile name, inputfile type, output mask\
-				 	\n\t\t and output frequency." << endl;
-			cout << "\tInputParticles: contains all information needed for particles." << endl;
-			cout << "\tInputCuboids: contains all information needed for cuboids." << endl;
-			cout << "\tInputSpheres: contains all information needed for spheres." << endl;
+				 	\n\t\t and output frequency."
+					<< endl;
+			cout
+					<< "\tInputParticles: contains all information needed for particles."
+					<< endl;
+			cout
+					<< "\tInputCuboids: contains all information needed for cuboids."
+					<< endl;
+			cout
+					<< "\tInputSpheres: contains all information needed for spheres."
+					<< endl;
 			cout << "\nPress 1 to use Linked Cell Algorithm." << endl;
-			cout << "Press 2 to simulate without Linked Cell Algorithm." << endl;
+			cout << "Press 2 to simulate without Linked Cell Algorithm."
+					<< endl;
 			break;
 		}
 
@@ -337,35 +349,36 @@ int main(int argc, char* argsv[]) {
 		}
 
 		//for XML input:
-		else if (option1 == 3){
+		else if (option1 == 3) {
 			//getting information from InputSetting first
-			pgen.extractSetting(start_time, end_time, delta_t, EPSILON, SIGMA, 
-						inputNames, inputTypes, outputMask, freq,
- 							domainSize, R_CUTOFF, domainCondition);
+			pgen.extractSetting(start_time, end_time, delta_t, EPSILON, SIGMA,
+					inputNames, inputTypes, outputMask, freq, domainSize,
+					R_CUTOFF, domainCondition);
 			particleList.clear();
 			list<string>::iterator itT = inputTypes.begin();
 			int i = 1;
-			
-			for (list<string>::iterator itN = inputNames.begin(); itN != inputNames.end(); itN++){
-				if (*itT=="particles"){
+
+			for (list<string>::iterator itN = inputNames.begin();
+					itN != inputNames.end(); itN++) {
+				if (*itT == "particles") {
 					cout << i << ". input file: " << "[particles]." << endl;
 					pgen.extractParticles(*itN);
 					pgen.mergeWithParticleList(particleList);
-				}else if (*itT=="cuboids"){
+				} else if (*itT == "cuboids") {
 					cout << i << ". input file: " << "[cuboids]" << endl;
 					pgen.extractCuboids(*itN);
 					pgen.cuboidsToList();
 					pgen.mergeWithParticleList(particleList);
-				}else{
+				} else {
 					cout << i << ". input file: " << "[spheres]" << endl;
 					pgen.extractSpheres(*itN);
-					pgen.spheresToList();				
+					pgen.spheresToList();
 					pgen.mergeWithParticleList(particleList);
 				}
 				itT++;
 				i++;
 			}
-			
+
 			cout << "Press enter to continue..." << endl;
 			cin.ignore();
 		}
@@ -374,32 +387,32 @@ int main(int argc, char* argsv[]) {
 
 		//inintialize container with particle list
 		LOG4CXX_INFO(molsimlogger, "Arrived @ initialization call.");
-		if (option1 == 3 && option2 == 1)
-			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
-		else
-			container.initialize(particleList);
 
 		//start simulation
 		LOG4CXX_INFO(molsimlogger, "Arrived @ simulation call.");
 
 		cout << "Running simulation..." << endl;
 
-		if (option1 == 3 && option2 == 1)
+		if (option1 == 3 && option2 == 1) {
+			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
 			LCsimulate();
-		else
+		} else {
+			container.initialize(particleList);
 			simulate();
+		}
 
 		LOG4CXX_INFO(molsimlogger, "Arrived @ ending simulation.");
 	}
 	return 0;
 }
 
-
 void simulate() {
 // the forces are needed to calculate x, but are not given in the input file.
 //calculateF();
-	LOG4CXX_INFO(molsimlogger, "Size of container: " << container.size() << " particles.");
-	LOG4CXX_DEBUG(molsimlogger, "Starting force calculation for the first time...");
+	LOG4CXX_INFO(molsimlogger,
+			"Size of container: " << container.size() << " particles.");
+	LOG4CXX_DEBUG(molsimlogger,
+			"Starting force calculation for the first time...");
 	calculateFLJ();
 
 	double current_time = start_time;
@@ -409,11 +422,11 @@ void simulate() {
 // for this loop, we assume: current x, current f and current v are known
 	while (current_time < end_time) {
 		//const clock_t beginTime = clock();
-		
+
 		//cout << "Iteration " << iteration << ": " << endl;
 		// calculate new x
 		//cout << "\tcalculating X" << endl;
-		calculateX(); 
+		calculateX();
 
 		// calculate new f
 		//cout << "\tcalculating F" << endl;
@@ -427,7 +440,7 @@ void simulate() {
 		if (iteration % freq == 0) {
 			plotVTK(iteration);
 		}
-		cout << "Iteration " << iteration << " finished." << endl;
+		//cout << "Iteration " << iteration << " finished." << endl;
 		LOG4CXX_TRACE(molsimlogger, "Iteration " << iteration << " finished.");
 
 		current_time += delta_t;
@@ -472,14 +485,15 @@ void calculateFLJ() {
 			double tempDNorm = tempD.L2Norm();
 
 			//if(tempDNorm < R_CUTOFF) {
-				double tempDSigDivNormPowSix = pow(SIGMA / tempDNorm, 6);
-				utils::Vector<double, 3> tempF = 24 * EPSILON
-					* pow(1 / tempDNorm, 2)
-					* (tempDSigDivNormPowSix - 2 * pow(tempDSigDivNormPowSix, 2))
-					* tempD;
+			double tempDSigDivNormPowSix = pow(SIGMA / tempDNorm, 6);
+			utils::Vector<double, 3> tempF =
+					24 * EPSILON * pow(1 / tempDNorm, 2)
+							* (tempDSigDivNormPowSix
+									- 2 * pow(tempDSigDivNormPowSix, 2))
+							* tempD;
 
-				sumF[i] += tempF;
-				sumF[j] += (-1) * tempF;
+			sumF[i] += tempF;
+			sumF[j] += (-1) * tempF;
 			//}
 			++innerIterator;
 			++j;
@@ -580,10 +594,10 @@ void plotVTK(int iteration) {
 //=========================================================
 // LINKED CELL ALGORITHM
 
-  /*! To compare the execution time between naive and LC Algorithm:
-   *  \image html GraphLCWithoutPlot.jpg
-   *  \image html GraphLCWithPlot.jpg
-   */
+/*! To compare the execution time between naive and LC Algorithm:
+ *  \image html GraphLCWithoutPlot.jpg
+ *  \image html GraphLCWithPlot.jpg
+ */
 
 void LCsimulate() {
 // the forces are needed to calculate x, but are not given in the input file.
@@ -607,7 +621,6 @@ void LCsimulate() {
 		LCcalculateV();
 
 		iteration++;
-		cout << "Iteration " << iteration << " finished." << endl;
 		if (iteration % freq == 0 || outflow_flag) {
 			lcContainer.updateCells();
 			outflow_flag = false;
@@ -615,10 +628,11 @@ void LCsimulate() {
 		if (iteration % freq == 0) {
 			LCplotVTK(iteration);
 		}
+		//cout << "Iteration " << iteration << " finished." << endl;
 		LOG4CXX_TRACE(molsimlogger, "Iteration " << iteration << " finished.");
 
 		current_time += delta_t;
-	
+
 		//cout << float( clock () - beginTime ) /  CLOCKS_PER_SEC;
 		//cin.ignore();
 	}
@@ -626,8 +640,8 @@ void LCsimulate() {
 	cout << "Output written. Terminating..." << endl;
 }
 
-void LCcalculateFLJ() {	
-	
+void LCcalculateFLJ() {
+
 	utils::Vector<double, 3> zero((double) 0);
 	utils::Vector<double, 3> sumF((double) 0);
 	utils::LCOuterParticleIterator iterator = lcContainer.beginOuter();
@@ -669,90 +683,90 @@ void LCcalculateFLJ() {
 		/* check if the left boundary will affect the force threw reflection */
 		if ((*iterator).getX()[0] <= h) {
 			if (domainCondition[0] == 1) {
-				double x_arg[3] = { 0, (*iterator).getX()[1],
-						(*iterator).getX()[2] };
-				utils::Vector<double, 3> x(x_arg);
-				utils::Vector<double, 3> v(0.0);
-				Particle p(x, v, 1);
-				computeForce((*iterator), p);
-			} else if (domainCondition[0] == 2) {
-				if ((*iterator).getX()[0] < 0) {
+				if ((*iterator).getX()[0] <= 0) {
 					outflow_flag = true;
+				} else if (domainCondition[0] == 2) {
+					double x_arg[3] = { 0, (*iterator).getX()[1],
+							(*iterator).getX()[2] };
+					utils::Vector<double, 3> x(x_arg);
+					utils::Vector<double, 3> v(0.0);
+					Particle p(x, v, 1);
+					computeForce((*iterator), p);
 				}
 			}
 		}
 		/* check if the right boundary will affect the force threw reflection */
 		else if ((*iterator).getX()[0] >= domainSize[0] - h) {
 			if (domainCondition[1] == 1) {
-				double x_arg[3] = { domainSize[0], (*iterator).getX()[1],
-						(*iterator).getX()[2] };
-				utils::Vector<double, 3> x(x_arg);
-				utils::Vector<double, 3> v(0.0);
-				Particle p(x, v, 1);
-				computeForce((*iterator), p);
-			} else if (domainCondition[0] == 2) {
 				if ((*iterator).getX()[0] >= domainSize[0]) {
 					outflow_flag = true;
+				} else if (domainCondition[1] == 2) {
+					double x_arg[3] = { domainSize[0], (*iterator).getX()[1],
+							(*iterator).getX()[2] };
+					utils::Vector<double, 3> x(x_arg);
+					utils::Vector<double, 3> v(0.0);
+					Particle p(x, v, 1);
+					computeForce((*iterator), p);
 				}
 			}
 		}
 		/* check if the bottom boundary will affect the force threw reflection */
 		if ((*iterator).getX()[1] <= h) {
 			if (domainCondition[2] == 1) {
-				double x_arg[3] = { (*iterator).getX()[0], 0,
-						(*iterator).getX()[2] };
-				utils::Vector<double, 3> x(x_arg);
-				utils::Vector<double, 3> v(0.0);
-				Particle p(x, v, 1);
-				computeForce((*iterator), p);
-			} else if (domainCondition[0] == 2) {
-				if ((*iterator).getX()[1] < 0) {
+				if ((*iterator).getX()[1] <= 0) {
 					outflow_flag = true;
+				} else if (domainCondition[2] == 2) {
+					double x_arg[3] = { (*iterator).getX()[0], 0,
+							(*iterator).getX()[2] };
+					utils::Vector<double, 3> x(x_arg);
+					utils::Vector<double, 3> v(0.0);
+					Particle p(x, v, 1);
+					computeForce((*iterator), p);
 				}
 			}
 		}
 		/* check if the upper boundary will affect the force threw reflection */
 		else if ((*iterator).getX()[1] >= domainSize[1] - h) {
 			if (domainCondition[3] == 1) {
-				double x_arg[3] = { (*iterator).getX()[0], domainSize[1],
-						(*iterator).getX()[2] };
-				utils::Vector<double, 3> x(x_arg);
-				utils::Vector<double, 3> v(0.0);
-				Particle p(x, v, 1);
-				computeForce((*iterator), p);
-			} else if (domainCondition[0] == 2) {
 				if ((*iterator).getX()[1] >= domainSize[1]) {
 					outflow_flag = true;
+				} else if (domainCondition[3] == 2) {
+					double x_arg[3] = { (*iterator).getX()[0], domainSize[1],
+							(*iterator).getX()[2] };
+					utils::Vector<double, 3> x(x_arg);
+					utils::Vector<double, 3> v(0.0);
+					Particle p(x, v, 1);
+					computeForce((*iterator), p);
 				}
 			}
 		}
 		/* check if the front boundary will affect the force threw reflection */
 		if ((*iterator).getX()[2] <= h && depth > 0) {
 			if (domainCondition[4] == 1) {
-				double x_arg[3] = { (*iterator).getX()[0],
-						(*iterator).getX()[1], 0 };
-				utils::Vector<double, 3> x(x_arg);
-				utils::Vector<double, 3> v(0.0);
-				Particle p(x, v, 1);
-				computeForce((*iterator), p);
-			} else if (domainCondition[0] == 2) {
 				if ((*iterator).getX()[2] < 0) {
 					outflow_flag = true;
+				} else if (domainCondition[4] == 2) {
+					double x_arg[3] = { (*iterator).getX()[0],
+							(*iterator).getX()[1], 0 };
+					utils::Vector<double, 3> x(x_arg);
+					utils::Vector<double, 3> v(0.0);
+					Particle p(x, v, 1);
+					computeForce((*iterator), p);
 				}
 			}
 		}
 		/* check if the rear boundary will affect the force threw reflection */
 		else if ((*iterator).getX()[2] >= domainSize[2] - h && depth > 0) {
 			if (domainCondition[5] == 1) {
-				double x_arg[3] = { (*iterator).getX()[0],
-						(*iterator).getX()[1], domainSize[2] };
-				utils::Vector<double, 3> x(x_arg);
-				utils::Vector<double, 3> v(0.0);
-				Particle p(x, v, 1);
-				computeForce((*iterator), p);
-			} else if (domainCondition[0] == 2) {
 				if ((*iterator).getX()[2] >= domainSize[2]) {
 					outflow_flag = true;
+				} else if (domainCondition[5] == 2) {
+					double x_arg[3] = { (*iterator).getX()[0],
+							(*iterator).getX()[1], domainSize[2] };
+					utils::Vector<double, 3> x(x_arg);
+					utils::Vector<double, 3> v(0.0);
+					Particle p(x, v, 1);
+					computeForce((*iterator), p);
 				}
 			}
 		}
@@ -811,11 +825,13 @@ void LCcalculateV() {
 void computeForce(Particle& p1, Particle& p2) {
 	utils::Vector<double, 3> tempD = p2.getX() - p1.getX();
 	double tempDNorm = tempD.L2Norm();
-	double tempDSigDivNorm = pow(SIGMA / tempDNorm, 6);
-	utils::Vector<double, 3> tempF = 24 * EPSILON * pow(1 / tempDNorm, 2)
-			* (tempDSigDivNorm - 2 * pow(tempDSigDivNorm, 2)) * tempD;
-	p2.updateTempF((-1) * tempF);
-	p1.updateTempF(tempF);
+	if (tempDNorm < R_CUTOFF) {
+		double tempDSigDivNorm = pow(SIGMA / tempDNorm, 6);
+		utils::Vector<double, 3> tempF = 24 * EPSILON * pow(1 / tempDNorm, 2)
+				* (tempDSigDivNorm - 2 * pow(tempDSigDivNorm, 2)) * tempD;
+		p2.updateTempF((-1) * tempF);
+		p1.updateTempF(tempF);
+	}
 }
 
 void LCplotVTK(int iteration) {

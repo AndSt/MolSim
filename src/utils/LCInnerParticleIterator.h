@@ -33,6 +33,7 @@ public:
 
 	/**
 	 * iterates to the next element
+	 * @return the next particle in the neighborhood of the outer particle
 	 */
 	void operator++();
 
@@ -40,23 +41,41 @@ public:
 	/**
 	 * checks on inequality
 	 * @param b the Iterator to compare with
-	 * @return returns true, if the two iterators don't match
+	 * @return returns true, if the two iterators do not match
 	 */
 	bool operator!=(const LCInnerParticleIterator b);
 
 	LCInnerParticleIterator& operator=(const LCInnerParticleIterator& cpy);
 
+	/**
+	 * @return the index
+	 */
 	int getCellNumber();
 
+	/**
+	 * checks whether the inner iterator may go left
+	 */
 	bool checkLeft();
+	/**
+	 * checks whether the inner iterator may go right
+	 */
 	bool checkRight();
+	/**
+	 * checks whether the inner iterator may go to a lower layer
+	 */
 	bool checkBottom();
+	/**
+	 * checks whether the inner iterator may go to a deeper layer
+	 */
 	bool checkBack();
+	/**
+	 * checks whether the inner iterator may go to a higher layer
+	 */
 	bool checkTop();
 
 private:
 	/**
-	 * the element of the iterator
+	 * the members of the iterator
 	 */
 	std::vector<std::list<Particle> >& cells;
 	int cell_size;

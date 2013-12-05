@@ -6,9 +6,6 @@
  */
 
 #include "LCInnerParticleIterator.h"
-#include <log4cxx/logger.h>
-
-log4cxx::LoggerPtr lcinnerparticleiteratorlogger(log4cxx::Logger::getLogger("utils.lcinnerparticleiterator"));
 
 namespace utils {
 
@@ -38,121 +35,122 @@ Particle& LCInnerParticleIterator::operator*() const {
 void LCInnerParticleIterator::operator++() {
 
 	++iterator;
+	/** 
+	 * Checks whether the outer particle was already the last Particle in its cell
+	 * which would mean iterator were now on the dummy end of the list.
+	 */
 	if (iterator != cells[index].end()) {
 		assert(iterator != cells[index].end());
 	} else {
 		int old_index = index;
 		bool done = false;
+		/**
+		 * Checks the neighoring cells of the outer particle in a predetermined order:
+		 * right, top left, top, top right [for both dimensional cases],
+		 * Back bottom left, back bottom, back bottom right, back left, back, back right,
+		 * back top left, back top and back top right [for the 3-dimensional case]
+		 */
 		while (cells[index].empty() || done == false) {
 			done = false;
 			if (index == original_index) {
 				index++;
 				if (checkRight()) {
-
 					done = true;
-					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + 1");
 				}
 			} else if (index == original_index + 1) {
 				index = original_index + width - 1;
 				if (checkLeft() && checkTop()) {
 					done = true;
-					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width - 1");
 				}
 			} else if (index == original_index + width - 1) {
 				index = original_index + width;
-				if (checkTop()) {
+				if (checkTop() == true) {
 					done = true;
-					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width");
 				}
 			} else if (index == original_index + width) {
 				index = original_index + width + 1;
 				if (checkTop() && checkRight()) {
 					done = true;
-					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width + 1");
+
 				}
 			} else if (index == original_index + width + 1) {
+				index = original_index + width * height - width - 1;
 				if (depth > 1) {
-					index = original_index + width * height - width - 1;
 					if (checkBack() && checkBottom() && checkLeft()) {
 						done = true;
-						//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height - width - 1");
 					}
 				} else {
-					index = old_index;
+					index = original_index + width + 2;
 					done = true;
-					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "index = old_index with depth <= 1");
+					//assert(true == false);
 				}
 			} else if (depth > 0
 					&& index == original_index + width * height - width - 1) {
 				index = original_index + width * height - width;
 				if (checkBack() && checkBottom()) {
 					done = true;
-					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height - width");
 				}
 			} else if (depth > 0
 					&& index == original_index + width * height - width) {
 				index = original_index + width * height - width + 1;
 				if (checkBack() && checkBottom() && checkRight()) {
 					done = true;
-					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height - width + 1");
 				}
 			} else if (depth > 0
 					&& index == original_index + width * height - width + 1) {
 				index = original_index + width * height - 1;
 				if (checkBack() && checkLeft()) {
 					done = true;
-					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height - 1");
 				}
 			} else if (depth > 0
 					&& index == original_index + width * height - 1) {
 				index = original_index + width * height;
 				if (checkBack()) {
 					done = true;
-					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height");
 				}
 			} else if (depth > 0 && index == original_index + width * height) {
 				index = original_index + width * height + 1;
 				if (checkBack() && checkRight()) {
 					done = true;
-					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height + 1");
 				}
 			} else if (depth > 0
 					&& index == original_index + width * height + 1) {
 				index = original_index + width * height + width - 1;
 				if (checkBack() && checkTop() && checkLeft()) {
 					done = true;
-					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height + width - 1");
 				}
 			} else if (depth > 0
 					&& index == original_index + width * height + width - 1) {
 				index = original_index + width * height + width;
 				if (checkBack() && checkTop()) {
 					done = true;
-					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height + width");
 				}
 			} else if (depth > 0
 					&& index == original_index + width * height + width) {
 				index = original_index + width * height + width + 1;
 				if (checkBack() && checkTop() && checkRight()) {
 					done = true;
-					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height + width + 1");
 				}
 			} else if (depth > 0
 					&& index == original_index + width * height + width + 1) {
 				assert(cells[index].empty() == false);
 				index = old_index;
 				done = true;
-				//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "index = old_index with depth > 0");
 			} else {
-				assert(cells[index].empty() == false);
-				LOG4CXX_ERROR(lcinnerparticleiteratorlogger, "Error, Iterator gone too far.");
+				index = original_index + width * height + width + 2;
+				done = true;
 			}
 		}
-		assert(index <= cell_size);
-		assert(cells[index].empty() == false);
-		assert(cells[index].begin() != cells[index].end());
 
-		if (index > old_index) {
+		if(depth < 1 && index >= original_index + width + 2){
+		}
+		else if(index >= original_index + width * height + width + 2){
+
+		}
+		else if (index > old_index) {
+			assert(index <= cell_size);
+			assert(cells[index].begin() != cells[index].end());
+			assert(cells[index].empty() == false);
 			iterator = cells[index].begin();
 			assert(index > old_index);
 		} else {

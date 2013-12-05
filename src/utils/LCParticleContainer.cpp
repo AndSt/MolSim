@@ -68,7 +68,7 @@ void LCParticleContainer::initializeCells(){
 			cells[i].push_back(*iterator);
 		} else {
 			halo.push_back(*iterator);
-			std::cout << "hier" << std::endl;
+			//std::cout << "hier" << std::endl;
 		}
 	}
 	LOG4CXX_DEBUG(lcparticlecontainerlogger,"Initialized cells.");
@@ -126,23 +126,23 @@ LCOuterParticleIterator LCParticleContainer::endOuter() {
 
 LCInnerParticleIterator LCParticleContainer::endInner(int i) {
 	int x;
-	if (!cells[i + width * height + width + 1].empty() && depth > 0) {
+	if ((!cells[i + width * height + width + 1].empty()) && depth > 0) {
 		x = i + width * height + width + 1;
-	} else if (!cells[i + width * height + width].empty() && depth > 0) {
+	} else if ((!cells[i + width * height + width].empty()) && depth > 0) {
 		x = i + width * height + width;
-	} else if (!cells[i + width * height + width - 1].empty() && depth > 0) {
+	} else if ((!cells[i + width * height + width - 1].empty()) && depth > 0) {
 		x = i + width * height + width - 1;
-	} else if (!cells[i + width * height + 1].empty() && depth > 0) {
+	} else if ((!cells[i + width * height + 1].empty()) && depth > 0) {
 		x = i + width * height + 1;
-	} else if (!cells[i + width * height].empty() && depth > 0) {
+	} else if ((!cells[i + width * height].empty()) && depth > 0) {
 		x = i + width * height;
-	} else if (!cells[i + width * height - 1].empty() && depth > 0) {
+	} else if ((!cells[i + width * height - 1].empty()) && depth > 0) {
 		x = i + width * height - 1;
-	} else if (!cells[i + width * height - width + 1].empty() && depth > 0) {
+	} else if ((!cells[i + width * height - width + 1].empty()) && depth > 0) {
 		x = i + width * height - width + 1;
-	} else if (!cells[i + width * height - width].empty() && depth > 0) {
+	} else if ((!cells[i + width * height - width].empty()) && depth > 0) {
 		x = i + width * height - width;
-	} else if (!cells[i + width * height - width - 1].empty() && depth > 0) {
+	} else if ((!cells[i + width * height - width - 1].empty()) && depth > 0) {
 		x = i + width * height - width - 1;
 	} else if (!cells[i + width + 1].empty()) {
 		x = i + width + 1;
@@ -157,7 +157,7 @@ LCInnerParticleIterator LCParticleContainer::endInner(int i) {
 	}
 	assert(cells[i].size() != 0);
 	assert(cells[x].empty() == false);
-	assert(cells[x].size() != 0);
+	assert(cells[x].size() > 0);
 	//assert(x <= i + 61);
 	return LCInnerParticleIterator(x, x, num_of_cells, width, height, depth,
 			cells[x].end(), cells);
