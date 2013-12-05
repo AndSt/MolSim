@@ -8,7 +8,8 @@
 #include "LCParticleContainer.h"
 #include <log4cxx/logger.h>
 
-log4cxx::LoggerPtr lcparticlecontainerlogger(log4cxx::Logger::getLogger("utils.lcparticlecontainer"));
+log4cxx::LoggerPtr lcparticlecontainerlogger(
+		log4cxx::Logger::getLogger("utils.lcparticlecontainer"));
 
 namespace utils {
 
@@ -30,7 +31,7 @@ void LCParticleContainer::initialize(std::list<Particle>& particles_arg,
 	width = domain_size[0] / cutoff_radius;
 	height = domain_size[1] / cutoff_radius;
 	depth = domain_size[2] / cutoff_radius;
-	if (depth > 0 ) {
+	if (depth > 0) {
 		num_of_cells = width * height * depth;
 	} else {
 		num_of_cells = width * height;
@@ -42,24 +43,25 @@ void LCParticleContainer::initialize(std::list<Particle>& particles_arg,
 	initializeCells();
 }
 
-
 void LCParticleContainer::updateCells() {
 	deleteHalo();
 	toList();
 	initializeCells();
-	LOG4CXX_DEBUG(lcparticlecontainerlogger,"Updated cells.");
+	LOG4CXX_DEBUG(lcparticlecontainerlogger, "Updated cells.");
 }
 
-void LCParticleContainer::initializeCells(){
+void LCParticleContainer::initializeCells() {
 	for (int i = 0; i < num_of_cells; i++) {
 		cells[i].clear();
 	}
 	for (std::list<Particle>::iterator iterator = particles.begin();
 			iterator != particles.end(); ++iterator) {
 		//check if it's in the domain
-		if (((*iterator).getX())[0] <= domain_size[0]
-				&& (*iterator).getX()[1] <= domain_size[1]
-				&& (*iterator).getX()[2] <= domain_size[2]) {
+		if (((*iterator).getX())[0] < domain_size[0] && (*iterator).getX[0] > 0
+				&& (*iterator).getX()[1] < domain_size[1]
+				&& (*iterator).getX[1] > 0
+				&& (*iterator).getX()[2] < domain_size[2]
+				&& (*iterator).getX[2] > 0) {
 
 			Particle& p = *iterator;
 			int i = (int) (p.getX()[0] / cutoff_radius)
@@ -71,7 +73,7 @@ void LCParticleContainer::initializeCells(){
 			//std::cout << "hier" << std::endl;
 		}
 	}
-	LOG4CXX_DEBUG(lcparticlecontainerlogger,"Initialized cells.");
+	LOG4CXX_DEBUG(lcparticlecontainerlogger, "Initialized cells.");
 }
 
 void LCParticleContainer::toList() {
@@ -165,6 +167,10 @@ LCInnerParticleIterator LCParticleContainer::endInner(int i) {
 
 std::list<Particle>& LCParticleContainer::getList() {
 	return particles;
+}
+
+std::list<Particle>& LCParticleContainer::getHaloList() {
+	return halo;
 }
 
 int LCParticleContainer::size() {

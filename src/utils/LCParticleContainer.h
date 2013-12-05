@@ -36,7 +36,8 @@ public:
 	LCOuterParticleIterator beginOuter();
 
 	/**
-	 * @return the first element of the container
+	 * @return the first element of the neighboring particles
+	 * @param the outer particle iterator
 	 */
 	LCInnerParticleIterator beginInner(LCOuterParticleIterator it);
 
@@ -45,8 +46,15 @@ public:
 	 */
 	LCOuterParticleIterator endOuter();
 
+	/**
+	 * @return the last element of the neighboring partciles
+	 * @param the index of the outer particle
+	 */
 	LCInnerParticleIterator endInner(int i);
 
+	/**
+	 * deletes the particles in the halo
+	 */
 	void deleteHalo();
 
 	/**
@@ -54,16 +62,29 @@ public:
 	 */
 	void updateCells();
 
-
+	/**
+	 * Initializes the cells
+	 */
 	void initializeCells();
 
 	/**
-	 * @ return the particles list
+	 * @return the particles list
 	 */
 	std::list<Particle>& getList();
 
+	/**
+	 * @return the halo list
+	 */
+	std::list<Particle>& LCParticleContainer::getHaloList()
+
+	/**
+	 * @return number of particles within the domain
+	 */
 	int size();
 
+	/**
+	 * writes all particles into a list
+	 */
 	void toList();
 
 private:
