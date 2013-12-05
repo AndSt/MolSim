@@ -583,8 +583,8 @@ void plotVTK(int iteration) {
 // LINKED CELL ALGORITHM
 
   /*! To compare the execution time between naive and LC Algorithm:
-   *  \image html Graph/GraphLCWithoutPlot.jpg
-   *  \image html Graph/GraphLCWithPlot.jpg
+   *  \image html GraphLCWithoutPlot.jpg
+   *  \image html GraphLCWithPlot.jpg
    */
 
 void LCsimulate() {
