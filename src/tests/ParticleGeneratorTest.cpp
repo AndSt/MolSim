@@ -75,7 +75,7 @@ void ParticleGeneratorTest::setUp() {
 
 	/*FOR TESTEXTRACTSETTING*/
 	start_time = 0.0;
- 	end_time = 25.0;
+ 	end_time = 20.0;
 	delta_t = 0.0005;
 	EPSILON = 5.0;
 	SIGMA = 1.0;
