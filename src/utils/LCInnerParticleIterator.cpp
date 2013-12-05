@@ -50,99 +50,99 @@ void LCInnerParticleIterator::operator++() {
 				if (checkRight()) {
 
 					done = true;
-					LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + 1");
+					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + 1");
 				}
 			} else if (index == original_index + 1) {
 				index = original_index + width - 1;
 				if (checkLeft() && checkTop()) {
 					done = true;
-					LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width - 1");
+					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width - 1");
 				}
 			} else if (index == original_index + width - 1) {
 				index = original_index + width;
 				if (checkTop()) {
 					done = true;
-					LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width");
+					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width");
 				}
 			} else if (index == original_index + width) {
 				index = original_index + width + 1;
 				if (checkTop() && checkRight()) {
 					done = true;
-					LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width + 1");
+					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width + 1");
 				}
 			} else if (index == original_index + width + 1) {
 				if (depth > 1) {
 					index = original_index + width * height - width - 1;
 					if (checkBack() && checkBottom() && checkLeft()) {
 						done = true;
-						LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height - width - 1");
+						//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height - width - 1");
 					}
 				} else {
 					index = old_index;
 					done = true;
-					LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "index = old_index with depth <= 1");
+					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "index = old_index with depth <= 1");
 				}
 			} else if (depth > 0
 					&& index == original_index + width * height - width - 1) {
 				index = original_index + width * height - width;
 				if (checkBack() && checkBottom()) {
 					done = true;
-					LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height - width");
+					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height - width");
 				}
 			} else if (depth > 0
 					&& index == original_index + width * height - width) {
 				index = original_index + width * height - width + 1;
 				if (checkBack() && checkBottom() && checkRight()) {
 					done = true;
-					LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height - width + 1");
+					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height - width + 1");
 				}
 			} else if (depth > 0
 					&& index == original_index + width * height - width + 1) {
 				index = original_index + width * height - 1;
 				if (checkBack() && checkLeft()) {
 					done = true;
-					LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height - 1");
+					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height - 1");
 				}
 			} else if (depth > 0
 					&& index == original_index + width * height - 1) {
 				index = original_index + width * height;
 				if (checkBack()) {
 					done = true;
-					LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height");
+					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height");
 				}
 			} else if (depth > 0 && index == original_index + width * height) {
 				index = original_index + width * height + 1;
 				if (checkBack() && checkRight()) {
 					done = true;
-					LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height + 1");
+					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height + 1");
 				}
 			} else if (depth > 0
 					&& index == original_index + width * height + 1) {
 				index = original_index + width * height + width - 1;
 				if (checkBack() && checkTop() && checkLeft()) {
 					done = true;
-					LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height + width - 1");
+					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height + width - 1");
 				}
 			} else if (depth > 0
 					&& index == original_index + width * height + width - 1) {
 				index = original_index + width * height + width;
 				if (checkBack() && checkTop()) {
 					done = true;
-					LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height + width");
+					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height + width");
 				}
 			} else if (depth > 0
 					&& index == original_index + width * height + width) {
 				index = original_index + width * height + width + 1;
 				if (checkBack() && checkTop() && checkRight()) {
 					done = true;
-					LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height + width + 1");
+					//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "original_index + width * height + width + 1");
 				}
 			} else if (depth > 0
 					&& index == original_index + width * height + width + 1) {
 				assert(cells[index].empty() == false);
 				index = old_index;
 				done = true;
-				LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "index = old_index with depth > 0");
+				//LOG4CXX_TRACE(lcinnerparticleiteratorlogger, "index = old_index with depth > 0");
 			} else {
 				assert(cells[index].empty() == false);
 				LOG4CXX_ERROR(lcinnerparticleiteratorlogger, "Error, Iterator gone too far.");

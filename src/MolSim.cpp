@@ -374,22 +374,20 @@ int main(int argc, char* argsv[]) {
 
 		//inintialize container with particle list
 		LOG4CXX_INFO(molsimlogger, "Arrived @ initialization call.");
-		if (option1 != 3 || option2 != 2)
-			container.initialize(particleList);
-		else
-			//LC
+		if (option1 == 3 && option2 == 1)
 			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
+		else
+			container.initialize(particleList);
 
 		//start simulation
 		LOG4CXX_INFO(molsimlogger, "Arrived @ simulation call.");
 
 		cout << "Running simulation..." << endl;
 
-		if (option1 != 3 || option2 != 2)
-			simulate();
-		else
-			//LC
+		if (option1 == 3 && option2 == 1)
 			LCsimulate();
+		else
+			simulate();
 
 		LOG4CXX_INFO(molsimlogger, "Arrived @ ending simulation.");
 	}
