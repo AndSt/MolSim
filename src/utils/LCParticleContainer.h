@@ -104,7 +104,7 @@ public:
 
 	/**
 	 * updates the leftBoundaryParticleList
-	 */	
+	 */
 	void updateLeftBoundaryParticles();
 	/**
 	 * updates the rightBoundaryParticleList
@@ -186,11 +186,29 @@ private:
 	 */
 	int num_of_cells;
 
+	/**
+	 * particles in the left boundary of the domain
+	 */
 	std::list<Particle> leftBoundaryParticleList;
+	/**
+	 * particles in the right boundary of the domain
+	 */
 	std::list<Particle> rightBoundaryParticleList;
+	/**
+	 * particles in the bottom boundary of the domain
+	 */
 	std::list<Particle> bottomBoundaryParticleList;
+	/**
+	 * particles in the top boundary of the domain
+	 */
 	std::list<Particle> topBoundaryParticleList;
+	/**
+	 * particles in the front boundary of the domain
+	 */
 	std::list<Particle> frontBoundaryParticleList;
+	/**
+	 * particles in the back boundary of the domain
+	 */
 	std::list<Particle> backBoundaryParticleList;
 };
 
