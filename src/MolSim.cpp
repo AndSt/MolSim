@@ -399,10 +399,10 @@ int main(int argc, char* argsv[]) {
 void simulate() {
 // the forces are needed to calculate x, but are not given in the input file.
 //calculateF();
-	cout << "Size of container: " << container.size() << " particles..." << endl;
+	LOG4CXX_INFO(molsimlogger, "Size of container: " << container.size() << " particles.");
 	cout << "Press enter to continue..." << endl;
 	cin.ignore();
-	cout << "Starting force calculation for the first time..." << endl;
+	LOG4CXX_DEBUG(molsimlogger, "Starting force calculation for the first time...");
 	calculateFLJ();
 
 	double current_time = start_time;
@@ -411,17 +411,17 @@ void simulate() {
 
 // for this loop, we assume: current x, current f and current v are known
 	while (current_time < end_time) {
-		cout << "Iteration " << iteration << ": " << endl;
+		//cout << "Iteration " << iteration << ": " << endl;
 		// calculate new x
-		cout << "\tcalculating X" << endl;
+		//cout << "\tcalculating X" << endl;
 		calculateX(); 
 
 		// calculate new f
-		cout << "\tcalculating F" << endl;
+		//cout << "\tcalculating F" << endl;
 		calculateFLJ();
 
 		// calculate new v
-		cout << "\tcalculating V.\n" << endl;
+		//cout << "\tcalculating V.\n" << endl;
 		calculateV();
 
 		iteration++;
@@ -580,8 +580,8 @@ void plotVTK(int iteration) {
 void LCsimulate() {
 // the forces are needed to calculate x, but are not given in the input file.
 //calculateF();
-	cout << lcContainer.size() << endl;
-	cout << particleList.size() << endl;
+	LOG4CXX_INFO(molsimlogger, "lcContainer.size: " << lcContainer.size());
+	LOG4CXX_INFO(molsimlogger, "particleList.size: " << particleList.size());
 	assert(lcContainer.size() == particleList.size());
 	LCcalculateFLJ();
 	double current_time = start_time;
@@ -604,7 +604,7 @@ void LCsimulate() {
 		if (iteration % freq == 0) {
 			LCplotVTK(iteration);
 		}
-		cout << "Iteration " << iteration << " finished." << endl;
+		LOG4CXX_TRACE(molsimlogger, "Iteration " << iteration << " finished.");
 
 		current_time += delta_t;
 	}

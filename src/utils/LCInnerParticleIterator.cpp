@@ -6,6 +6,9 @@
  */
 
 #include "LCInnerParticleIterator.h"
+#include <log4cxx/logger.h>
+
+log4cxx::LoggerPtr lcinnerparticleiteratorlogger(log4cxx::Logger::getLogger("utils.lcinnerparticleiterator"));
 
 namespace utils {
 
@@ -54,14 +57,13 @@ void LCInnerParticleIterator::operator++() {
 				}
 			} else if (index == original_index + width - 1) {
 				index = original_index + width;
-				if (checkTop() == true) {
+				if (checkTop()) {
 					done = true;
 				}
 			} else if (index == original_index + width) {
 				index = original_index + width + 1;
 				if (checkTop() && checkRight()) {
 					done = true;
-
 				}
 			} else if (index == original_index + width + 1) {
 				if (depth > 1) {
@@ -127,7 +129,7 @@ void LCInnerParticleIterator::operator++() {
 				done = true;
 			} else {
 				assert(cells[index].empty() == false);
-				std::cout << "uups" << std::endl;
+				LOG4CXX_ERROR(lcinnerparticleiteratorlogger, "Error, Iterator gone too far.")
 			}
 		}
 		assert(index <= cell_size);

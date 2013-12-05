@@ -33,7 +33,7 @@ bool LCOuterParticleIterator::operator!=(const LCOuterParticleIterator b) {
 		return_value = true;
 	}
 	if(index > b.index){
-		return_value = true;
+		return_value = false;
 	}
 	return return_value;
 }
