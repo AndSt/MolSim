@@ -6,6 +6,9 @@
  */
 
 #include "LCOuterParticleIterator.h"
+#include <log4cxx/logger.h>
+
+log4cxx::LoggerPtr lcouterparticleiteratorlogger(log4cxx::Logger::getLogger("utils.lcouterparticleiterator"));
 
 namespace utils {
 
@@ -52,6 +55,7 @@ void  LCOuterParticleIterator::operator++() {
 		while (cells[index].empty() == true && index < cell_size) {
 			index++;
 		}
+		LOG4CXX_TRACE(lcouterparticleiteratorlogger, index);
 		assert(index > old_index);
 		assert(cells[index].empty() == false);
 		assert(cells[index].begin() != cells[index].end());

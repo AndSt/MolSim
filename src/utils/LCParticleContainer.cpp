@@ -71,7 +71,6 @@ void LCParticleContainer::initializeCells(){
 }
 
 void LCParticleContainer::toList() {
-	std::cout << "toList" << std::endl;
 	particles.clear();
 	LCOuterParticleIterator iterator = beginOuter();
 	while (iterator != endOuter()) {
