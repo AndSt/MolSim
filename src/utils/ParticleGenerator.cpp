@@ -25,7 +25,7 @@ using namespace log4cxx::xml;
 using namespace utils;
 using namespace std;
 
-log4cxx::LoggerPtr particlegeneratorlogger(log4cxx::Logger::getLogger("particlegenerator"));
+log4cxx::LoggerPtr particlegeneratorlogger(log4cxx::Logger::getLogger("utils.particlegenerator"));
 
 ParticleGenerator::ParticleGenerator() {
 	//LOG4CXX_INFO(particlegeneratorlogger,"Constructed.");

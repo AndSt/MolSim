@@ -6,6 +6,9 @@
  */
 
 #include "LCParticleContainer.h"
+#include <log4cxx/logger.h>
+
+log4cxx::LoggerPtr lcparticlecontainerlogger(log4cxx::Logger::getLogger("utils.lcparticlecontainer"));
 
 namespace utils {
 
@@ -40,6 +43,7 @@ void LCParticleContainer::updateCells() {
 	deleteHalo();
 	toList();
 	initializeCells();
+	LOG4CXX_DEBUG(lcparticlecontainerlogger,"Updated cells.");
 }
 
 void LCParticleContainer::initializeCells(){
@@ -63,6 +67,7 @@ void LCParticleContainer::initializeCells(){
 			std::cout << "hier" << std::endl;
 		}
 	}
+	LOG4CXX_DEBUG(lcparticlecontainerlogger,"Initialized cells.");
 }
 
 void LCParticleContainer::toList() {
@@ -80,7 +85,6 @@ void LCParticleContainer::toList() {
 	std::list<Particle>::iterator iiterator = halo.begin();
 	while (iiterator != halo.end()) {
 		particles.push_back(*iiterator);
-		assert(true == false);
 		++iiterator;
 	}
 	assert(particles.size() == size());
