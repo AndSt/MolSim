@@ -28,6 +28,9 @@
 #include "tests/ParticleIteratorTest.h"
 #include "tests/ParticleContainerTest.h"
 #include "tests/ParticleGeneratorTest.h"
+#include "tests/LCParticleContainerTest.h"
+#include "tests/LCInnerParticleIteratorTest.h"
+#include "tests/LCOuterParticleIteratorTest.h"
 
 #include <list>
 #include <cassert>
@@ -172,6 +175,9 @@ int main(int argc, char* argsv[]) {
 				runner.addTest(ParticleIteratorTest::suite());
 				runner.addTest(ParticleContainerTest::suite());
 				runner.addTest(ParticleGeneratorTest::suite());
+				runner.addTest(LCParticleContainerTest::suite());
+				//runner.addTest(LCInnerParticleIteratorTest::suite());
+				runner.addTest(LCOuterParticleIteratorTest::suite());
 				runner.run();
 
 			} else if (option == 2) {

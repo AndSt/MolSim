@@ -14,6 +14,9 @@ src/MolSim.cpp\
 src/utils/ParticleContainer.cpp\
 src/utils/ParticleGenerator.cpp\
 src/utils/ParticleIterator.cpp\
+src/tests/LCParticleContainerTest.cpp\
+src/tests/LCInnerParticleIteratorTest.cpp\
+src/tests/LCOuterParticleIteratorTest.cpp\
 src/utils/InputSetting.cpp\
 src/utils/LCParticleContainer.cpp\
 src/utils/LCOuterParticleIterator.cpp\
