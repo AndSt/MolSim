@@ -101,13 +101,13 @@ void Sphere::drawVerticalLine(utils::Vector<double, 3> tempCenter, int upperHeig
 // all tempCenter lie on Oz axis (the circles are parallel to each other and also to Oxy, distance =  meshWidth)
 void Sphere::drawBiggestCircleArea(){
 	// Implementing Bresenham's Algorithm 1 (see GAD Lecture)
-	double x = 0.0;
+	//double x = 0.0;
 	int xx = 0;
-	double y = radius*meshWidth;
+	//double y = radius*meshWidth;
 	int yy = radius;
 	//z = center[2]
 
-	drawVerticalLine(center, radius);		// from (0,R) to (0,-R)
+	//drawVerticalLine(center, radius);		// from (0,R) to (0,-R)
 
 	//plot(center, radius, 0);
 	//plot(center, (-1)*radius, 0);
@@ -115,8 +115,8 @@ void Sphere::drawBiggestCircleArea(){
 	double dToPointR[] = {meshWidth, radius*meshWidth - meshWidth/2, 0};
 	double F = dToPointR[0]*dToPointR[0] + dToPointR[1]*dToPointR[1] - pow(radius*meshWidth, 2);
 
-		utils::Vector<double, 3> tempCenter1(center);
-		utils::Vector<double, 3> tempCenter2(center);
+		//utils::Vector<double, 3> tempCenter1(center);
+		//utils::Vector<double, 3> tempCenter2(center);
 		//utils::Vector<double, 3> tempCenter3(center);
 		//utils::Vector<double, 3> tempCenter4(center);
 
@@ -124,73 +124,68 @@ void Sphere::drawBiggestCircleArea(){
 		initListOfCenters();
 		// listOfCenters and listOfRadii must have been initialized before
 		
-		while (x<=radius*meshWidth){
+		while (xx<yy){
 			if (F<0){
 				F = F + 2*xx*meshWidth + meshWidth*meshWidth;
 			}
 			else{
 				F = F + 2*meshWidth*(xx - yy + meshWidth);
-				y = y - meshWidth;
+				//y = y - meshWidth;
 				yy--;
 			}
-			x = x + meshWidth;
+			//x = x + meshWidth;
 			xx++;
 			//listOfRadii[radius] = radius already in init
 			listOfRadii[radius+xx] = yy;
 			listOfRadii[radius-xx] = yy;
-			//listOfRadii[radius+yy] = xx;
-			//listOfRadii[radius-yy] = xx;
+			listOfRadii[radius+yy] = xx;
+			listOfRadii[radius-yy] = xx;
 
-			tempCenter1[0] += meshWidth; 	// from (x,y) to (x,-y)
-			tempCenter2[0] -= meshWidth;	// from (-x,y) to (-x,-y)
+			//tempCenter1[0] += meshWidth; 	// from (x,y) to (x,-y)
+			//tempCenter2[0] -= meshWidth;	// from (-x,y) to (-x,-y)
 			//tempCenter3[0] = y;	 	// from (y,x) to (y,-x)
 			//tempCenter4[0] = -y; 		// from (-y,x) to (-y,-x)
 
-			drawVerticalLine(tempCenter1, yy);
-			drawVerticalLine(tempCenter2, yy);
+			//drawVerticalLine(tempCenter1, yy);
+			//drawVerticalLine(tempCenter2, yy);
 			//drawVerticalLine(tempCenter3, xx);
 			//drawVerticalLine(tempCenter4, xx);
+		}
+
+		utils::Vector<double, 3> tempC(center);
+		tempC[0] -= radius*meshWidth;
+		for (int i=0; i<=2*radius; i++){
+			drawVerticalLine(tempC, listOfRadii[i]);
+			tempC[0] += meshWidth;
 		}
 }
 
 
 void Sphere::drawCircleArea(utils::Vector<double, 3> tempCenter, int rad){
 	// Implementing Bresenham's Algorithm 1 (see GAD Lecture)
-	double x = 0.0;
 	int xx = 0;
-	double y = rad*meshWidth;
 	int yy = rad;
 	//z = center[2]
-
-	drawVerticalLine(tempCenter, rad);		// from (0,R) to (0,-R)
 
 	double dToPointR[] = {meshWidth, rad*meshWidth - meshWidth/2, 0};
 	double F = dToPointR[0]*dToPointR[0] + dToPointR[1]*dToPointR[1] - pow(rad*meshWidth, 2);
 
-		utils::Vector<double, 3> tempCenter1(tempCenter);
-		utils::Vector<double, 3> tempCenter2(tempCenter);
-
-		while (x<=rad*meshWidth){
+		while (xx<yy){
 			if (F<0){
 				F = F + 2*xx*meshWidth + meshWidth*meshWidth;
 			}
 			else{
 				F = F + 2*meshWidth*(xx - yy + meshWidth);
-				y = y - meshWidth;
 				yy--;
 			}
-			x = x + meshWidth;
 			xx++;
-			
-			tempCenter1[0] += meshWidth; 	// from (x,y) to (x,-y)
-			tempCenter2[0] -= meshWidth;	// from (-x,y) to (-x,-y)
-			//tempCenter3[0] = y;	 	// from (y,x) to (y,-x)
-			//tempCenter4[0] = -y; 		// from (-y,x) to (-y,-x)
+		}
 
-			drawVerticalLine(tempCenter1, yy);
-			drawVerticalLine(tempCenter2, yy);
-			//drawVerticalLine(tempCenter3, xx);
-			//drawVerticalLine(tempCenter4, xx);
+		utils::Vector<double, 3> tempC(tempCenter);
+		tempC[0] -= rad*meshWidth;
+		for (int i=0; i<=2*rad; i++){
+			drawVerticalLine(tempC, listOfRadii[i]);
+			tempC[0] += meshWidth;
 		}
 }
 
