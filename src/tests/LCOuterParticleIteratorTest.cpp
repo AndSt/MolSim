@@ -150,13 +150,13 @@ void LCOuterParticleIteratorTest::testGetIterator() {
 	utils::LCOuterParticleIterator iterator3 = container.beginOuter();
 	++iterator3;
 
-	std::list<Particle>::iterator iiterator1 = iterator1.getIterator();
-	std::list<Particle>::iterator iiterator2 = iterator1.getIterator();
-	std::list<Particle>::iterator iiterator3 = iterator1.getIterator();
+	std::list<Particle *>::iterator iiterator1 = iterator1.getIterator();
+	std::list<Particle *>::iterator iiterator2 = iterator1.getIterator();
+	std::list<Particle *>::iterator iiterator3 = iterator1.getIterator();
 
-	CPPUNIT_ASSERT((*iterator1) == (*iiterator1));
-	CPPUNIT_ASSERT((*iterator1) == (*iiterator2));
-	CPPUNIT_ASSERT(((*iterator1) == (*iiterator3)));
+	CPPUNIT_ASSERT((*iterator1) == *(*iiterator1));
+	CPPUNIT_ASSERT((*iterator1) == *(*iiterator2));
+	CPPUNIT_ASSERT(((*iterator1) == *(*iiterator3)));
 	std::cout << "testGetIterator" << std::endl;
 }
 
