@@ -75,32 +75,32 @@ public:
 	/**
 	 * @return the halo list
 	 */
-	std::list<Particle>& getHaloList();
+	std::list<Particle *>& getHaloList();
 
 	/**
 	 * @return the leftBoundaryParticleList
 	 */
-	std::list<Particle>& getLeftBoundaryParticles();
+	std::list<Particle *>& getLeftBoundaryParticles();
 	/**
 	 * @return the rightBoundaryParticleList
 	 */
-	std::list<Particle>& getRightBoundaryParticles();
+	std::list<Particle *>& getRightBoundaryParticles();
 	/**
 	 * @return the bottomBoundaryParticleList
 	 */
-	std::list<Particle>& getBottomBoundaryParticles();
+	std::list<Particle *>& getBottomBoundaryParticles();
 	/**
 	 * @return the topBoundaryParticleList
 	 */
-	std::list<Particle>& getTopBoundaryParticles();
+	std::list<Particle *>& getTopBoundaryParticles();
 	/**
 	 * @return the frontBoundaryParticleList
 	 */
-	std::list<Particle>& getFrontBoundaryParticles();
+	std::list<Particle *>& getFrontBoundaryParticles();
 	/**
 	 * @return the backBoundaryParticleList
 	 */
-	std::list<Particle>& getBackBoundaryParticles();
+	std::list<Particle *>& getBackBoundaryParticles();
 
 	/**
 	 * updates the leftBoundaryParticleList
@@ -132,11 +132,6 @@ public:
 	 */
 	int size();
 
-	/**
-	 * writes all particles into a list
-	 */
-	void toList();
-
 private:
 	/**
 	 * contains the list of the given particles
@@ -146,12 +141,12 @@ private:
 	/**
 	 * contains the vector of cells of the given particles
 	 */
-	std::vector<std::list<Particle> > cells;
+	std::vector<std::list<Particle *> > cells;
 
 	/**
 	 * contains the list of the particles in the halo zone
 	 */
-	std::list<Particle> halo;
+	std::list<Particle *> halo;
 
 	/**
 	 * contains the size of the domain.
@@ -189,27 +184,27 @@ private:
 	/**
 	 * particles in the left boundary of the domain
 	 */
-	std::list<Particle> leftBoundaryParticleList;
+	std::list<Particle *> leftBoundaryParticleList;
 	/**
 	 * particles in the right boundary of the domain
 	 */
-	std::list<Particle> rightBoundaryParticleList;
+	std::list<Particle *> rightBoundaryParticleList;
 	/**
 	 * particles in the bottom boundary of the domain
 	 */
-	std::list<Particle> bottomBoundaryParticleList;
+	std::list<Particle *> bottomBoundaryParticleList;
 	/**
 	 * particles in the top boundary of the domain
 	 */
-	std::list<Particle> topBoundaryParticleList;
+	std::list<Particle *> topBoundaryParticleList;
 	/**
 	 * particles in the front boundary of the domain
 	 */
-	std::list<Particle> frontBoundaryParticleList;
+	std::list<Particle *> frontBoundaryParticleList;
 	/**
 	 * particles in the back boundary of the domain
 	 */
-	std::list<Particle> backBoundaryParticleList;
+	std::list<Particle *> backBoundaryParticleList;
 };
 
 } /* namespace utils */

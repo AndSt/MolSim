@@ -39,7 +39,7 @@ void LCParticleContainer::initialize(std::list<Particle>& particles_arg,
 	cells.resize(num_of_cells);
 
 	for (int i = 0; i < num_of_cells; i++) {
-		cells[i] = std::list<Particle>();
+		cells[i] = std::list<Particle *>();
 	}
 
 	initializeCells();
@@ -47,7 +47,6 @@ void LCParticleContainer::initialize(std::list<Particle>& particles_arg,
 
 void LCParticleContainer::updateCells() {
 	deleteHalo();
-	toList();
 	initializeCells();
 	LOG4CXX_DEBUG(lcparticlecontainerlogger, "Updated cells.");
 }
@@ -70,32 +69,15 @@ void LCParticleContainer::initializeCells() {
 			int i = (int) (p.getX()[0] / cutoff_radius)
 					+ ((int) (p.getX()[1] / cutoff_radius)) * width
 					+ ((int) (p.getX()[2] / cutoff_radius)) * width * height;
-			cells[i].push_back(*iterator);
+			cells[i].push_back(&(*iterator));
 		} else {
-			halo.push_back(*iterator);
+			halo.push_back(&(*iterator));
 		}
 		++iterator;
 	}
 	LOG4CXX_DEBUG(lcparticlecontainerlogger, "Initialized cells.");
 }
 
-void LCParticleContainer::toList() {
-	particles.clear();
-	LCOuterParticleIterator iterator = beginOuter();
-	while (iterator != endOuter()) {
-		if (iterator.getCellNumber() > endOuter().getCellNumber()) {
-			break;
-		}
-		assert(iterator.getCellNumber() <= endOuter().getCellNumber());
-		particles.push_back(*iterator);
-		++iterator;
-	}
-	std::list<Particle>::iterator iiterator = halo.begin();
-	while (iiterator != halo.end()) {
-		particles.push_back(*iiterator);
-		++iiterator;
-	}
-}
 void LCParticleContainer::deleteHalo() {
 	halo.clear();
 }
@@ -171,18 +153,18 @@ std::list<Particle>& LCParticleContainer::getList() {
 	return particles;
 }
 
-std::list<Particle>& LCParticleContainer::getHaloList() {
+std::list<Particle *>& LCParticleContainer::getHaloList() {
 	return halo;
 }
 
-std::list<Particle>& LCParticleContainer::getLeftBoundaryParticles() {
-	return leftBoundaryParticleList; 	
+std::list<Particle *>& LCParticleContainer::getLeftBoundaryParticles() {
+	return leftBoundaryParticleList;
 }
 
-void LCParticleContainer::updateLeftBoundaryParticles() {	
+void LCParticleContainer::updateLeftBoundaryParticles() {
 	leftBoundaryParticleList.clear();
 	for (int i = 0; i <= num_of_cells - width; i = i + width) {
-		std::list<Particle>::iterator innerIterator = cells[i].begin();
+		std::list<Particle *>::iterator innerIterator = cells[i].begin();
 		while (innerIterator != cells[i].end()) {
 			leftBoundaryParticleList.push_back((*innerIterator));
 			++innerIterator;
@@ -190,14 +172,14 @@ void LCParticleContainer::updateLeftBoundaryParticles() {
 	}
 }
 
-std::list<Particle>& LCParticleContainer::getRightBoundaryParticles() {
+std::list<Particle *>& LCParticleContainer::getRightBoundaryParticles() {
 	return rightBoundaryParticleList;
 }
 
 void LCParticleContainer::updateRightBoundaryParticles() {
 	rightBoundaryParticleList.clear();
 	for (int i = width - 1; i <= num_of_cells - 1; i = i + width) {
-		std::list<Particle>::iterator innerIterator = cells[i].begin();
+		std::list<Particle *>::iterator innerIterator = cells[i].begin();
 		while (innerIterator != cells[i].end()) {
 			rightBoundaryParticleList.push_back((*innerIterator));
 			++innerIterator;
@@ -205,7 +187,7 @@ void LCParticleContainer::updateRightBoundaryParticles() {
 	}
 }
 
-std::list<Particle>& LCParticleContainer::getBottomBoundaryParticles() {
+std::list<Particle *>& LCParticleContainer::getBottomBoundaryParticles() {
 	return bottomBoundaryParticleList;
 }
 
@@ -214,7 +196,7 @@ void LCParticleContainer::updateBottomBoundaryParticles() {
 	for (int i = 0; i <= num_of_cells - width * height + width - 1;
 			i = i + 1 - width + width * height) {
 		for (int j = 0; j < width; j++) {
-			std::list<Particle>::iterator innerIterator = cells[i].begin();
+			std::list<Particle *>::iterator innerIterator = cells[i].begin();
 			while (innerIterator != cells[i].end()) {
 				bottomBoundaryParticleList.push_back((*innerIterator));
 				++innerIterator;
@@ -224,7 +206,7 @@ void LCParticleContainer::updateBottomBoundaryParticles() {
 	}
 }
 
-std::list<Particle>& LCParticleContainer::getTopBoundaryParticles() {
+std::list<Particle *>& LCParticleContainer::getTopBoundaryParticles() {
 	return topBoundaryParticleList;
 }
 
@@ -234,7 +216,7 @@ void LCParticleContainer::updateTopBoundaryParticles() {
 			i <= num_of_cells - width * height + width - 1;
 			i = i + 1 - width + width * height) {
 		for (int j = 0; j < width; j++) {
-			std::list<Particle>::iterator innerIterator = cells[i].begin();
+			std::list<Particle *>::iterator innerIterator = cells[i].begin();
 			while (innerIterator != cells[i].end()) {
 				topBoundaryParticleList.push_back((*innerIterator));
 				++innerIterator;
@@ -245,7 +227,7 @@ void LCParticleContainer::updateTopBoundaryParticles() {
 
 }
 
-std::list<Particle>& LCParticleContainer::getFrontBoundaryParticles() {
+std::list<Particle *>& LCParticleContainer::getFrontBoundaryParticles() {
 	return frontBoundaryParticleList;
 }
 
@@ -253,7 +235,7 @@ void LCParticleContainer::updateFrontBoundaryParticles() {
 	assert(depth > 1);
 	frontBoundaryParticleList.clear();
 	for (int i = 0; i < width * height; i++) {
-		std::list<Particle>::iterator innerIterator = cells[i].begin();
+		std::list<Particle *>::iterator innerIterator = cells[i].begin();
 		while (innerIterator != cells[i].end()) {
 			frontBoundaryParticleList.push_back((*innerIterator));
 			++innerIterator;
@@ -262,7 +244,7 @@ void LCParticleContainer::updateFrontBoundaryParticles() {
 
 }
 
-std::list<Particle>& LCParticleContainer::getBackBoundaryParticles() {
+std::list<Particle *>& LCParticleContainer::getBackBoundaryParticles() {
 	return backBoundaryParticleList;
 }
 
@@ -270,7 +252,7 @@ void LCParticleContainer::updateBackBoundaryParticles() {
 	assert(depth > 1);
 	backBoundaryParticleList.clear();
 	for (int i = num_of_cells - width * height; i < num_of_cells; i++) {
-		std::list<Particle>::iterator innerIterator = cells[i].begin();
+		std::list<Particle *>::iterator innerIterator = cells[i].begin();
 		while (innerIterator != cells[i].end()) {
 			backBoundaryParticleList.push_back((*innerIterator));
 			++innerIterator;

@@ -68,7 +68,7 @@ void LCParticleContainerTest::testInitializeCells() {
 					+ ((int) (p.getX()[1] / cutoff_radius)) * width
 					+ ((int) (p.getX()[2] / cutoff_radius)) * width * height;
 
-			 //test if they are reachable threw LCOuterParticleIterator
+			//test if they are reachable threw LCOuterParticleIterator
 			utils::LCOuterParticleIterator iiterator = container.beginOuter();
 			while (iiterator != container.endOuter()) {
 				if ((*iterator) == (*iiterator)) {
@@ -78,7 +78,7 @@ void LCParticleContainerTest::testInitializeCells() {
 			}
 			CPPUNIT_ASSERT((*iterator) == (*iiterator));
 
-			 //test if they are reachable threw LCInnerParticleIterator
+			//test if they are reachable threw LCInnerParticleIterator
 			utils::LCInnerParticleIterator iiiterator = container.beginInner(
 					iiterator);
 			while (iiiterator != container.endInner(iiterator.getCellNumber())) {
@@ -91,39 +91,18 @@ void LCParticleContainerTest::testInitializeCells() {
 		}
 		//test if they are in the halo region
 		else {
-			std::list<Particle>::iterator iiterator =
+			std::list<Particle *>::iterator iiterator =
 					container.getHaloList().begin();
 			while (iiterator != container.getHaloList().end()) {
-				if ((*iterator) == (*iiterator)) {
+				if ((*iterator) == (**iiterator)) {
 					break;
 				}
 				++iiterator;
 			}
-			CPPUNIT_ASSERT((*iterator) == (*iiterator));
+			CPPUNIT_ASSERT((*iterator) == (**iiterator));
 		}
 		++iterator;
 	}
-	std::cout << "testInitializeCells" << std::endl;
-}
-
-void LCParticleContainerTest::testToList() {
-	container.toList();
-
-	//iterate over original particle list
-	std::list<Particle>::iterator iterator = particles.begin();
-	while (iterator != particles.end()) {
-		//iterator over the list in the container and check, if they exist
-		std::list<Particle>::iterator iiterator = container.getList().begin();
-		while (iiterator != container.getHaloList().end()) {
-			if ((*iterator) == (*iiterator)) {
-				break;
-			}
-			++iiterator;
-		}
-		CPPUNIT_ASSERT((*iterator) == (*iiterator));
-		++iterator;
-	}
-	std::cout << "testToList" << std::endl;
 }
 
 void LCParticleContainerTest::testUpdateCells() {
@@ -131,13 +110,11 @@ void LCParticleContainerTest::testUpdateCells() {
 	//we haven't changed the particles, so we only have to test, if all
 	//the particles are in the right cell
 	//testInitializeCells();
-	std::cout << "testUpdateCells" << std::endl;
 }
 
 void LCParticleContainerTest::testDeleteHalo() {
 	container.deleteHalo();
 	CPPUNIT_ASSERT(container.getHaloList().empty() == true);
-	std::cout << "testDeleteHaloCells" << std::endl;
 }
 
 void LCParticleContainerTest::testSize() {
@@ -153,8 +130,6 @@ void LCParticleContainerTest::testSize() {
 		++iterator;
 	}
 	CPPUNIT_ASSERT(i == container.size());
-
-	std::cout << "testSize" << std::endl;
 }
 
 void LCParticleContainerTest::testBeginOuter() {
@@ -188,8 +163,6 @@ void LCParticleContainerTest::testBeginOuter() {
 		++iterator;
 	}
 	CPPUNIT_ASSERT((*iterator) == (*iiterator));
-
-	std::cout << "testBeginOuter" << std::endl;
 }
 
 void LCParticleContainerTest::testEndOuter() {
@@ -217,8 +190,8 @@ void LCParticleContainerTest::testEndOuter() {
 
 	//check if container.endOuter() is in the list
 	utils::LCOuterParticleIterator outerIterator = container.beginOuter();
-	while(outerIterator != container.endOuter()){
-		if((*iterator) == (*outerIterator)){
+	while (outerIterator != container.endOuter()) {
+		if ((*iterator) == (*outerIterator)) {
 			break;
 		}
 		++outerIterator;
@@ -227,7 +200,6 @@ void LCParticleContainerTest::testEndOuter() {
 	CPPUNIT_ASSERT((*iterator) == (*outerIterator));
 	++outerIterator;
 	CPPUNIT_ASSERT(!(outerIterator != container.endOuter()));
-	std::cout << "testEndOuter" << std::endl;
 }
 
 void LCParticleContainerTest::testBeginInner() {
@@ -253,8 +225,8 @@ void LCParticleContainerTest::testBeginInner() {
 					}
 					++innerIterator2;
 				}
-				if(innerIterator2 != container.endOuter()){
-				CPPUNIT_ASSERT((*innerIterator2) == (*begin));
+				if (innerIterator2 != container.endOuter()) {
+					CPPUNIT_ASSERT((*innerIterator2) == (*begin));
 				}
 
 			}
@@ -262,8 +234,6 @@ void LCParticleContainerTest::testBeginInner() {
 		}
 		++outerIterator;
 	}
-
-	std::cout << "testBeginInner" << std::endl;
 }
 
 void LCParticleContainerTest::testEndInner() {
@@ -297,15 +267,12 @@ void LCParticleContainerTest::testEndInner() {
 
 		utils::LCInnerParticleIterator innerIterator = container.beginInner(
 				outerIterator);
-		for (int j = 0; j <= size+1; j++) {
+		for (int j = 0; j < size; j++) {
 			++innerIterator;
 		}
-		std::cout << (*innerIterator).toString() << std::cout;
-		std::cout << "EndInner: " << (*(container.endInner(i))).toString() << std::cout;
+		++innerIterator;
 		CPPUNIT_ASSERT((*innerIterator) == (*(container.endInner(i))));
 	}
-
-	std::cout << "testEndInner" << std::endl;
 }
 
 void LCParticleContainerTest::testGetList() {
@@ -322,8 +289,6 @@ void LCParticleContainerTest::testGetList() {
 		CPPUNIT_ASSERT((*innerIterator) == (*outerIterator));
 		++outerIterator;
 	}
-
-	std::cout << "testGetList" << std::endl;
 }
 
 CppUnit::Test *LCParticleContainerTest::suite() {
@@ -339,17 +304,14 @@ CppUnit::Test *LCParticleContainerTest::suite() {
 			new CppUnit::TestCaller<LCParticleContainerTest>("testUpdateCells",
 					&LCParticleContainerTest::testUpdateCells));
 	testSuite->addTest(
-			new CppUnit::TestCaller<LCParticleContainerTest>("testToList",
-					&LCParticleContainerTest::testToList));
-	testSuite->addTest(
 			new CppUnit::TestCaller<LCParticleContainerTest>("testDeleteHalo",
 					&LCParticleContainerTest::testDeleteHalo));
 	testSuite->addTest(
-				new CppUnit::TestCaller<LCParticleContainerTest>("testGetList",
-						&LCParticleContainerTest::testGetList));
+			new CppUnit::TestCaller<LCParticleContainerTest>("testGetList",
+					&LCParticleContainerTest::testGetList));
 	testSuite->addTest(
-				new CppUnit::TestCaller<LCParticleContainerTest>("testSize",
-						&LCParticleContainerTest::testSize));
+			new CppUnit::TestCaller<LCParticleContainerTest>("testSize",
+					&LCParticleContainerTest::testSize));
 	testSuite->addTest(
 			new CppUnit::TestCaller<LCParticleContainerTest>("testBeginOuter",
 					&LCParticleContainerTest::testBeginOuter));
@@ -357,11 +319,11 @@ CppUnit::Test *LCParticleContainerTest::suite() {
 			new CppUnit::TestCaller<LCParticleContainerTest>("testEndOuter",
 					&LCParticleContainerTest::testEndOuter));
 	testSuite->addTest(
-				new CppUnit::TestCaller<LCParticleContainerTest>("testBeginInner",
-						&LCParticleContainerTest::testBeginInner));
+			new CppUnit::TestCaller<LCParticleContainerTest>("testBeginInner",
+					&LCParticleContainerTest::testBeginInner));
 	testSuite->addTest(
-				new CppUnit::TestCaller<LCParticleContainerTest>("testEndInner",
-						&LCParticleContainerTest::testEndInner));
+			new CppUnit::TestCaller<LCParticleContainerTest>("testEndInner",
+					&LCParticleContainerTest::testEndInner));
 
 	return testSuite;
 }

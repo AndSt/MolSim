@@ -12,8 +12,8 @@ namespace utils {
 LCInnerParticleIterator::LCInnerParticleIterator(int index_arg,
 		int original_index_arg, int cell_size_arg, int width_arg,
 		int height_arg, int depth_arg,
-		std::list<Particle>::iterator iterator_arg,
-		std::vector<std::list<Particle> >& cells_arg) :
+		std::list<Particle *>::iterator iterator_arg,
+		std::vector<std::list<Particle *> >& cells_arg) :
 		cells(cells_arg) {
 	original_index = original_index_arg;
 	index = index_arg;
@@ -29,7 +29,7 @@ LCInnerParticleIterator::~LCInnerParticleIterator() {
 }
 
 Particle& LCInnerParticleIterator::operator*() const {
-	return *iterator;
+	return *(*iterator);
 }
 
 void LCInnerParticleIterator::operator++() {

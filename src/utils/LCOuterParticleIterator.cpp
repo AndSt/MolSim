@@ -14,8 +14,8 @@ namespace utils {
 
 
 LCOuterParticleIterator::LCOuterParticleIterator(int cell_size_arg,
-		std::vector<std::list<Particle> >& cells_arg,
-	std::list<Particle>::iterator iterator_arg, int index_arg) :
+		std::vector<std::list<Particle *> >& cells_arg,
+	std::list<Particle *>::iterator iterator_arg, int index_arg) :
 	cells(cells_arg) {
 	cell_size = cell_size_arg;
 	index = index_arg;
@@ -27,7 +27,7 @@ LCOuterParticleIterator::~LCOuterParticleIterator() {
 }
 
 Particle& LCOuterParticleIterator::operator*() const {
-	return *iterator;
+	return (*(*iterator));
 }
 
 bool LCOuterParticleIterator::operator!=(const LCOuterParticleIterator b) {
@@ -67,8 +67,8 @@ int LCOuterParticleIterator::getCellNumber(){
 	return index;
 }
 
-std::list<Particle>::iterator LCOuterParticleIterator::getIterator(){
-	std::list<Particle>::iterator newIterator = iterator;
+std::list<Particle *>::iterator LCOuterParticleIterator::getIterator(){
+	std::list<Particle *>::iterator newIterator = iterator;
 	return newIterator;
 }
 

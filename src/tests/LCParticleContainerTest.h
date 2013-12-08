@@ -45,11 +45,6 @@ public:
 	 * Check the updateCells() method of the ParticleContainer
 	 */
 	void testUpdateCells();
-	
-	/**
-	 * Check the toList() method of the ParticleContainer
-	 */
-	void testToList();
 
 	/**
 	 * Check the deleteHalo() method of the ParticleContainer
