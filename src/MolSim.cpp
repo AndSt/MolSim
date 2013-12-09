@@ -610,7 +610,7 @@ void LCsimulate() {
 //calculateF();
 	LOG4CXX_INFO(molsimlogger, "lcContainer.size: " << lcContainer.size());
 	LOG4CXX_INFO(molsimlogger, "particleList.size: " << particleList.size());
-	assert(lcContainer.size() == particleList.size());
+	//assert(lcContainer.size() == particleList.size());
 	LCcalculateFLJ();
 	double current_time = start_time;
 
@@ -795,9 +795,9 @@ void LCcalculateX() {
 		utils::Vector<double, 3> tempX = p.getX() + delta_t * p.getV()
 				+ ((delta_t) * (delta_t) / (2 * p.getM())) * p.getOldF();
 
-		if (tempX[0] < 0 || tempX[1] < 0) {
+		/*if (tempX[0] < 0 || tempX[1] < 0) {
 			cout << iterator.getCellNumber() << " " << (*iterator).toString();
-		}
+		}*/
 		p.getX() = tempX;
 
 		++iterator;
