@@ -403,11 +403,21 @@ int main(int argc, char* argsv[]) {
 		//start simulation
 		LOG4CXX_INFO(molsimlogger, "Arrived @ simulation call.");
 
-		//initialize thermostat to get enabled flag (true --> call, false --> ignore)
-		thermo = Thermostat();
+		//======================THERMOSTAT=====================
+		int thermoOption;
+		cout << "Do you want to use Thermostat?\nPress 1 to confirm, 2 to ignore." << endl;
+		getIntegerInput(str, thermoOption);
 
-		cout << "Thermostat enabled. Target temperature: "
-						<< thermo.getT_target() << ".\n" << endl;
+		if (thermoOption==1){
+			//initialize thermostat to get enabled flag (true --> call, false --> ignore)
+			thermo = Thermostat();
+			thermo.getEnabled()=true;
+			cout << "Thermostat enabled. Target temperature: "
+							<< thermo.getT_target() << ".\n" << endl;
+		}else{
+			cout << "Thermostat disabled.\n" << endl;
+		}
+		//======================THERMOSTAT=====================
 
 		cout << "Running simulation..." << endl;
 
@@ -444,17 +454,10 @@ void simulate() {
 	while (current_time < end_time) {
 		//const clock_t beginTime = clock();
 
-		//cout << "Iteration " << iteration << ": " << endl;
-		// calculate new x
-		//cout << "\tcalculating X" << endl;
 		calculateX();
 
-		// calculate new f
-		//cout << "\tcalculating F" << endl;
 		calculateFLJ();
 
-		// calculate new v
-		//cout << "\tcalculating V.\n" << endl;
 		calculateV();
 
 		iteration++;
