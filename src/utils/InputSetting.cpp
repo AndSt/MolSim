@@ -362,6 +362,118 @@ freq (const freq_type& x)
 }
 
 
+// thermo_t
+// 
+
+const thermo_t::brownianFlag_type& thermo_t::
+brownianFlag () const
+{
+  return this->brownianFlag_.get ();
+}
+
+thermo_t::brownianFlag_type& thermo_t::
+brownianFlag ()
+{
+  return this->brownianFlag_.get ();
+}
+
+void thermo_t::
+brownianFlag (const brownianFlag_type& x)
+{
+  this->brownianFlag_.set (x);
+}
+
+const thermo_t::initT_type& thermo_t::
+initT () const
+{
+  return this->initT_.get ();
+}
+
+thermo_t::initT_type& thermo_t::
+initT ()
+{
+  return this->initT_.get ();
+}
+
+void thermo_t::
+initT (const initT_type& x)
+{
+  this->initT_.set (x);
+}
+
+const thermo_t::targetT_type& thermo_t::
+targetT () const
+{
+  return this->targetT_.get ();
+}
+
+thermo_t::targetT_type& thermo_t::
+targetT ()
+{
+  return this->targetT_.get ();
+}
+
+void thermo_t::
+targetT (const targetT_type& x)
+{
+  this->targetT_.set (x);
+}
+
+const thermo_t::deltaT_type& thermo_t::
+deltaT () const
+{
+  return this->deltaT_.get ();
+}
+
+thermo_t::deltaT_type& thermo_t::
+deltaT ()
+{
+  return this->deltaT_.get ();
+}
+
+void thermo_t::
+deltaT (const deltaT_type& x)
+{
+  this->deltaT_.set (x);
+}
+
+const thermo_t::nThermo_type& thermo_t::
+nThermo () const
+{
+  return this->nThermo_.get ();
+}
+
+thermo_t::nThermo_type& thermo_t::
+nThermo ()
+{
+  return this->nThermo_.get ();
+}
+
+void thermo_t::
+nThermo (const nThermo_type& x)
+{
+  this->nThermo_.set (x);
+}
+
+const thermo_t::nDelta_type& thermo_t::
+nDelta () const
+{
+  return this->nDelta_.get ();
+}
+
+thermo_t::nDelta_type& thermo_t::
+nDelta ()
+{
+  return this->nDelta_.get ();
+}
+
+void thermo_t::
+nDelta (const nDelta_type& x)
+{
+  this->nDelta_.set (x);
+}
+
+
 // pse_t
 // 
 
@@ -465,6 +577,30 @@ void pse_t::
 lc (::std::auto_ptr< lc_type > x)
 {
   this->lc_.set (x);
+}
+
+const pse_t::thermo_type& pse_t::
+thermo () const
+{
+  return this->thermo_.get ();
+}
+
+pse_t::thermo_type& pse_t::
+thermo ()
+{
+  return this->thermo_.get ();
+}
+
+void pse_t::
+thermo (const thermo_type& x)
+{
+  this->thermo_.set (x);
+}
+
+void pse_t::
+thermo (::std::auto_ptr< thermo_type > x)
+{
+  this->thermo_.set (x);
 }
 
 const pse_t::inputfile_sequence& pse_t::
@@ -1172,6 +1308,193 @@ outputfile_t::
 {
 }
 
+// thermo_t
+//
+
+thermo_t::
+thermo_t (const brownianFlag_type& brownianFlag,
+          const initT_type& initT,
+          const targetT_type& targetT,
+          const deltaT_type& deltaT,
+          const nThermo_type& nThermo,
+          const nDelta_type& nDelta)
+: ::xml_schema::type (),
+  brownianFlag_ (brownianFlag, ::xml_schema::flags (), this),
+  initT_ (initT, ::xml_schema::flags (), this),
+  targetT_ (targetT, ::xml_schema::flags (), this),
+  deltaT_ (deltaT, ::xml_schema::flags (), this),
+  nThermo_ (nThermo, ::xml_schema::flags (), this),
+  nDelta_ (nDelta, ::xml_schema::flags (), this)
+{
+}
+
+thermo_t::
+thermo_t (const thermo_t& x,
+          ::xml_schema::flags f,
+          ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  brownianFlag_ (x.brownianFlag_, f, this),
+  initT_ (x.initT_, f, this),
+  targetT_ (x.targetT_, f, this),
+  deltaT_ (x.deltaT_, f, this),
+  nThermo_ (x.nThermo_, f, this),
+  nDelta_ (x.nDelta_, f, this)
+{
+}
+
+thermo_t::
+thermo_t (const ::xercesc::DOMElement& e,
+          ::xml_schema::flags f,
+          ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  brownianFlag_ (f, this),
+  initT_ (f, this),
+  targetT_ (f, this),
+  deltaT_ (f, this),
+  nThermo_ (f, this),
+  nDelta_ (f, this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, true, false);
+    this->parse (p, f);
+  }
+}
+
+void thermo_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  for (; p.more_elements (); p.next_element ())
+  {
+    const ::xercesc::DOMElement& i (p.cur_element ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    // brownianFlag
+    //
+    if (n.name () == "brownianFlag" && n.namespace_ ().empty ())
+    {
+      if (!brownianFlag_.present ())
+      {
+        this->brownianFlag_.set (brownianFlag_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // initT
+    //
+    if (n.name () == "initT" && n.namespace_ ().empty ())
+    {
+      if (!initT_.present ())
+      {
+        this->initT_.set (initT_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // targetT
+    //
+    if (n.name () == "targetT" && n.namespace_ ().empty ())
+    {
+      if (!targetT_.present ())
+      {
+        this->targetT_.set (targetT_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // deltaT
+    //
+    if (n.name () == "deltaT" && n.namespace_ ().empty ())
+    {
+      if (!deltaT_.present ())
+      {
+        this->deltaT_.set (deltaT_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // nThermo
+    //
+    if (n.name () == "nThermo" && n.namespace_ ().empty ())
+    {
+      if (!nThermo_.present ())
+      {
+        this->nThermo_.set (nThermo_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // nDelta
+    //
+    if (n.name () == "nDelta" && n.namespace_ ().empty ())
+    {
+      if (!nDelta_.present ())
+      {
+        this->nDelta_.set (nDelta_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!brownianFlag_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "brownianFlag",
+      "");
+  }
+
+  if (!initT_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "initT",
+      "");
+  }
+
+  if (!targetT_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "targetT",
+      "");
+  }
+
+  if (!deltaT_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "deltaT",
+      "");
+  }
+
+  if (!nThermo_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "nThermo",
+      "");
+  }
+
+  if (!nDelta_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "nDelta",
+      "");
+  }
+}
+
+thermo_t* thermo_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class thermo_t (*this, f, c);
+}
+
+thermo_t::
+~thermo_t ()
+{
+}
+
 // pse_t
 //
 
@@ -1181,6 +1504,7 @@ pse_t (const start_time_type& start_time,
        const delta_t_type& delta_t,
        const ljf_type& ljf,
        const lc_type& lc,
+       const thermo_type& thermo,
        const outputfile_type& outputfile)
 : ::xml_schema::type (),
   start_time_ (start_time, ::xml_schema::flags (), this),
@@ -1188,6 +1512,7 @@ pse_t (const start_time_type& start_time,
   delta_t_ (delta_t, ::xml_schema::flags (), this),
   ljf_ (ljf, ::xml_schema::flags (), this),
   lc_ (lc, ::xml_schema::flags (), this),
+  thermo_ (thermo, ::xml_schema::flags (), this),
   inputfile_ (::xml_schema::flags (), this),
   outputfile_ (outputfile, ::xml_schema::flags (), this)
 {
@@ -1199,6 +1524,7 @@ pse_t (const start_time_type& start_time,
        const delta_t_type& delta_t,
        ::std::auto_ptr< ljf_type >& ljf,
        ::std::auto_ptr< lc_type >& lc,
+       ::std::auto_ptr< thermo_type >& thermo,
        ::std::auto_ptr< outputfile_type >& outputfile)
 : ::xml_schema::type (),
   start_time_ (start_time, ::xml_schema::flags (), this),
@@ -1206,6 +1532,7 @@ pse_t (const start_time_type& start_time,
   delta_t_ (delta_t, ::xml_schema::flags (), this),
   ljf_ (ljf, ::xml_schema::flags (), this),
   lc_ (lc, ::xml_schema::flags (), this),
+  thermo_ (thermo, ::xml_schema::flags (), this),
   inputfile_ (::xml_schema::flags (), this),
   outputfile_ (outputfile, ::xml_schema::flags (), this)
 {
@@ -1221,6 +1548,7 @@ pse_t (const pse_t& x,
   delta_t_ (x.delta_t_, f, this),
   ljf_ (x.ljf_, f, this),
   lc_ (x.lc_, f, this),
+  thermo_ (x.thermo_, f, this),
   inputfile_ (x.inputfile_, f, this),
   outputfile_ (x.outputfile_, f, this)
 {
@@ -1236,6 +1564,7 @@ pse_t (const ::xercesc::DOMElement& e,
   delta_t_ (f, this),
   ljf_ (f, this),
   lc_ (f, this),
+  thermo_ (f, this),
   inputfile_ (f, this),
   outputfile_ (f, this)
 {
@@ -1317,6 +1646,20 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
+    // thermo
+    //
+    if (n.name () == "thermo" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< thermo_type > r (
+        thermo_traits::create (i, f, this));
+
+      if (!thermo_.present ())
+      {
+        this->thermo_.set (r);
+        continue;
+      }
+    }
+
     // inputfile
     //
     if (n.name () == "inputfile" && n.namespace_ ().empty ())
@@ -1377,6 +1720,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
   {
     throw ::xsd::cxx::tree::expected_element< char > (
       "lc",
+      "");
+  }
+
+  if (!thermo_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "thermo",
       "");
   }
 

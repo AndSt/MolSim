@@ -43,6 +43,16 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 		<!-- behind -->
 		<condition>2</condition>
 	</lc>	
+	
+	<!-- Thermostats -->
+	<thermo>
+		<brownianFlag>true</brownianFlag>
+		<initT>40</initT>
+		<targetT>80</targetT>
+		<deltaT>5</deltaT>
+		<nThermo>1000</nThermo>
+		<nDelta>2000</nDelta>
+	</thermo>
 
 	<inputfile>
 		<name>InputCuboids.xml</name>

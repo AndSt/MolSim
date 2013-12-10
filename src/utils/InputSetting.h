@@ -228,6 +228,7 @@ class condition_t;
 class inputfile_t;
 class type_t;
 class outputfile_t;
+class thermo_t;
 class pse_t;
 
 #include <memory>    // std::auto_ptr
@@ -691,6 +692,133 @@ class outputfile_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< freq_type > freq_;
 };
 
+class thermo_t: public ::xml_schema::type
+{
+  public:
+  // brownianFlag
+  // 
+  typedef ::xml_schema::boolean brownianFlag_type;
+  typedef ::xsd::cxx::tree::traits< brownianFlag_type, char > brownianFlag_traits;
+
+  const brownianFlag_type&
+  brownianFlag () const;
+
+  brownianFlag_type&
+  brownianFlag ();
+
+  void
+  brownianFlag (const brownianFlag_type& x);
+
+  // initT
+  // 
+  typedef ::xml_schema::decimal initT_type;
+  typedef ::xsd::cxx::tree::traits< initT_type, char, ::xsd::cxx::tree::schema_type::decimal > initT_traits;
+
+  const initT_type&
+  initT () const;
+
+  initT_type&
+  initT ();
+
+  void
+  initT (const initT_type& x);
+
+  // targetT
+  // 
+  typedef ::xml_schema::decimal targetT_type;
+  typedef ::xsd::cxx::tree::traits< targetT_type, char, ::xsd::cxx::tree::schema_type::decimal > targetT_traits;
+
+  const targetT_type&
+  targetT () const;
+
+  targetT_type&
+  targetT ();
+
+  void
+  targetT (const targetT_type& x);
+
+  // deltaT
+  // 
+  typedef ::xml_schema::decimal deltaT_type;
+  typedef ::xsd::cxx::tree::traits< deltaT_type, char, ::xsd::cxx::tree::schema_type::decimal > deltaT_traits;
+
+  const deltaT_type&
+  deltaT () const;
+
+  deltaT_type&
+  deltaT ();
+
+  void
+  deltaT (const deltaT_type& x);
+
+  // nThermo
+  // 
+  typedef ::xml_schema::int_ nThermo_type;
+  typedef ::xsd::cxx::tree::traits< nThermo_type, char > nThermo_traits;
+
+  const nThermo_type&
+  nThermo () const;
+
+  nThermo_type&
+  nThermo ();
+
+  void
+  nThermo (const nThermo_type& x);
+
+  // nDelta
+  // 
+  typedef ::xml_schema::int_ nDelta_type;
+  typedef ::xsd::cxx::tree::traits< nDelta_type, char > nDelta_traits;
+
+  const nDelta_type&
+  nDelta () const;
+
+  nDelta_type&
+  nDelta ();
+
+  void
+  nDelta (const nDelta_type& x);
+
+  // Constructors.
+  //
+  thermo_t (const brownianFlag_type&,
+            const initT_type&,
+            const targetT_type&,
+            const deltaT_type&,
+            const nThermo_type&,
+            const nDelta_type&);
+
+  thermo_t (const ::xercesc::DOMElement& e,
+            ::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0);
+
+  thermo_t (const thermo_t& x,
+            ::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0);
+
+  virtual thermo_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  virtual 
+  ~thermo_t ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  ::xsd::cxx::tree::one< brownianFlag_type > brownianFlag_;
+  ::xsd::cxx::tree::one< initT_type > initT_;
+  ::xsd::cxx::tree::one< targetT_type > targetT_;
+  ::xsd::cxx::tree::one< deltaT_type > deltaT_;
+  ::xsd::cxx::tree::one< nThermo_type > nThermo_;
+  ::xsd::cxx::tree::one< nDelta_type > nDelta_;
+};
+
 class pse_t: public ::xml_schema::type
 {
   public:
@@ -770,6 +898,23 @@ class pse_t: public ::xml_schema::type
   void
   lc (::std::auto_ptr< lc_type > p);
 
+  // thermo
+  // 
+  typedef ::thermo_t thermo_type;
+  typedef ::xsd::cxx::tree::traits< thermo_type, char > thermo_traits;
+
+  const thermo_type&
+  thermo () const;
+
+  thermo_type&
+  thermo ();
+
+  void
+  thermo (const thermo_type& x);
+
+  void
+  thermo (::std::auto_ptr< thermo_type > p);
+
   // inputfile
   // 
   typedef ::inputfile_t inputfile_type;
@@ -811,6 +956,7 @@ class pse_t: public ::xml_schema::type
          const delta_t_type&,
          const ljf_type&,
          const lc_type&,
+         const thermo_type&,
          const outputfile_type&);
 
   pse_t (const start_time_type&,
@@ -818,6 +964,7 @@ class pse_t: public ::xml_schema::type
          const delta_t_type&,
          ::std::auto_ptr< ljf_type >&,
          ::std::auto_ptr< lc_type >&,
+         ::std::auto_ptr< thermo_type >&,
          ::std::auto_ptr< outputfile_type >&);
 
   pse_t (const ::xercesc::DOMElement& e,
@@ -848,6 +995,7 @@ class pse_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< delta_t_type > delta_t_;
   ::xsd::cxx::tree::one< ljf_type > ljf_;
   ::xsd::cxx::tree::one< lc_type > lc_;
+  ::xsd::cxx::tree::one< thermo_type > thermo_;
   inputfile_sequence inputfile_;
   ::xsd::cxx::tree::one< outputfile_type > outputfile_;
 };

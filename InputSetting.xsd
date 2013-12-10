@@ -96,6 +96,22 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 		</xs:sequence>
 	</xs:complexType>
 
+	<xs:complexType name="thermo_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The thermo type consists of all information needed for a thermostat.
+				Also contains brownian_flag (true means the Brownian Motion should be applied).
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:sequence>
+			<xs:element name="brownianFlag" type="xs:boolean"/>
+			<xs:element name="initT" type="xs:decimal"/>
+			<xs:element name="targetT" type="xs:decimal"/>
+			<xs:element name="deltaT" type="xs:decimal"/>
+			<xs:element name="nThermo" type="xs:int"/>
+			<xs:element name="nDelta" type="xs:int"/>
+		</xs:sequence>
+	</xs:complexType>
 
 	<!-- type of the biggest complex element -->
 	<xs:complexType name="pse_t">
@@ -110,6 +126,7 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 			<xs:element name="delta_t" type="xs:decimal"/>
 			<xs:element name="ljf" type="ljf_t"/>
 			<xs:element name="lc" type="lc_t"/>
+			<xs:element name="thermo" type="thermo_t"/>
 			<xs:element name="inputfile" type="inputfile_t" maxOccurs="unbounded"/>
 			<xs:element name="outputfile" type="outputfile_t"/>
 		</xs:sequence>

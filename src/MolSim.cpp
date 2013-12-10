@@ -12,6 +12,7 @@
 #include "utils/LCParticleContainer.h"
 #include "utils/LCInnerParticleIterator.h"
 #include "utils/LCOuterParticleIterator.h"
+#include "utils/Thermostat.h"
 
 #include <log4cxx/logger.h>
 #include <log4cxx/propertyconfigurator.h>
@@ -31,6 +32,7 @@
 #include "tests/LCParticleContainerTest.h"
 #include "tests/LCInnerParticleIteratorTest.h"
 #include "tests/LCOuterParticleIteratorTest.h"
+#include "tests/ThermostatTest.h"
 
 #include <list>
 #include <cassert>
@@ -178,6 +180,7 @@ int main(int argc, char* argsv[]) {
 				runner.addTest(LCParticleContainerTest::suite());
 				//runner.addTest(LCInnerParticleIteratorTest::suite());
 				runner.addTest(LCOuterParticleIteratorTest::suite());
+				runner.addTest(ThermostatTest::suite());
 				runner.run();
 
 			} else if (option == 2) {
