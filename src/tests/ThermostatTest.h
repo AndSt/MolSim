@@ -39,8 +39,6 @@ public:
 
 	void testDefaultConstructor();
 
-	void testConstructor();
-
 	void testGetEKin();
 
 	void testMeanV();

@@ -35,7 +35,7 @@ public:
 
 	double getEKin(std::list<Particle> parList);
 
-	double getMeanV(int dim, std::list<Particle> parList, double mass);
+	double getMeanV(std::list<Particle> parList, int dim, double mass);
 
 	void setThermo(std::list<Particle>& parList, int dim, double temperature);
 

@@ -54,7 +54,7 @@ double Thermostat::getEKin(std::list<Particle> parList){
 	return eKinTimes2/2;
 }
 
-double Thermostat::getMeanV(int dim, std::list<Particle> parList, double mass){
+double Thermostat::getMeanV(std::list<Particle> parList, int dim, double mass){
 	return sqrt(2*getEKin(parList)/(dim*parList.size()*mass));
 }
 
@@ -64,7 +64,7 @@ void Thermostat::setThermo(std::list<Particle>& parList, int dim, double tempera
 	if (beta == 1) return;
 	//beta != 1
 	for (std::list<Particle>::iterator it = parList.begin(); it != parList.end(); it++){
-			(*it).getV() = (*it).getV()*beta;
+			(*it).getV() = beta*(*it).getV();
 	}
 }
 

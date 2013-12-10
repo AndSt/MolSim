@@ -6,6 +6,7 @@
  */
 
 #include "ParticleGeneratorTest.h"
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -124,8 +125,34 @@ void ParticleGeneratorTest::testReadCuboids() {
 void ParticleGeneratorTest::testExtractCuboids(){
 	
 	generator.extractCuboids("InputCuboids.xml");
-	
-	this->testReadCuboids();
+	Cuboid testCuboid = *generator.getCuboidList().begin();
+	CPPUNIT_ASSERT(testCuboid.getDepth()==1);
+	CPPUNIT_ASSERT(testCuboid.getHeight()==20);
+	CPPUNIT_ASSERT(testCuboid.getWidth()==100);
+	CPPUNIT_ASSERT(testCuboid.getMass()==1);
+	CPPUNIT_ASSERT(testCuboid.getDistance()==1.1225);
+	double v[] = {20.0, 20.0, 0.0};
+	utils::Vector<double,3> vv(v);
+	CPPUNIT_ASSERT(testCuboid.getOrigin()==vv);
+	double x[] = {0.0, 0.0, 0.0};
+	vv = utils::Vector<double,3> (x);
+	CPPUNIT_ASSERT(testCuboid.getStartV()==vv);
+	CPPUNIT_ASSERT(testCuboid.getMeanV()==0.1);
+
+	//Check second cuboid
+	testCuboid = *(++generator.getCuboidList().begin());
+	CPPUNIT_ASSERT(testCuboid.getDepth()==1);
+	CPPUNIT_ASSERT(testCuboid.getHeight()==20);
+	CPPUNIT_ASSERT(testCuboid.getWidth()==20);
+	CPPUNIT_ASSERT(testCuboid.getMass()==1);
+	CPPUNIT_ASSERT(testCuboid.getDistance()==1.1225);
+	double v1[] = {70.0, 60.0, 0.0};
+	vv = utils::Vector<double,3>(v1);
+	CPPUNIT_ASSERT(testCuboid.getOrigin()==vv);
+	double x1[] = {0.0, -10.0, 0.0};
+	vv = utils::Vector<double,3> (x1);
+	CPPUNIT_ASSERT(testCuboid.getStartV()==vv);
+	CPPUNIT_ASSERT(testCuboid.getMeanV()==0.1);
 }
 
 
@@ -139,9 +166,9 @@ void ParticleGeneratorTest::testExtractSpheres(){
 	std::list<Particle> parList = generator.getParticleList();
 
 	for (std::list<Particle>::iterator it = parList.begin(); it != parList.end(); it++){
-		Particle p = *it;		
-		CPPUNIT_ASSERT(pow(p.getX()[0]-cen[0],2) + pow(p.getX()[1]-cen[1],2) + 
-				pow(p.getX()[2]-cen[2],2) - pow(15*1.1225,2) <= 1.1225/2);
+		Particle p = *it;
+		utils::Vector<double, 3> temp = p.getX() - cen;
+		CPPUNIT_ASSERT(temp.L2Norm() - rDouble <= sp.getMeshWidth());
 	}
 	
 	CPPUNIT_ASSERT(sp.getCenter()[0]==60);
@@ -192,15 +219,15 @@ void ParticleGeneratorTest::testExtractSetting(){
 
 	list<string>::iterator itN = inputNamesT.begin();
 	list<string>::iterator itT = inputTypesT.begin();
-	CPPUNIT_ASSERT(*itN == "InputSpheres.xml");
-	CPPUNIT_ASSERT(*itT == "spheres");
+	CPPUNIT_ASSERT(*itN == "InputCuboids.xml");
+	CPPUNIT_ASSERT(*itT == "cuboids");
 
-	CPPUNIT_ASSERT(cond[0] == 1);
+	CPPUNIT_ASSERT(cond[0] == 2);
 	CPPUNIT_ASSERT(cond[1] == 2);
-	CPPUNIT_ASSERT(cond[2] == 1);
-	CPPUNIT_ASSERT(cond[3] == 1);
-	CPPUNIT_ASSERT(cond[4] == 1);
-	CPPUNIT_ASSERT(cond[5] == 1);	
+	CPPUNIT_ASSERT(cond[2] == 2);
+	CPPUNIT_ASSERT(cond[3] == 2);
+	CPPUNIT_ASSERT(cond[4] == 2);
+	CPPUNIT_ASSERT(cond[5] == 2);
 
 	CPPUNIT_ASSERT(outputMask==outputMaskT);
 	CPPUNIT_ASSERT(outputFreq==outputFreqT);

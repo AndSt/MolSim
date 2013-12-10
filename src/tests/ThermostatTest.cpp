@@ -38,7 +38,7 @@ void ThermostatTest::testGetEKin(){
 void ThermostatTest::testMeanV(){
 	//Hardcode: mass = 1
 	double v = sqrt(2*eKin/(2*4*1));
-	CPPUNIT_ASSERT((brownian_flag==true)&&(thermo.getMeanV(2, parList, 1)==v));
+	CPPUNIT_ASSERT((brownian_flag==true)&&(thermo.getMeanV(parList, 2, 1)==v));
 }
 
 void ThermostatTest::testSetThermo(){
