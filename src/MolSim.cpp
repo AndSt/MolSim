@@ -43,6 +43,8 @@
 #include <memory>
 #include <vector>
 #include <time.h>
+#include <fstream>
+#include <iomanip>
 
 using namespace std;
 using namespace log4cxx;
@@ -82,6 +84,8 @@ void getDoubleInput(string &str, double &input);
 void plotVTK(int iteration);
 void LCplotVTK(int iteration);
 
+void writeOutputFile();
+
 double start_time = 0;
 double end_time = 1000;
 double delta_t = 0.014;
@@ -98,6 +102,7 @@ int freq = 10;
 // For Lennard-Jones
 double SIGMA = 1.0;
 double EPSILON = 5.0;
+double G_CONST = -12.44;
 
 // For Linked Cell Algorithm
 double R_CUTOFF = 3.0;
@@ -105,6 +110,8 @@ utils::Vector<double, 3> domainSize;
 bool outflow_flag = false;
 const double h = (pow(2, (1 / 6)) * SIGMA);
 int depth = 0;
+
+bool gravity = false;
 
 list<Particle> particleList;
 utils::ParticleContainer container;
@@ -365,7 +372,7 @@ int main(int argc, char* argsv[]) {
 			//getting information from InputSetting first
 			pgen.extractSetting(start_time, end_time, delta_t, EPSILON, SIGMA,
 					inputNames, inputTypes, outputMask, freq, domainSize,
-					R_CUTOFF, domainCondition);
+					R_CUTOFF, domainCondition, G_CONST);
 			particleList.clear();
 			list<string>::iterator itT = inputTypes.begin();
 			int i = 1;
@@ -393,7 +400,22 @@ int main(int argc, char* argsv[]) {
 
 			cout << "Press enter to continue..." << endl;
 			cin.ignore();
+
+			//======================GRAVITY=====================
+			int ag;
+			cout << "Do you want to add gravity?\nPress 1 to confirm, 2 to ignore." << endl;
+			getIntegerInput(str, ag);
+			if (ag==1){
+				cout 	<< "Gravity enabled.\n"
+						<< "G = " << G_CONST << "." << endl;
+			}else{
+				cout 	<< "Gravity disabled." << endl;
+				G_CONST = 0;
+			}
+			//======================GRAVITY=====================
 		}
+
+		writeOutputFile();
 
 		cout << "Reading input file..." << endl;
 
@@ -541,8 +563,13 @@ void calculateFLJ() {
 			++innerIterator;
 			++j;
 		}
+		// GRAVITY (G_CONST = 0 when gravity is disabled)
+		double gDirection[] = {0.0, -1.0, 0.0};
+		utils::Vector<double, 3> gDirVec(gDirection);
+		utils::Vector<double, 3> gravForce(G_CONST*((*iterator).getM())*gDirVec);
 
-		(*iterator).setF(sumF[i]);
+		//(*iterator).setF(sumF[i]);
+		(*iterator).setF(gravForce + sumF[i]);
 		++iterator;
 		++i;
 	}
@@ -835,7 +862,14 @@ void LCcalculateFLJ() {
 				}
 			}
 		}
-		(*iterator).setF((*iterator).getTempF());
+
+		// GRAVITY (G_CONST = 0 when gravity is disabled)
+		double gDirection[] = {0.0, -1.0, 0.0};
+		utils::Vector<double, 3> gDirVec(gDirection);
+		utils::Vector<double, 3> gravForce(G_CONST*((*iterator).getM())*gDirVec);
+
+		//(*iterator).setF((*iterator).getTempF());
+		(*iterator).setF(gravForce + (*iterator).getTempF());
 		(*iterator).deleteTempF();
 		++iterator;
 	}
@@ -911,4 +945,52 @@ void LCplotVTK(int iteration) {
 	}
 	string out_name(outputMask);
 	writer.writeFile(out_name, iteration);
+}
+
+void writeOutputFile(){
+	ofstream file;
+	file.open ("ParListStatus.txt", ios::trunc);
+	file	<< "# file format:\n"
+			<< "# Lines of comment start with '#' and are only allowed at the beginning of the file\n"
+			<< "# Empty lines are not allowed.\n"
+			<< "# The first line not being a comment has to be one integer, indicating the number of\n"
+			<< "# molecule data sets.\n"
+			<< "#\n"
+			<< "# Molecule data consists of\n"
+			<< "# * xyz-coordinates (3 double values)\n"
+			<< "# * velocities (3 double values)\n"
+			<< "# * force (3 double values)\n"
+			<< "# * old force (3 double values)\n"
+			<< "# * mass (1 double value)\n"
+			<< "# * type (1 int value)\n"
+			<< "#\n"
+			<< "# "
+				<< setw(45) << "xyz-coord"
+				<< setw(45) << "velocity"
+				<< setw(45) << "force"
+				<< setw(45) << "old force"
+				<< setw(15) << "mass"
+				<< setw(10) << "type\n"
+			<< particleList.size() << endl;
+	for (list<Particle>::iterator it=particleList.begin(); it!=particleList.end(); it++){
+		file 	<< setw(15) << (*it).getX()[0]
+		     	<< setw(15) << (*it).getX()[1]
+		     	<< setw(15) << (*it).getX()[2]
+
+		     	<< setw(15) << (*it).getV()[0]
+				<< setw(15) << (*it).getV()[1]
+				<< setw(15) << (*it).getV()[2]
+
+				<< setw(15) << (*it).getF()[0]
+				<< setw(15) << (*it).getF()[1]
+				<< setw(15) << (*it).getF()[2]
+
+				<< setw(15) << (*it).getOldF()[0]
+				<< setw(15) << (*it).getOldF()[1]
+				<< setw(15) << (*it).getOldF()[2]
+
+				<< setw(15) << (*it).getM()
+				<< setw(10) << (*it).getType() << endl;
+	}
+	file.close();
 }

@@ -159,3 +159,68 @@ void FileReader::readFileCub(std::list<Cuboid>& cuboids, char* filename) {
 
 }
 
+void FileReader::readStatus(std::list<Particle>& particles, char* filename) {
+	double x[] = {0,0,0};
+	double v[] = {1,1,1};
+	double f[] = {0,0,0};
+	double old_f[] = {0,0,0};
+
+	double m = 1;
+	int t = 1;
+    int num_particles = 0;
+
+    std::ifstream input_file(filename);
+    string tmp_string;
+
+    if (input_file.is_open()) {
+
+    	LOG4CXX_INFO(filereaderlogger, "Reading open file.");
+    	getline(input_file, tmp_string);
+    	LOG4CXX_DEBUG(filereaderlogger,"Reading " << tmp_string << " line.");
+
+    	while (tmp_string.size() == 0 || tmp_string[0] == '#') {
+    		getline(input_file, tmp_string);
+    		LOG4CXX_DEBUG(filereaderlogger,"Reading comment line.");
+    	}
+
+    	istringstream numstream(tmp_string);
+    	numstream >> num_particles;
+    	LOG4CXX_DEBUG(filereaderlogger,"Reading " << num_particles);
+    	getline(input_file, tmp_string);
+    	LOG4CXX_DEBUG(filereaderlogger,"Read line: " << tmp_string << ".");
+
+    	for (int i = 0; i < num_particles; i++) {
+    		istringstream datastream(tmp_string);
+
+    		for (int j = 0; j < 3; j++) {
+    			datastream >> x[j];
+    		}
+    		for (int j = 0; j < 3; j++) {
+    			datastream >> v[j];
+    		}
+    		for (int j = 0; j < 3; j++) {
+    			datastream >> f[j];
+			}
+    		for (int j = 0; j < 3; j++) {
+				datastream >> old_f[j];
+			}
+    		if (datastream.eof()) {
+    			LOG4CXX_ERROR(filereaderlogger,"Error reading file: eof reached unexpectedly reading from line " << i);
+    			exit(-1);
+    		}
+    		datastream >> m;
+    		datastream >> t;
+    		Particle p(x, v, m, t);
+    		p.getF() = utils::Vector<double, 3> (f);
+    		p.getOldF() = utils::Vector<double, 3> (old_f);
+    		particles.push_back(p);
+
+    		getline(input_file, tmp_string);
+    		LOG4CXX_DEBUG(filereaderlogger,"Read line: " << tmp_string << ".");
+    	}
+    } else {
+    	LOG4CXX_ERROR(filereaderlogger,"Error: could not open file " << filename );
+    	exit(-1);
+    }
+
+}

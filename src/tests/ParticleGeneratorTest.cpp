@@ -78,6 +78,7 @@ void ParticleGeneratorTest::setUp() {
 	start_time = 0.0;
  	end_time = 20.0;
 	delta_t = 0.0005;
+	g = -12.44;
 	EPSILON = 5.0;
 	SIGMA = 1.0;
 	inputNames.clear();
@@ -206,14 +207,16 @@ void ParticleGeneratorTest::testExtractSetting(){
 	utils::Vector<double, 3> domainSizeT;
 	double rcutoffT;
 	std::vector<int> cond;
+	double gT;
 	
 	generator.extractSetting(start_timeT, end_timeT, delta_tT, EPSILONT,
 	 			SIGMAT, inputNamesT, inputTypesT, outputMaskT, 
-				outputFreqT, domainSizeT, rcutoffT, cond);
+				outputFreqT, domainSizeT, rcutoffT, cond, gT);
 
 	CPPUNIT_ASSERT(start_time==start_timeT);
 	CPPUNIT_ASSERT(end_time==end_timeT);
 	CPPUNIT_ASSERT(delta_t==delta_tT);
+	CPPUNIT_ASSERT(g==gT);
 	CPPUNIT_ASSERT(EPSILON==EPSILONT);
 	CPPUNIT_ASSERT(SIGMA==SIGMAT);
 

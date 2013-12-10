@@ -125,6 +125,7 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 			<xs:element name="start_time" type="xs:decimal"/>
 			<xs:element name="t_end" type="xs:decimal"/>
 			<xs:element name="delta_t" type="xs:decimal"/>
+			<xs:element name="gconst" type="xs:decimal"/>
 			<xs:element name="ljf" type="ljf_t"/>
 			<xs:element name="lc" type="lc_t"/>
 			<xs:element name="thermo" type="thermo_t"/>

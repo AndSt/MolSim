@@ -549,6 +549,24 @@ delta_t (const delta_t_type& x)
   this->delta_t_.set (x);
 }
 
+const pse_t::gconst_type& pse_t::
+gconst () const
+{
+  return this->gconst_.get ();
+}
+
+pse_t::gconst_type& pse_t::
+gconst ()
+{
+  return this->gconst_.get ();
+}
+
+void pse_t::
+gconst (const gconst_type& x)
+{
+  this->gconst_.set (x);
+}
+
 const pse_t::ljf_type& pse_t::
 ljf () const
 {
@@ -1542,6 +1560,7 @@ pse_t::
 pse_t (const start_time_type& start_time,
        const t_end_type& t_end,
        const delta_t_type& delta_t,
+       const gconst_type& gconst,
        const ljf_type& ljf,
        const lc_type& lc,
        const thermo_type& thermo,
@@ -1550,6 +1569,7 @@ pse_t (const start_time_type& start_time,
   start_time_ (start_time, ::xml_schema::flags (), this),
   t_end_ (t_end, ::xml_schema::flags (), this),
   delta_t_ (delta_t, ::xml_schema::flags (), this),
+  gconst_ (gconst, ::xml_schema::flags (), this),
   ljf_ (ljf, ::xml_schema::flags (), this),
   lc_ (lc, ::xml_schema::flags (), this),
   thermo_ (thermo, ::xml_schema::flags (), this),
@@ -1562,6 +1582,7 @@ pse_t::
 pse_t (const start_time_type& start_time,
        const t_end_type& t_end,
        const delta_t_type& delta_t,
+       const gconst_type& gconst,
        ::std::auto_ptr< ljf_type >& ljf,
        ::std::auto_ptr< lc_type >& lc,
        ::std::auto_ptr< thermo_type >& thermo,
@@ -1570,6 +1591,7 @@ pse_t (const start_time_type& start_time,
   start_time_ (start_time, ::xml_schema::flags (), this),
   t_end_ (t_end, ::xml_schema::flags (), this),
   delta_t_ (delta_t, ::xml_schema::flags (), this),
+  gconst_ (gconst, ::xml_schema::flags (), this),
   ljf_ (ljf, ::xml_schema::flags (), this),
   lc_ (lc, ::xml_schema::flags (), this),
   thermo_ (thermo, ::xml_schema::flags (), this),
@@ -1586,6 +1608,7 @@ pse_t (const pse_t& x,
   start_time_ (x.start_time_, f, this),
   t_end_ (x.t_end_, f, this),
   delta_t_ (x.delta_t_, f, this),
+  gconst_ (x.gconst_, f, this),
   ljf_ (x.ljf_, f, this),
   lc_ (x.lc_, f, this),
   thermo_ (x.thermo_, f, this),
@@ -1602,6 +1625,7 @@ pse_t (const ::xercesc::DOMElement& e,
   start_time_ (f, this),
   t_end_ (f, this),
   delta_t_ (f, this),
+  gconst_ (f, this),
   ljf_ (f, this),
   lc_ (f, this),
   thermo_ (f, this),
@@ -1654,6 +1678,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!delta_t_.present ())
       {
         this->delta_t_.set (delta_t_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // gconst
+    //
+    if (n.name () == "gconst" && n.namespace_ ().empty ())
+    {
+      if (!gconst_.present ())
+      {
+        this->gconst_.set (gconst_traits::create (i, f, this));
         continue;
       }
     }
@@ -1746,6 +1781,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
   {
     throw ::xsd::cxx::tree::expected_element< char > (
       "delta_t",
+      "");
+  }
+
+  if (!gconst_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "gconst",
       "");
   }
 

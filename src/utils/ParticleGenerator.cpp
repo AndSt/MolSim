@@ -198,7 +198,7 @@ void ParticleGenerator::extractSetting(double& start_time, double& end_time,
 				std::list<string>& inputNames, std::list<string>& inputTypes, 
 				string& outputMask, int& outputFreq,
 				utils::Vector<double, 3>& domainSize, double& r_cutoff,
-				std::vector<int>& domainBoundCond)
+				std::vector<int>& domainBoundCond, double& g_const)
 {
   	try
   	{
@@ -206,6 +206,7 @@ void ParticleGenerator::extractSetting(double& start_time, double& end_time,
 		start_time = h->start_time();
 		end_time = h->t_end();
 		delta_t = h->delta_t();
+		g_const = h->gconst();
 
 		EPSILON = h->ljf().epsilon();
 		SIGMA = h->ljf().sigma();

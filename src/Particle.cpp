@@ -68,7 +68,7 @@ utils::Vector<double, 3>& Particle::getOldF() {
 	return old_f;
 }
 
-double Particle::getM() {
+double& Particle::getM() {
 	return m;
 }
 
@@ -80,11 +80,7 @@ void Particle::updateTempF(utils::Vector<double, 3> newF) {
 	temp_f = temp_f + newF;
 }
 
-void Particle::setM(double newMass){
-	m = newMass;
-}
-
-int Particle::getType() {
+int& Particle::getType() {
 	return type;
 }
 

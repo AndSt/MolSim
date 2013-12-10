@@ -72,7 +72,7 @@ private:
 	 */
 	utils::ParticleGenerator generator;
 
-	double start_time, end_time, delta_t, EPSILON, SIGMA; 
+	double start_time, end_time, delta_t, g, EPSILON, SIGMA;
 	std::list<string> inputNames, inputTypes;
 	string outputMask;
 	int outputFreq;

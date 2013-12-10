@@ -63,10 +63,9 @@ public:
 
 	utils::Vector<double, 3> getTempF();
 
-	double getM();
-	void setM(double newMass);
+	double& getM();
 
-	int getType();
+	int& getType();
 
 	bool operator==(Particle& other);
 
