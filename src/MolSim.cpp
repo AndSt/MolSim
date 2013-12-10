@@ -120,6 +120,9 @@ vector<int> domainCondition;
 
 string fileName;
 
+// Thermostat option: only called when thermo.getEnabled() == true
+Thermostat thermo;
+
 log4cxx::LoggerPtr molsimlogger(log4cxx::Logger::getLogger("molsim"));
 
 /**
@@ -394,11 +397,17 @@ int main(int argc, char* argsv[]) {
 
 		cout << "Reading input file..." << endl;
 
-		//inintialize container with particle list
+		//initialize container with particle list
 		LOG4CXX_INFO(molsimlogger, "Arrived @ initialization call.");
 
 		//start simulation
 		LOG4CXX_INFO(molsimlogger, "Arrived @ simulation call.");
+
+		//initialize thermostat to get enabled flag (true --> call, false --> ignore)
+		thermo = Thermostat();
+
+		cout << "Thermostat enabled. Target temperature: "
+						<< thermo.getT_target() << ".\n" << endl;
 
 		cout << "Running simulation..." << endl;
 
@@ -428,6 +437,9 @@ void simulate() {
 
 	int iteration = 0;
 
+	double temperature = thermo.getT_init();
+	bool target_temp_reached = false;
+
 // for this loop, we assume: current x, current f and current v are known
 	while (current_time < end_time) {
 		//const clock_t beginTime = clock();
@@ -446,6 +458,25 @@ void simulate() {
 		calculateV();
 
 		iteration++;
+
+		// Thermostat
+		if (thermo.getEnabled()){
+			if (!target_temp_reached){
+				if (iteration % thermo.getn_delta() == 0){
+					temperature += thermo.getDelta_T();
+					if (temperature > thermo.getT_target()){
+						temperature -= thermo.getDelta_T();
+						target_temp_reached = true;
+					}
+				}
+			}
+
+
+			if (iteration % thermo.getn_thermo() == 0){
+				thermo.setThermo(particleList, 2, temperature);
+			}
+		}
+
 		if (iteration % freq == 0) {
 			plotVTK(iteration);
 		}
@@ -617,6 +648,9 @@ void LCsimulate() {
 	LCcalculateFLJ();
 	double current_time = start_time;
 
+	double temperature = thermo.getT_init();
+	bool target_temp_reached = false;
+
 	int iteration = 0;
 // for this loop, we assume: current x, current f and current v are known
 	while (current_time < end_time) {
@@ -630,6 +664,25 @@ void LCsimulate() {
 		LCcalculateV();
 
 		iteration++;
+
+		// Thermostat
+		if (thermo.getEnabled()){
+			if (!target_temp_reached){
+				if (iteration % thermo.getn_delta() == 0){
+					temperature += thermo.getDelta_T();
+					if (temperature > thermo.getT_target()){
+						temperature -= thermo.getDelta_T();
+						target_temp_reached = true;
+					}
+				}
+			}
+
+
+			if (iteration % thermo.getn_thermo() == 0){
+				thermo.setThermo(particleList, 2, temperature);
+			}
+		}
+
 		if (iteration % freq == 0 || outflow_flag) {
 			lcContainer.updateCells();
 			outflow_flag = false;

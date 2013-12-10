@@ -14,6 +14,8 @@
 
 class Thermostat {
 private:
+	bool enabled;
+
 	double T_init;
 
 	double T_target;
@@ -31,7 +33,7 @@ public:
 	virtual ~Thermostat();
 
 	Thermostat(double T_init, double T_target, double delta_T,
-				int n_thermo, int n_delta, bool brownian_flag);
+				int n_thermo, int n_delta, bool brownian_flag, bool enabled);
 
 	double getEKin(std::list<Particle> parList);
 
@@ -50,6 +52,8 @@ public:
 	int& getn_delta();
 
 	bool& getBrownian_flag();
+
+	bool& getEnabled();
 };
 
 #endif /* THERMOSTAT_H_ */

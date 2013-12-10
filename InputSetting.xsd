@@ -104,6 +104,7 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 			  </xs:documentation>
 			</xs:annotation>
 		<xs:sequence>
+			<xs:element name="enabled" type="xs:boolean"/>
 			<xs:element name="brownianFlag" type="xs:boolean"/>
 			<xs:element name="initT" type="xs:decimal"/>
 			<xs:element name="targetT" type="xs:decimal"/>

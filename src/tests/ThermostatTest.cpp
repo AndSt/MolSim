@@ -49,6 +49,7 @@ void ThermostatTest::testSetThermo(){
 
 void ThermostatTest::testDefaultConstructor(){
 	/*
+	<enabled>true</enabled>
 	<brownianFlag>true</brownianFlag>
 	<initT>40</initT>
 	<targetT>80</targetT>
@@ -57,6 +58,7 @@ void ThermostatTest::testDefaultConstructor(){
 	<nDelta>2000</nDelta>
 	*/
 	thermo = Thermostat ();
+	CPPUNIT_ASSERT(thermo.getEnabled()==true);
 	CPPUNIT_ASSERT(thermo.getBrownian_flag()==true);
 	CPPUNIT_ASSERT(thermo.getT_init()==40);
 	CPPUNIT_ASSERT(thermo.getT_target()==80);

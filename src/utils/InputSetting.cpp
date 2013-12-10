@@ -365,6 +365,24 @@ freq (const freq_type& x)
 // thermo_t
 // 
 
+const thermo_t::enabled_type& thermo_t::
+enabled () const
+{
+  return this->enabled_.get ();
+}
+
+thermo_t::enabled_type& thermo_t::
+enabled ()
+{
+  return this->enabled_.get ();
+}
+
+void thermo_t::
+enabled (const enabled_type& x)
+{
+  this->enabled_.set (x);
+}
+
 const thermo_t::brownianFlag_type& thermo_t::
 brownianFlag () const
 {
@@ -1312,13 +1330,15 @@ outputfile_t::
 //
 
 thermo_t::
-thermo_t (const brownianFlag_type& brownianFlag,
+thermo_t (const enabled_type& enabled,
+          const brownianFlag_type& brownianFlag,
           const initT_type& initT,
           const targetT_type& targetT,
           const deltaT_type& deltaT,
           const nThermo_type& nThermo,
           const nDelta_type& nDelta)
 : ::xml_schema::type (),
+  enabled_ (enabled, ::xml_schema::flags (), this),
   brownianFlag_ (brownianFlag, ::xml_schema::flags (), this),
   initT_ (initT, ::xml_schema::flags (), this),
   targetT_ (targetT, ::xml_schema::flags (), this),
@@ -1333,6 +1353,7 @@ thermo_t (const thermo_t& x,
           ::xml_schema::flags f,
           ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
+  enabled_ (x.enabled_, f, this),
   brownianFlag_ (x.brownianFlag_, f, this),
   initT_ (x.initT_, f, this),
   targetT_ (x.targetT_, f, this),
@@ -1347,6 +1368,7 @@ thermo_t (const ::xercesc::DOMElement& e,
           ::xml_schema::flags f,
           ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  enabled_ (f, this),
   brownianFlag_ (f, this),
   initT_ (f, this),
   targetT_ (f, this),
@@ -1370,6 +1392,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     const ::xercesc::DOMElement& i (p.cur_element ());
     const ::xsd::cxx::xml::qualified_name< char > n (
       ::xsd::cxx::xml::dom::name< char > (i));
+
+    // enabled
+    //
+    if (n.name () == "enabled" && n.namespace_ ().empty ())
+    {
+      if (!enabled_.present ())
+      {
+        this->enabled_.set (enabled_traits::create (i, f, this));
+        continue;
+      }
+    }
 
     // brownianFlag
     //
@@ -1438,6 +1471,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     }
 
     break;
+  }
+
+  if (!enabled_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "enabled",
+      "");
   }
 
   if (!brownianFlag_.present ())

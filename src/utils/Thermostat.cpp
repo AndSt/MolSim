@@ -7,6 +7,7 @@
 
 #include "Thermostat.h"
 #include "InputSetting.h"
+#include "MaxwellBoltzmannDistribution.h"
 
 #include <memory>
 #include <iostream>
@@ -19,7 +20,7 @@ Thermostat::Thermostat(){
 	try
 	  	{
 			auto_ptr<pse_t> h (pse ("InputSetting.xml", xml_schema::flags::dont_validate));
-
+			this->enabled = h->thermo().enabled();
 			this->T_init = h->thermo().initT();
 			this->T_target = h->thermo().targetT();
 			this->delta_T = h->thermo().deltaT();
@@ -35,7 +36,8 @@ Thermostat::Thermostat(){
 }
 
 Thermostat::Thermostat(double T_init, double T_target, double delta_T,
-						int n_thermo, int n_delta, bool brownian_flag){
+						int n_thermo, int n_delta, bool brownian_flag, bool enabled){
+	this->enabled = enabled;
 	this->T_init = T_init;
 	this->T_target = T_target;
 	this->delta_T = delta_T;
@@ -61,11 +63,20 @@ double Thermostat::getMeanV(std::list<Particle> parList, int dim, double mass){
 void Thermostat::setThermo(std::list<Particle>& parList, int dim, double temperature){
 	double newEKin = dim*parList.size()*temperature/2;
 	double beta = sqrt(newEKin/getEKin(parList));
-	if (beta == 1) return;
-	//beta != 1
-	for (std::list<Particle>::iterator it = parList.begin(); it != parList.end(); it++){
+	if ((beta==1)&&(brownian_flag==false)) return;
+
+	//beta!=1 or brownian_flag==false
+	for (std::list<Particle>::iterator it = parList.begin();
+						it != parList.end(); it++){
 			(*it).getV() = beta*(*it).getV();
+			if (brownian_flag==true)
+				//Hardcode mass=1
+				MaxwellBoltzmannDistribution(*it, this->getMeanV(parList, dim, 1), 2);
 	}
+}
+
+bool& Thermostat::getEnabled(){
+	return enabled;
 }
 
 double& Thermostat::getT_init(){

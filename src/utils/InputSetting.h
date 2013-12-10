@@ -695,6 +695,20 @@ class outputfile_t: public ::xml_schema::type
 class thermo_t: public ::xml_schema::type
 {
   public:
+  // enabled
+  // 
+  typedef ::xml_schema::boolean enabled_type;
+  typedef ::xsd::cxx::tree::traits< enabled_type, char > enabled_traits;
+
+  const enabled_type&
+  enabled () const;
+
+  enabled_type&
+  enabled ();
+
+  void
+  enabled (const enabled_type& x);
+
   // brownianFlag
   // 
   typedef ::xml_schema::boolean brownianFlag_type;
@@ -781,7 +795,8 @@ class thermo_t: public ::xml_schema::type
 
   // Constructors.
   //
-  thermo_t (const brownianFlag_type&,
+  thermo_t (const enabled_type&,
+            const brownianFlag_type&,
             const initT_type&,
             const targetT_type&,
             const deltaT_type&,
@@ -811,6 +826,7 @@ class thermo_t: public ::xml_schema::type
          ::xml_schema::flags);
 
   protected:
+  ::xsd::cxx::tree::one< enabled_type > enabled_;
   ::xsd::cxx::tree::one< brownianFlag_type > brownianFlag_;
   ::xsd::cxx::tree::one< initT_type > initT_;
   ::xsd::cxx::tree::one< targetT_type > targetT_;

@@ -46,6 +46,7 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 	
 	<!-- Thermostats -->
 	<thermo>
+		<enabled>true</enabled>
 		<brownianFlag>true</brownianFlag>
 		<initT>40</initT>
 		<targetT>80</targetT>
