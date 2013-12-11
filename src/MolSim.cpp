@@ -293,8 +293,7 @@ int main(int argc, char* argsv[]) {
 					<< "\tInputSpheres: contains all information needed for spheres."
 					<< endl;
 			cout << "\nPress 1 to use Linked Cell Algorithm." << endl;
-			cout << "Press 2 to simulate without Linked Cell Algorithm."
-					<< endl;
+			cout << "Press 2 to simulate without Linked Cell Algorithm." << endl;
 			break;
 		}
 
@@ -413,11 +412,26 @@ int main(int argc, char* argsv[]) {
 				G_CONST = 0;
 			}
 			//======================GRAVITY=====================
+
+			//======================FALLING DROP=====================
+			int fd;
+			cout << "\nDo you want to simulate the falling drop?\n"
+					<< "Note: ParListStatus.txt must exist!\n"
+					<< "Press 1 to confirm, 2 to ignore." << endl;
+			getIntegerInput(str, fd);
+			if (fd==1){
+				cout << "Falling drop chosen." << endl;
+				pgen.getParticleList().clear();
+				fileReader.readStatus(pgen.getParticleList(),"ParListStatus.txt");
+				pgen.mergeWithParticleList(particleList);
+				cout << "Input data from ParListStatus imported." << endl;
+			}else{
+				cout << "Falling drop disabled." << endl;
+			}
+			//======================FALLING DROP=====================
 		}
 
-		writeOutputFile();
-
-		cout << "Reading input file..." << endl;
+		cout << "\nReading input file..." << endl;
 
 		//initialize container with particle list
 		LOG4CXX_INFO(molsimlogger, "Arrived @ initialization call.");
@@ -449,6 +463,15 @@ int main(int argc, char* argsv[]) {
 		} else {
 			container.initialize(particleList);
 			simulate();
+		}
+
+		int wo;
+		cout << "\nWrite ParListStatus.txt out?" << endl;
+		cout << "Press 1 to confirm, 2 to ignore." << endl;
+		getIntegerInput(str, wo);
+		if (wo==1){
+			writeOutputFile();
+			cout << "ParListStatus.txt written." << endl;
 		}
 
 		LOG4CXX_INFO(molsimlogger, "Arrived @ ending simulation.");
@@ -483,6 +506,7 @@ void simulate() {
 		calculateV();
 
 		iteration++;
+		cout << "\r" << "Iteration " << iteration << " completed." << flush;
 
 		// Thermostat
 		if (thermo.getEnabled()){
@@ -514,7 +538,7 @@ void simulate() {
 		//cin.ignore();
 	}
 
-	cout << "Output written. Terminating..." << endl;
+	cout << "\nOutput written. Terminating..." << endl;
 }
 
 /**
@@ -564,7 +588,7 @@ void calculateFLJ() {
 			++j;
 		}
 		// GRAVITY (G_CONST = 0 when gravity is disabled)
-		double gDirection[] = {0.0, -1.0, 0.0};
+		double gDirection[] = {0.0, 1.0, 0.0};
 		utils::Vector<double, 3> gDirVec(gDirection);
 		utils::Vector<double, 3> gravForce(G_CONST*((*iterator).getM())*gDirVec);
 
@@ -694,6 +718,7 @@ void LCsimulate() {
 		LCcalculateV();
 
 		iteration++;
+		cout << "\r" << "Iteration " << iteration << " completed." << flush;
 
 		// Thermostat
 		if (thermo.getEnabled()){
@@ -707,7 +732,6 @@ void LCsimulate() {
 				}
 			}
 
-
 			if (iteration % thermo.getn_thermo() == 0){
 				thermo.setThermo(particleList, 2, temperature);
 			}
@@ -720,7 +744,7 @@ void LCsimulate() {
 		if (iteration % freq == 0) {
 			LCplotVTK(iteration);
 		}
-		//cout << "Iteration " << iteration << " finished." << endl;
+
 		LOG4CXX_TRACE(molsimlogger, "Iteration " << iteration << " finished.");
 
 		current_time += delta_t;
@@ -729,7 +753,7 @@ void LCsimulate() {
 		//cin.ignore();
 	}
 
-	cout << "Output written. Terminating..." << endl;
+	cout << "\nOutput written. Terminating..." << endl;
 }
 
 void LCcalculateFLJ() {
@@ -864,7 +888,7 @@ void LCcalculateFLJ() {
 		}
 
 		// GRAVITY (G_CONST = 0 when gravity is disabled)
-		double gDirection[] = {0.0, -1.0, 0.0};
+		double gDirection[] = {0.0, 1.0, 0.0};
 		utils::Vector<double, 3> gDirVec(gDirection);
 		utils::Vector<double, 3> gravForce(G_CONST*((*iterator).getM())*gDirVec);
 
@@ -972,7 +996,8 @@ void writeOutputFile(){
 				<< setw(15) << "mass"
 				<< setw(10) << "type\n"
 			<< particleList.size() << endl;
-	for (list<Particle>::iterator it=particleList.begin(); it!=particleList.end(); it++){
+	for (list<Particle>::iterator it=particleList.begin();
+			it!=particleList.end(); it++){
 		file 	<< setw(15) << (*it).getX()[0]
 		     	<< setw(15) << (*it).getX()[1]
 		     	<< setw(15) << (*it).getX()[2]
