@@ -4,8 +4,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 
 	<start_time>0.0</start_time>
-	<t_end>5</t_end>
-	<delta_t>0.005</delta_t>
+	<t_end>15</t_end>
+	<delta_t>0.0005</delta_t>
 	
 	<gconst>-12.44</gconst>
 	
@@ -37,7 +37,7 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 		<condition>2</condition>
 
 		<!-- upper -->
-		<condition>2</condition>
+		<condition>1</condition>
 
 		<!-- front -->
 		<condition>2</condition>
@@ -54,7 +54,7 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 		<targetT>80</targetT>
 		<deltaT>0</deltaT>
 		<nThermo>1000</nThermo>
-		<nDelta>30000</nDelta>
+		<nDelta>40000</nDelta>
 	</thermo>
 
 	<inputfile>

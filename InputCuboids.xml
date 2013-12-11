@@ -4,7 +4,7 @@
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:noNamespaceSchemaLocation="InputCuboids.xsd">
 
-	<meshWidth>1.1225</meshWidth>
+	<meshWidth>1.2</meshWidth>
 	<mass>1.0</mass>
 	<meanV>0.1</meanV>
 
@@ -20,8 +20,8 @@ xsi:noNamespaceSchemaLocation="InputCuboids.xsd">
 			<velZ>0.0</velZ>
 		</startVelocity>
 		<size3D>
-			<width>10</width>
-			<height>10</height>
+			<width>250</width>
+			<height>50</height>
 			<depth>1</depth>
 		</size3D>		
 	</cuboid>	

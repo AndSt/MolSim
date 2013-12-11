@@ -84,7 +84,7 @@ void getDoubleInput(string &str, double &input);
 void plotVTK(int iteration);
 void LCplotVTK(int iteration);
 
-void writeOutputFile();
+void writeOutputFile(list<Particle> parList);
 
 double start_time = 0;
 double end_time = 1000;
@@ -102,7 +102,6 @@ int freq = 10;
 // For Lennard-Jones
 double SIGMA = 1.0;
 double EPSILON = 5.0;
-double G_CONST = -12.44;
 
 // For Linked Cell Algorithm
 double R_CUTOFF = 3.0;
@@ -111,7 +110,12 @@ bool outflow_flag = false;
 const double h = (pow(2, (1 / 6)) * SIGMA);
 int depth = 0;
 
+// For gravity
 bool gravity = false;
+double mass = 1.0;
+double G_CONST = -12.44;
+double gDirVec[] = {0.0, G_CONST*mass, 0.0};
+utils::Vector<double, 3> gravForce(gDirVec);
 
 list<Particle> particleList;
 utils::ParticleContainer container;
@@ -387,6 +391,8 @@ int main(int argc, char* argsv[]) {
 					pgen.extractCuboids(*itN);
 					pgen.cuboidsToList();
 					pgen.mergeWithParticleList(particleList);
+					// For bassin in gravity field (falling drop)
+					mass = (*particleList.begin()).getM();
 				} else {
 					cout << i << ". input file: " << "[spheres]" << endl;
 					pgen.extractSpheres(*itN);
@@ -407,6 +413,8 @@ int main(int argc, char* argsv[]) {
 			if (ag==1){
 				cout 	<< "Gravity enabled.\n"
 						<< "G = " << G_CONST << "." << endl;
+				gDirVec[1] = G_CONST*mass;
+				gravForce = utils::Vector<double, 3> (gDirVec);
 			}else{
 				cout 	<< "Gravity disabled." << endl;
 				G_CONST = 0;
@@ -456,22 +464,27 @@ int main(int argc, char* argsv[]) {
 		//======================THERMOSTAT=====================
 
 		cout << "Running simulation..." << endl;
-
+		int wo;
 		if (option1 == 3 && option2 == 1) {
 			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
 			LCsimulate();
+				cout << "\nWrite ParListStatus.txt out?" << endl;
+				cout << "Press 1 to confirm, 2 to ignore." << endl;
+				getIntegerInput(str, wo);
+				if (wo==1){
+					writeOutputFile(lcContainer.getList());
+					cout << "ParListStatus.txt written." << endl;
+				}
 		} else {
 			container.initialize(particleList);
 			simulate();
-		}
-
-		int wo;
-		cout << "\nWrite ParListStatus.txt out?" << endl;
-		cout << "Press 1 to confirm, 2 to ignore." << endl;
-		getIntegerInput(str, wo);
-		if (wo==1){
-			writeOutputFile();
-			cout << "ParListStatus.txt written." << endl;
+				cout << "\nWrite ParListStatus.txt out?" << endl;
+				cout << "Press 1 to confirm, 2 to ignore." << endl;
+				getIntegerInput(str, wo);
+				if (wo==1){
+					writeOutputFile(container.getList());
+					cout << "ParListStatus.txt written." << endl;
+				}
 		}
 
 		LOG4CXX_INFO(molsimlogger, "Arrived @ ending simulation.");
@@ -588,11 +601,6 @@ void calculateFLJ() {
 			++j;
 		}
 		// GRAVITY (G_CONST = 0 when gravity is disabled)
-		double gDirection[] = {0.0, 1.0, 0.0};
-		utils::Vector<double, 3> gDirVec(gDirection);
-		utils::Vector<double, 3> gravForce(G_CONST*((*iterator).getM())*gDirVec);
-
-		//(*iterator).setF(sumF[i]);
 		(*iterator).setF(gravForce + sumF[i]);
 		++iterator;
 		++i;
@@ -799,9 +807,9 @@ void LCcalculateFLJ() {
 		/* check if the left boundary will affect the force threw reflection */
 		if ((*iterator).getX()[0] <= h) {
 			if (domainCondition[0] == 1) {
-				if ((*iterator).getX()[0] <= 0) {
+				if ((*iterator).getX()[0] <= 0)
 					outflow_flag = true;
-				} else if (domainCondition[0] == 2) {
+			} else if (domainCondition[0] == 2) {
 					double x_arg[3] = { 0, (*iterator).getX()[1],
 							(*iterator).getX()[2] };
 					utils::Vector<double, 3> x(x_arg);
@@ -809,14 +817,14 @@ void LCcalculateFLJ() {
 					Particle p(x, v, 1);
 					computeForce((*iterator), p);
 				}
-			}
 		}
+
 		/* check if the right boundary will affect the force threw reflection */
 		else if ((*iterator).getX()[0] >= domainSize[0] - h) {
 			if (domainCondition[1] == 1) {
-				if ((*iterator).getX()[0] >= domainSize[0]) {
+				if ((*iterator).getX()[0] >= domainSize[0])
 					outflow_flag = true;
-				} else if (domainCondition[1] == 2) {
+			} else if (domainCondition[1] == 2) {
 					double x_arg[3] = { domainSize[0], (*iterator).getX()[1],
 							(*iterator).getX()[2] };
 					utils::Vector<double, 3> x(x_arg);
@@ -824,42 +832,42 @@ void LCcalculateFLJ() {
 					Particle p(x, v, 1);
 					computeForce((*iterator), p);
 				}
-			}
 		}
+
 		/* check if the bottom boundary will affect the force threw reflection */
 		if ((*iterator).getX()[1] <= h) {
 			if (domainCondition[2] == 1) {
-				if ((*iterator).getX()[1] <= 0) {
+				if ((*iterator).getX()[1] <= 0)
 					outflow_flag = true;
-				} else if (domainCondition[2] == 2) {
+			} else if (domainCondition[2] == 2) {
 					double x_arg[3] = { (*iterator).getX()[0], 0,
 							(*iterator).getX()[2] };
 					utils::Vector<double, 3> x(x_arg);
 					utils::Vector<double, 3> v(0.0);
 					Particle p(x, v, 1);
 					computeForce((*iterator), p);
-				}
 			}
 		}
+
 		/* check if the upper boundary will affect the force threw reflection */
 		else if ((*iterator).getX()[1] >= domainSize[1] - h) {
 			if (domainCondition[3] == 1) {
-				if ((*iterator).getX()[1] >= domainSize[1]) {
+				if ((*iterator).getX()[1] >= domainSize[1])
 					outflow_flag = true;
-				} else if (domainCondition[3] == 2) {
+			} else if (domainCondition[3] == 2) {
 					double x_arg[3] = { (*iterator).getX()[0], domainSize[1],
 							(*iterator).getX()[2] };
 					utils::Vector<double, 3> x(x_arg);
 					utils::Vector<double, 3> v(0.0);
 					Particle p(x, v, 1);
 					computeForce((*iterator), p);
-				}
 			}
 		}
+
 		/* check if the front boundary will affect the force threw reflection */
 		if ((*iterator).getX()[2] <= h && depth > 0) {
 			if (domainCondition[4] == 1) {
-				if ((*iterator).getX()[2] < 0) {
+				if ((*iterator).getX()[2] < 0)
 					outflow_flag = true;
 				} else if (domainCondition[4] == 2) {
 					double x_arg[3] = { (*iterator).getX()[0],
@@ -868,31 +876,25 @@ void LCcalculateFLJ() {
 					utils::Vector<double, 3> v(0.0);
 					Particle p(x, v, 1);
 					computeForce((*iterator), p);
-				}
 			}
 		}
+
 		/* check if the rear boundary will affect the force threw reflection */
 		else if ((*iterator).getX()[2] >= domainSize[2] - h && depth > 0) {
 			if (domainCondition[5] == 1) {
-				if ((*iterator).getX()[2] >= domainSize[2]) {
+				if ((*iterator).getX()[2] >= domainSize[2])
 					outflow_flag = true;
-				} else if (domainCondition[5] == 2) {
+			} else if (domainCondition[5] == 2) {
 					double x_arg[3] = { (*iterator).getX()[0],
 							(*iterator).getX()[1], domainSize[2] };
 					utils::Vector<double, 3> x(x_arg);
 					utils::Vector<double, 3> v(0.0);
 					Particle p(x, v, 1);
 					computeForce((*iterator), p);
-				}
 			}
 		}
 
 		// GRAVITY (G_CONST = 0 when gravity is disabled)
-		double gDirection[] = {0.0, 1.0, 0.0};
-		utils::Vector<double, 3> gDirVec(gDirection);
-		utils::Vector<double, 3> gravForce(G_CONST*((*iterator).getM())*gDirVec);
-
-		//(*iterator).setF((*iterator).getTempF());
 		(*iterator).setF(gravForce + (*iterator).getTempF());
 		(*iterator).deleteTempF();
 		++iterator;
@@ -971,7 +973,7 @@ void LCplotVTK(int iteration) {
 	writer.writeFile(out_name, iteration);
 }
 
-void writeOutputFile(){
+void writeOutputFile(list<Particle> parList){
 	ofstream file;
 	file.open ("ParListStatus.txt", ios::trunc);
 	file	<< "# file format:\n"
@@ -995,9 +997,9 @@ void writeOutputFile(){
 				<< setw(45) << "old force"
 				<< setw(15) << "mass"
 				<< setw(10) << "type\n"
-			<< particleList.size() << endl;
-	for (list<Particle>::iterator it=particleList.begin();
-			it!=particleList.end(); it++){
+			<< parList.size() << endl;
+	for (list<Particle>::iterator it=parList.begin();
+			it!=parList.end(); it++){
 		file 	<< setw(15) << (*it).getX()[0]
 		     	<< setw(15) << (*it).getX()[1]
 		     	<< setw(15) << (*it).getX()[2]
