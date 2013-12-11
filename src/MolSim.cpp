@@ -413,12 +413,12 @@ int main(int argc, char* argsv[]) {
 			if (ag==1){
 				cout 	<< "Gravity enabled.\n"
 						<< "G = " << G_CONST << "." << endl;
-				gDirVec[1] = G_CONST*mass;
-				gravForce = utils::Vector<double, 3> (gDirVec);
 			}else{
 				cout 	<< "Gravity disabled." << endl;
 				G_CONST = 0;
 			}
+			gDirVec[1] = G_CONST*mass;
+			gravForce = utils::Vector<double, 3> (gDirVec);
 			//======================GRAVITY=====================
 
 			//======================FALLING DROP=====================
