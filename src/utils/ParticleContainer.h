@@ -41,7 +41,7 @@ public:
 	/**
 	 * @ return the particles list
 	 */
-	std::list<Particle> getList();
+	std::list<Particle>& getList();
 
 	/**
 	 * @ return the size of the size

@@ -49,7 +49,7 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 	<!-- Thermostats -->
 	<thermo>
 		<enabled>true</enabled>
-		<brownianFlag>true</brownianFlag>
+		<brownianFlag>false</brownianFlag>
 		<initT>0.5</initT>
 		<targetT>80</targetT>
 		<deltaT>0</deltaT>
@@ -58,9 +58,9 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 	</thermo>
 
 	<inputfile>
-		<name>InputCuboids.xml</name>
+		<name>InputSpheres.xml</name>
 		<!-- particles/cuboids/spheres -->
-		<type>cuboids</type>
+		<type>spheres</type>
 	</inputfile>
 	
 	<outputfile>

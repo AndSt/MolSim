@@ -62,6 +62,8 @@ void LCsimulate();
 void calculateFLJ();
 void LCcalculateFLJ();
 
+void addGravity(list<Particle>& parList);
+
 /**
  * calculate the position for all particles
  */
@@ -452,13 +454,15 @@ int main(int argc, char* argsv[]) {
 		cout << "Do you want to use Thermostat?\nPress 1 to confirm, 2 to ignore." << endl;
 		getIntegerInput(str, thermoOption);
 
+		thermo = Thermostat();
+
 		if (thermoOption==1){
 			//initialize thermostat to get enabled flag (true --> call, false --> ignore)
-			thermo = Thermostat();
 			thermo.getEnabled()=true;
 			cout << "Thermostat enabled. Target temperature: "
 							<< thermo.getT_target() << ".\n" << endl;
 		}else{
+			thermo.getEnabled()=false;
 			cout << "Thermostat disabled.\n" << endl;
 		}
 		//======================THERMOSTAT=====================
@@ -500,6 +504,7 @@ void simulate() {
 	LOG4CXX_DEBUG(molsimlogger,
 			"Starting force calculation for the first time...");
 	calculateFLJ();
+	//addGravity(container.getList());
 
 	double current_time = start_time;
 
@@ -515,6 +520,7 @@ void simulate() {
 		calculateX();
 
 		calculateFLJ();
+		//addGravity(container.getList());
 
 		calculateV();
 
@@ -533,9 +539,8 @@ void simulate() {
 				}
 			}
 
-
 			if (iteration % thermo.getn_thermo() == 0){
-				thermo.setThermo(particleList, 2, temperature);
+				thermo.setThermo(container.getList(), 2, temperature);
 			}
 		}
 
@@ -708,6 +713,8 @@ void LCsimulate() {
 	LOG4CXX_INFO(molsimlogger, "particleList.size: " << particleList.size());
 	//assert(lcContainer.size() == particleList.size());
 	LCcalculateFLJ();
+	//addGravity(lcContainer.getList());
+
 	double current_time = start_time;
 
 	double temperature = thermo.getT_init();
@@ -722,6 +729,7 @@ void LCsimulate() {
 		LCcalculateX();
 		// calculate new f
 		LCcalculateFLJ();
+		//addGravity(lcContainer.getList());
 		// calculate new v
 		LCcalculateV();
 
@@ -741,7 +749,7 @@ void LCsimulate() {
 			}
 
 			if (iteration % thermo.getn_thermo() == 0){
-				thermo.setThermo(particleList, 2, temperature);
+				thermo.setThermo(lcContainer.getList(), 2, temperature);
 			}
 		}
 
@@ -1020,4 +1028,11 @@ void writeOutputFile(list<Particle> parList){
 				<< setw(10) << (*it).getType() << endl;
 	}
 	file.close();
+}
+
+void addGravity(list<Particle>& parList){
+	for (list<Particle>::iterator it=parList.begin(); it!=parList.end(); it++){
+		//(*it).getOldF() = (*it).getOldF() + gravForce;
+		(*it).getF() = (*it).getF() + gravForce;
+	}
 }

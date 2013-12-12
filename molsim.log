@@ -1,6 +1,5 @@
-2013-12-11 18:53:12,153 INFO  src/MolSim.cpp:147 - Arrived @ main.
-2013-12-11 18:53:12,153 INFO  src/MolSim.cpp:235 - Arrived @ filedecision.
-2013-12-11 18:53:29,986 INFO  src/MolSim.cpp:445 - Arrived @ initialization call.
-2013-12-11 18:53:29,986 INFO  src/MolSim.cpp:448 - Arrived @ simulation call.
-2013-12-11 18:53:32,107 INFO  src/MolSim.cpp:707 - lcContainer.size: 12500
-2013-12-11 18:53:32,108 INFO  src/MolSim.cpp:708 - particleList.size: 12500
+2013-12-12 13:26:53,021 INFO  src/MolSim.cpp:149 - Arrived @ main.
+2013-12-12 13:26:53,021 INFO  src/MolSim.cpp:237 - Arrived @ filedecision.
+2013-12-12 13:26:57,807 INFO  src/MolSim.cpp:447 - Arrived @ initialization call.
+2013-12-12 13:26:57,807 INFO  src/MolSim.cpp:450 - Arrived @ simulation call.
+2013-12-12 13:26:58,276 INFO  src/MolSim.cpp:503 - Size of container: 101 particles.

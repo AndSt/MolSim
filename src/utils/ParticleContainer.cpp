@@ -29,7 +29,7 @@ ParticleIterator ParticleContainer::end() {
 	return ParticleIterator(particles.end());
 }
 
-std::list<Particle> ParticleContainer::getList() {
+std::list<Particle>& ParticleContainer::getList() {
 	return particles;
 }
 
