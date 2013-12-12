@@ -20,8 +20,8 @@ xsi:noNamespaceSchemaLocation="InputCuboids.xsd">
 			<velZ>0.0</velZ>
 		</startVelocity>
 		<size3D>
-			<width>250</width>
-			<height>50</height>
+			<width>40</width>
+			<height>20</height>
 			<depth>1</depth>
 		</size3D>		
 	</cuboid>	

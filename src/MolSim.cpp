@@ -459,7 +459,9 @@ int main(int argc, char* argsv[]) {
 		if (thermoOption==1){
 			//initialize thermostat to get enabled flag (true --> call, false --> ignore)
 			thermo.getEnabled()=true;
-			cout << "Thermostat enabled. Target temperature: "
+			cout << "Thermostat enabled." << endl;
+			if (thermo.getDelta_T()!=0)
+				cout << "Target temperature: "
 							<< thermo.getT_target() << ".\n" << endl;
 		}else{
 			thermo.getEnabled()=false;
