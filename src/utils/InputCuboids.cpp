@@ -217,6 +217,24 @@ depth (const depth_type& x)
 // cuboid_t
 // 
 
+const cuboid_t::parTypeC_type& cuboid_t::
+parTypeC () const
+{
+  return this->parTypeC_.get ();
+}
+
+cuboid_t::parTypeC_type& cuboid_t::
+parTypeC ()
+{
+  return this->parTypeC_.get ();
+}
+
+void cuboid_t::
+parTypeC (const parTypeC_type& x)
+{
+  this->parTypeC_.set (x);
+}
+
 const cuboid_t::originVector_type& cuboid_t::
 originVector () const
 {
@@ -735,10 +753,12 @@ size3D_t::
 //
 
 cuboid_t::
-cuboid_t (const originVector_type& originVector,
+cuboid_t (const parTypeC_type& parTypeC,
+          const originVector_type& originVector,
           const startVelocity_type& startVelocity,
           const size3D_type& size3D)
 : ::xml_schema::type (),
+  parTypeC_ (parTypeC, ::xml_schema::flags (), this),
   originVector_ (originVector, ::xml_schema::flags (), this),
   startVelocity_ (startVelocity, ::xml_schema::flags (), this),
   size3D_ (size3D, ::xml_schema::flags (), this)
@@ -746,10 +766,12 @@ cuboid_t (const originVector_type& originVector,
 }
 
 cuboid_t::
-cuboid_t (::std::auto_ptr< originVector_type >& originVector,
+cuboid_t (const parTypeC_type& parTypeC,
+          ::std::auto_ptr< originVector_type >& originVector,
           ::std::auto_ptr< startVelocity_type >& startVelocity,
           ::std::auto_ptr< size3D_type >& size3D)
 : ::xml_schema::type (),
+  parTypeC_ (parTypeC, ::xml_schema::flags (), this),
   originVector_ (originVector, ::xml_schema::flags (), this),
   startVelocity_ (startVelocity, ::xml_schema::flags (), this),
   size3D_ (size3D, ::xml_schema::flags (), this)
@@ -761,6 +783,7 @@ cuboid_t (const cuboid_t& x,
           ::xml_schema::flags f,
           ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
+  parTypeC_ (x.parTypeC_, f, this),
   originVector_ (x.originVector_, f, this),
   startVelocity_ (x.startVelocity_, f, this),
   size3D_ (x.size3D_, f, this)
@@ -772,6 +795,7 @@ cuboid_t (const ::xercesc::DOMElement& e,
           ::xml_schema::flags f,
           ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  parTypeC_ (f, this),
   originVector_ (f, this),
   startVelocity_ (f, this),
   size3D_ (f, this)
@@ -792,6 +816,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     const ::xercesc::DOMElement& i (p.cur_element ());
     const ::xsd::cxx::xml::qualified_name< char > n (
       ::xsd::cxx::xml::dom::name< char > (i));
+
+    // parTypeC
+    //
+    if (n.name () == "parTypeC" && n.namespace_ ().empty ())
+    {
+      if (!parTypeC_.present ())
+      {
+        this->parTypeC_.set (parTypeC_traits::create (i, f, this));
+        continue;
+      }
+    }
 
     // originVector
     //
@@ -836,6 +871,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     }
 
     break;
+  }
+
+  if (!parTypeC_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "parTypeC",
+      "");
   }
 
   if (!originVector_.present ())

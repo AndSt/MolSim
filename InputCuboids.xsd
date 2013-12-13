@@ -50,6 +50,7 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 			  </xs:documentation>
 			</xs:annotation>
 		<xs:sequence>
+			<xs:element name="parTypeC" type="xs:int"/>
 			<xs:element name="originVector" type="ori_t"/>
 			<xs:element name="startVelocity" type="startV_t"/>
 			<xs:element name="size3D" type="size3D_t"/>

@@ -480,6 +480,20 @@ class size3D_t: public ::xml_schema::type
 class cuboid_t: public ::xml_schema::type
 {
   public:
+  // parTypeC
+  // 
+  typedef ::xml_schema::int_ parTypeC_type;
+  typedef ::xsd::cxx::tree::traits< parTypeC_type, char > parTypeC_traits;
+
+  const parTypeC_type&
+  parTypeC () const;
+
+  parTypeC_type&
+  parTypeC ();
+
+  void
+  parTypeC (const parTypeC_type& x);
+
   // originVector
   // 
   typedef ::ori_t originVector_type;
@@ -533,11 +547,13 @@ class cuboid_t: public ::xml_schema::type
 
   // Constructors.
   //
-  cuboid_t (const originVector_type&,
+  cuboid_t (const parTypeC_type&,
+            const originVector_type&,
             const startVelocity_type&,
             const size3D_type&);
 
-  cuboid_t (::std::auto_ptr< originVector_type >&,
+  cuboid_t (const parTypeC_type&,
+            ::std::auto_ptr< originVector_type >&,
             ::std::auto_ptr< startVelocity_type >&,
             ::std::auto_ptr< size3D_type >&);
 
@@ -564,6 +580,7 @@ class cuboid_t: public ::xml_schema::type
          ::xml_schema::flags);
 
   protected:
+  ::xsd::cxx::tree::one< parTypeC_type > parTypeC_;
   ::xsd::cxx::tree::one< originVector_type > originVector_;
   ::xsd::cxx::tree::one< startVelocity_type > startVelocity_;
   ::xsd::cxx::tree::one< size3D_type > size3D_;

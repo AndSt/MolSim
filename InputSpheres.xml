@@ -7,8 +7,9 @@ xsi:noNamespaceSchemaLocation="InputSpheres.xsd">
 	<meshWidthS>1.1225</meshWidthS>
 	<massS>1.0</massS>
 	<meanVS>0.1</meanVS>
-
+	
 	<sphere>
+		<parTypeS>1</parTypeS>
 		<radiussph>10</radiussph>
 		<centerPos>
 			<x>30.0</x>

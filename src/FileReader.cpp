@@ -146,7 +146,7 @@ void FileReader::readFileCub(std::list<Cuboid>& cuboids, char* filename) {
     	    datastream >> meanVelocity;
 
     	    // Create a new cuboid with extracted information from file
-    	    Cuboid cub(hei, w, d, distance, mass, ori, startVelocity, meanVelocity);
+    	    Cuboid cub(hei, w, d, distance, mass, ori, startVelocity, meanVelocity,0);
     	    cuboids.push_back(cub);
 
     	    getline(input_file, tmp_string);

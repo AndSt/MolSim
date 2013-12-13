@@ -35,6 +35,7 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 			  </xs:documentation>
 			</xs:annotation>
 		<xs:sequence>
+			<xs:element name="parTypeP" type="xs:int"/>
 			<xs:element name="position" type="position_t"/>
 			<xs:element name="velocity" type="velocity_t"/>
 			<xs:element name="mass" type="xs:decimal"/>

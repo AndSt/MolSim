@@ -7,8 +7,9 @@ xsi:noNamespaceSchemaLocation="InputCuboids.xsd">
 	<meshWidth>1.2</meshWidth>
 	<mass>1.0</mass>
 	<meanV>0.1</meanV>
-
+	
 	<cuboid>
+		<parTypeC>0</parTypeC>
 		<originVector>
 			<oriX>1.5</oriX>
 			<oriY>2.0</oriY>

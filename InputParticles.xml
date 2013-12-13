@@ -3,6 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="InputParticles.xsd">
 		<particle>
+			<parTypeP>0</parTypeP>
 			<position>
   				<x>0.0</x>
   				<y>0.0</y>
@@ -17,6 +18,7 @@
 		</particle>
 		
 		<particle>
+			<parTypeP>1</parTypeP>
 			<position>
   				<x>0.0</x>
   				<y>1.0</y>
@@ -31,6 +33,7 @@
 		</particle>
 		
 		<particle>
+			<parTypeP>2</parTypeP>
 			<position>
   				<x>0.0</x>
   				<y>5.36</y>
@@ -45,6 +48,7 @@
 		</particle>
 		
 		<particle>
+			<parTypeP>3</parTypeP>
 			<position>
   				<x>34.75</x>
   				<y>0.0</y>

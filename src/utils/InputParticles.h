@@ -400,6 +400,20 @@ class velocity_t: public ::xml_schema::type
 class particle_t: public ::xml_schema::type
 {
   public:
+  // parTypeP
+  // 
+  typedef ::xml_schema::int_ parTypeP_type;
+  typedef ::xsd::cxx::tree::traits< parTypeP_type, char > parTypeP_traits;
+
+  const parTypeP_type&
+  parTypeP () const;
+
+  parTypeP_type&
+  parTypeP ();
+
+  void
+  parTypeP (const parTypeP_type& x);
+
   // position
   // 
   typedef ::position_t position_type;
@@ -450,11 +464,13 @@ class particle_t: public ::xml_schema::type
 
   // Constructors.
   //
-  particle_t (const position_type&,
+  particle_t (const parTypeP_type&,
+              const position_type&,
               const velocity_type&,
               const mass_type&);
 
-  particle_t (::std::auto_ptr< position_type >&,
+  particle_t (const parTypeP_type&,
+              ::std::auto_ptr< position_type >&,
               ::std::auto_ptr< velocity_type >&,
               const mass_type&);
 
@@ -481,6 +497,7 @@ class particle_t: public ::xml_schema::type
          ::xml_schema::flags);
 
   protected:
+  ::xsd::cxx::tree::one< parTypeP_type > parTypeP_;
   ::xsd::cxx::tree::one< position_type > position_;
   ::xsd::cxx::tree::one< velocity_type > velocity_;
   ::xsd::cxx::tree::one< mass_type > mass_;

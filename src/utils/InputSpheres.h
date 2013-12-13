@@ -400,6 +400,20 @@ class startVel_t: public ::xml_schema::type
 class sphere_t: public ::xml_schema::type
 {
   public:
+  // parTypeS
+  // 
+  typedef ::xml_schema::int_ parTypeS_type;
+  typedef ::xsd::cxx::tree::traits< parTypeS_type, char > parTypeS_traits;
+
+  const parTypeS_type&
+  parTypeS () const;
+
+  parTypeS_type&
+  parTypeS ();
+
+  void
+  parTypeS (const parTypeS_type& x);
+
   // radiussph
   // 
   typedef ::xml_schema::int_ radiussph_type;
@@ -450,11 +464,13 @@ class sphere_t: public ::xml_schema::type
 
   // Constructors.
   //
-  sphere_t (const radiussph_type&,
+  sphere_t (const parTypeS_type&,
+            const radiussph_type&,
             const centerPos_type&,
             const startVel_type&);
 
-  sphere_t (const radiussph_type&,
+  sphere_t (const parTypeS_type&,
+            const radiussph_type&,
             ::std::auto_ptr< centerPos_type >&,
             ::std::auto_ptr< startVel_type >&);
 
@@ -481,6 +497,7 @@ class sphere_t: public ::xml_schema::type
          ::xml_schema::flags);
 
   protected:
+  ::xsd::cxx::tree::one< parTypeS_type > parTypeS_;
   ::xsd::cxx::tree::one< radiussph_type > radiussph_;
   ::xsd::cxx::tree::one< centerPos_type > centerPos_;
   ::xsd::cxx::tree::one< startVel_type > startVel_;

@@ -23,14 +23,14 @@ void ParticleGeneratorTest::setUp() {
 	//Set up cuboid1
 	utils::Vector<double, 3> oriXYZ(0.0);
 	utils::Vector<double, 3> startVel(0.0);
-	cuboid1 = Cuboid(8, 40, 1, 1.1225, 1, oriXYZ, startVel, 0.1);
+	cuboid1 = Cuboid(8, 40, 1, 1.1225, 1, oriXYZ, startVel, 0.1, 0);
 
 	//Set up cuboid2
 	double args[3] = { 15.0, 15.0, 0.0 };
 	oriXYZ = utils::Vector<double, 3>(args);
 	double argz[3] = { 0.0, -10.0, 0.0 };
 	startVel = utils::Vector<double, 3>(argz);
-	cuboid2 = Cuboid(8, 8, 1, 1.1225, 1, oriXYZ, startVel, 0.1);
+	cuboid2 = Cuboid(8, 8, 1, 1.1225, 1, oriXYZ, startVel, 0.1, 1);
 
 	//set up the particle generator
 	std::string fileName = "src/tests/testFiles/generator.txt";
@@ -78,6 +78,7 @@ void ParticleGeneratorTest::setUp() {
 	start_time = 0.0;
  	end_time = 20.0;
 	delta_t = 0.0005;
+	inputSize = 2;
 	g = -12.44;
 	EPSILON = 5.0;
 	SIGMA = 1.0;
@@ -139,6 +140,7 @@ void ParticleGeneratorTest::testExtractCuboids(){
 	vv = utils::Vector<double,3> (x);
 	CPPUNIT_ASSERT(testCuboid.getStartV()==vv);
 	CPPUNIT_ASSERT(testCuboid.getMeanV()==0.1);
+	CPPUNIT_ASSERT(testCuboid.getType() == 0);
 
 	//Check second cuboid
 	testCuboid = *(++generator.getCuboidList().begin());
@@ -154,6 +156,7 @@ void ParticleGeneratorTest::testExtractCuboids(){
 	vv = utils::Vector<double,3> (x1);
 	CPPUNIT_ASSERT(testCuboid.getStartV()==vv);
 	CPPUNIT_ASSERT(testCuboid.getMeanV()==0.1);
+	CPPUNIT_ASSERT(testCuboid.getType() == 1);
 }
 
 
@@ -179,7 +182,7 @@ void ParticleGeneratorTest::testExtractSpheres(){
 	CPPUNIT_ASSERT(sp.getStartV()[0]==0);
 	CPPUNIT_ASSERT(sp.getStartV()[1]==-10);
 	CPPUNIT_ASSERT(sp.getStartV()[2]==0);
-	
+	CPPUNIT_ASSERT(sp.getType()==0);
 }
 	
 void ParticleGeneratorTest::testExtractParticles(){
@@ -208,17 +211,19 @@ void ParticleGeneratorTest::testExtractSetting(){
 	double rcutoffT;
 	std::vector<int> cond;
 	double gT;
+	int inputSizeT;
 	
 	generator.extractSetting(start_timeT, end_timeT, delta_tT, EPSILONT,
 	 			SIGMAT, inputNamesT, inputTypesT, outputMaskT, 
-				outputFreqT, domainSizeT, rcutoffT, cond, gT);
+				outputFreqT, domainSizeT, rcutoffT, cond, gT, inputSize);
 
 	CPPUNIT_ASSERT(start_time==start_timeT);
 	CPPUNIT_ASSERT(end_time==end_timeT);
 	CPPUNIT_ASSERT(delta_t==delta_tT);
 	CPPUNIT_ASSERT(g==gT);
+	CPPUNIT_ASSERT(inputSize==inputSizeT);
 	CPPUNIT_ASSERT(EPSILON==EPSILONT);
-	CPPUNIT_ASSERT(SIGMA==SIGMAT);
+	CPPUNIT_ASSERT(inputSize==inputSizeT);
 
 	list<string>::iterator itN = inputNamesT.begin();
 	list<string>::iterator itT = inputTypesT.begin();

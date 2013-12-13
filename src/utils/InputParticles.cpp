@@ -159,6 +159,24 @@ z (const z_type& x)
 // particle_t
 // 
 
+const particle_t::parTypeP_type& particle_t::
+parTypeP () const
+{
+  return this->parTypeP_.get ();
+}
+
+particle_t::parTypeP_type& particle_t::
+parTypeP ()
+{
+  return this->parTypeP_.get ();
+}
+
+void particle_t::
+parTypeP (const parTypeP_type& x)
+{
+  this->parTypeP_.set (x);
+}
+
 const particle_t::position_type& particle_t::
 position () const
 {
@@ -496,10 +514,12 @@ velocity_t::
 //
 
 particle_t::
-particle_t (const position_type& position,
+particle_t (const parTypeP_type& parTypeP,
+            const position_type& position,
             const velocity_type& velocity,
             const mass_type& mass)
 : ::xml_schema::type (),
+  parTypeP_ (parTypeP, ::xml_schema::flags (), this),
   position_ (position, ::xml_schema::flags (), this),
   velocity_ (velocity, ::xml_schema::flags (), this),
   mass_ (mass, ::xml_schema::flags (), this)
@@ -507,10 +527,12 @@ particle_t (const position_type& position,
 }
 
 particle_t::
-particle_t (::std::auto_ptr< position_type >& position,
+particle_t (const parTypeP_type& parTypeP,
+            ::std::auto_ptr< position_type >& position,
             ::std::auto_ptr< velocity_type >& velocity,
             const mass_type& mass)
 : ::xml_schema::type (),
+  parTypeP_ (parTypeP, ::xml_schema::flags (), this),
   position_ (position, ::xml_schema::flags (), this),
   velocity_ (velocity, ::xml_schema::flags (), this),
   mass_ (mass, ::xml_schema::flags (), this)
@@ -522,6 +544,7 @@ particle_t (const particle_t& x,
             ::xml_schema::flags f,
             ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
+  parTypeP_ (x.parTypeP_, f, this),
   position_ (x.position_, f, this),
   velocity_ (x.velocity_, f, this),
   mass_ (x.mass_, f, this)
@@ -533,6 +556,7 @@ particle_t (const ::xercesc::DOMElement& e,
             ::xml_schema::flags f,
             ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  parTypeP_ (f, this),
   position_ (f, this),
   velocity_ (f, this),
   mass_ (f, this)
@@ -553,6 +577,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     const ::xercesc::DOMElement& i (p.cur_element ());
     const ::xsd::cxx::xml::qualified_name< char > n (
       ::xsd::cxx::xml::dom::name< char > (i));
+
+    // parTypeP
+    //
+    if (n.name () == "parTypeP" && n.namespace_ ().empty ())
+    {
+      if (!parTypeP_.present ())
+      {
+        this->parTypeP_.set (parTypeP_traits::create (i, f, this));
+        continue;
+      }
+    }
 
     // position
     //
@@ -594,6 +629,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     }
 
     break;
+  }
+
+  if (!parTypeP_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "parTypeP",
+      "");
   }
 
   if (!position_.present ())

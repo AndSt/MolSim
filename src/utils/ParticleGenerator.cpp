@@ -114,18 +114,18 @@ void ParticleGenerator::extractCuboids(const string filename)
 		double meanV = h->meanV();
 	
 		cuboids_t::cuboid_const_iterator i;
-	    	for (i = h->cuboid().begin(); i != h->cuboid().end(); ++i)
-	    	{		
-			double a[] = {i->originVector().oriX(), i->originVector().oriY(), i->originVector().oriZ()};
-			utils::Vector<double, 3> ori(a);
-			double b[] = {i->startVelocity().velX(), i->startVelocity().velY(), i->startVelocity().velZ()};
-			utils::Vector<double, 3> vel(b);
-			int hei = i->size3D().height();
-			int w = i->size3D().width();
-			int d = i->size3D().depth();
-		
-	      		Cuboid c(hei, w, d, mesh, m, ori, vel, meanV);
-			cuboidList.push_back(c);
+	    	for (i = h->cuboid().begin(); i != h->cuboid().end(); ++i){
+				double a[] = {i->originVector().oriX(), i->originVector().oriY(), i->originVector().oriZ()};
+				utils::Vector<double, 3> ori(a);
+				double b[] = {i->startVelocity().velX(), i->startVelocity().velY(), i->startVelocity().velZ()};
+				utils::Vector<double, 3> vel(b);
+				int hei = i->size3D().height();
+				int w = i->size3D().width();
+				int d = i->size3D().depth();
+				double typeC = i->parTypeC();
+
+				Cuboid c(hei, w, d, mesh, m, ori, vel, meanV, typeC);
+				cuboidList.push_back(c);
 	    	}
 	
   	}
@@ -146,16 +146,16 @@ void ParticleGenerator::extractSpheres(const string filename){
 		double meanV = h->meanVS();
 	
 		spheres_t::sphere_const_iterator i;
-	    	for (i = h->sphere().begin(); i != h->sphere().end(); ++i)
-	    	{		
-			double a[] = {i->centerPos().x(), i->centerPos().y(), i->centerPos().z()};
-			utils::Vector<double, 3> centerP(a);
-			double b[] = {i->startVel().vX(), i->startVel().vY(), i->startVel().vZ()};
-			utils::Vector<double, 3> vel(b);
-			int radiuss = i->radiussph();
-		
-	      		Sphere s(centerP, vel, meanV, m, radiuss, mesh);
-			sphereList.push_back(s);
+	    	for (i = h->sphere().begin(); i != h->sphere().end(); ++i){
+				double a[] = {i->centerPos().x(), i->centerPos().y(), i->centerPos().z()};
+				utils::Vector<double, 3> centerP(a);
+				double b[] = {i->startVel().vX(), i->startVel().vY(), i->startVel().vZ()};
+				utils::Vector<double, 3> vel(b);
+				int radiuss = i->radiussph();
+				double typeS = i->parTypeS();
+
+				Sphere s(centerP, vel, meanV, m, radiuss, mesh, typeS);
+				sphereList.push_back(s);
 	    	}
 	
   	}
@@ -173,16 +173,16 @@ void ParticleGenerator::extractParticles(const string filename)
 		particleList.clear();
 		auto_ptr<particles_t> h (particles (filename, xml_schema::flags::dont_validate));
 		particles_t::particle_const_iterator i;
-	    	for (i = h->particle().begin (); i != h->particle().end(); ++i)
-	    	{		
-			double a[] = {i->position().x(), i->position().y(), i->position().z()};
-			utils::Vector<double, 3> pos(a);
-			double b[] = {i->velocity().x(), i->velocity().y(), i->velocity().z()};
-			utils::Vector<double, 3> vel(b);
-			double m = i->mass();
+	    	for (i = h->particle().begin (); i != h->particle().end(); ++i){
+				double a[] = {i->position().x(), i->position().y(), i->position().z()};
+				utils::Vector<double, 3> pos(a);
+				double b[] = {i->velocity().x(), i->velocity().y(), i->velocity().z()};
+				utils::Vector<double, 3> vel(b);
+				double m = i->mass();
+				double typeP = i->parTypeP();
 
-	      		Particle p(pos, vel, m, 0);
-			particleList.push_back(p);
+				Particle p(pos, vel, m, typeP);
+				particleList.push_back(p);
 	    	}
 	
   	}
@@ -198,7 +198,7 @@ void ParticleGenerator::extractSetting(double& start_time, double& end_time,
 				std::list<string>& inputNames, std::list<string>& inputTypes, 
 				string& outputMask, int& outputFreq,
 				utils::Vector<double, 3>& domainSize, double& r_cutoff,
-				std::vector<int>& domainBoundCond, double& g_const)
+				std::vector<int>& domainBoundCond, double& g_const, int& inputSize)
 {
   	try
   	{
@@ -206,6 +206,7 @@ void ParticleGenerator::extractSetting(double& start_time, double& end_time,
 		start_time = h->start_time();
 		end_time = h->t_end();
 		delta_t = h->delta_t();
+		inputSize = h->numberOfTypes();
 		g_const = h->gconst();
 
 		EPSILON = h->ljf().epsilon();

@@ -37,6 +37,8 @@ private:
 
 	double meanV;					/*!< The mean velocity (aka. brownian factor) of each particle. */
 
+	int parType;				/*< Type of particles. */
+
 public:
 	/** Default constructor.
 	 */
@@ -55,8 +57,11 @@ public:
 	 * @param[in] ori Cuboid's lower left corner's 3D coordinate.
 	 * @param[in] startVelocity Velocity at the beginning of each particle in cuboid.
 	 * @param[in] meanVelocity Mean velocity (aka. brownian factor) of each partcile in cuboid.
+	 * @param[in] parType Particle type of cuboid.
 	 */
-	Cuboid(int height, int width, int depth, double distance, double mass, utils::Vector<double, 3> ori, utils::Vector<double, 3> startVelocity, double meanVelocity);
+	Cuboid(int height, int width, int depth, double distance, double mass,
+			utils::Vector<double, 3> ori, utils::Vector<double, 3> startVelocity,
+			double meanVelocity, int parType);
 
 	/** \returns Cuboid's lower left corner's location.
 	 */
@@ -127,6 +132,10 @@ public:
 	/** \returns Cuboid's size in particles.
 	 */
 	int getSize();
+
+	/** \returns Cuboid's particle type.
+	 */
+	int& getType();
 
 	virtual ~Cuboid();
 };

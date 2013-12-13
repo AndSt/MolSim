@@ -880,6 +880,20 @@ class pse_t: public ::xml_schema::type
   void
   delta_t (const delta_t_type& x);
 
+  // numberOfTypes
+  // 
+  typedef ::xml_schema::int_ numberOfTypes_type;
+  typedef ::xsd::cxx::tree::traits< numberOfTypes_type, char > numberOfTypes_traits;
+
+  const numberOfTypes_type&
+  numberOfTypes () const;
+
+  numberOfTypes_type&
+  numberOfTypes ();
+
+  void
+  numberOfTypes (const numberOfTypes_type& x);
+
   // gconst
   // 
   typedef ::xml_schema::decimal gconst_type;
@@ -984,6 +998,7 @@ class pse_t: public ::xml_schema::type
   pse_t (const start_time_type&,
          const t_end_type&,
          const delta_t_type&,
+         const numberOfTypes_type&,
          const gconst_type&,
          const ljf_type&,
          const lc_type&,
@@ -993,6 +1008,7 @@ class pse_t: public ::xml_schema::type
   pse_t (const start_time_type&,
          const t_end_type&,
          const delta_t_type&,
+         const numberOfTypes_type&,
          const gconst_type&,
          ::std::auto_ptr< ljf_type >&,
          ::std::auto_ptr< lc_type >&,
@@ -1025,6 +1041,7 @@ class pse_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< start_time_type > start_time_;
   ::xsd::cxx::tree::one< t_end_type > t_end_;
   ::xsd::cxx::tree::one< delta_t_type > delta_t_;
+  ::xsd::cxx::tree::one< numberOfTypes_type > numberOfTypes_;
   ::xsd::cxx::tree::one< gconst_type > gconst_;
   ::xsd::cxx::tree::one< ljf_type > ljf_;
   ::xsd::cxx::tree::one< lc_type > lc_;

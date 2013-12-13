@@ -76,6 +76,7 @@ private:
 	std::list<string> inputNames, inputTypes;
 	string outputMask;
 	int outputFreq;
+	int inputSize;
 	utils::Vector<double, 3> domainSize;
 	double rcutoff;
 };

@@ -43,6 +43,9 @@ private:
 	/** The mesh distance between 2 particles.*/
 	double meshWidth;
 
+	/** Type of particles in sphere.*/
+	int parType;
+
 	/** The list of particles stored in this sphere.*/
 	std::list<Particle> sph;
 
@@ -132,7 +135,8 @@ public:
 	 * @param[in] radius Radius of the sphere in particles (int not double!).
 	 * @param[in] meshWidth The mesh distance between every 2 nearest particles of sphere.
 	 */
-	Sphere(utils::Vector<double, 3> center, utils::Vector<double, 3> startV, double meanV, double m, int radius, double meshWidth);
+	Sphere(utils::Vector<double, 3> center, utils::Vector<double, 3> startV,
+			double meanV, double m, int radius, double meshWidth, int parType);
 
 	/** \returns Sphere's center's location.
 	 */
@@ -161,6 +165,10 @@ public:
 	/** \returns List of stored particles in the sphere.
 	 */
 	std::list<Particle>& getSphere();
+
+	/** \returns particle type of the sphere.
+	 */
+	int& getType();
 
 	virtual ~Sphere();
 };

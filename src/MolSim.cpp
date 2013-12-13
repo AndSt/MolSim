@@ -62,8 +62,6 @@ void LCsimulate();
 void calculateFLJ();
 void LCcalculateFLJ();
 
-void addGravity(list<Particle>& parList);
-
 /**
  * calculate the position for all particles
  */
@@ -114,10 +112,12 @@ int depth = 0;
 
 // For gravity
 bool gravity = false;
-double mass = 1.0;
+vector<double> mass;
 double G_CONST = -12.44;
-double gDirVec[] = {0.0, G_CONST*mass, 0.0};
-utils::Vector<double, 3> gravForce(gDirVec);
+//only for cuboids and spheres, not for particles alone
+//type = index
+double gDirMass[] = {0.0, 1.0, 0.0}; //will store mass (without G_CONST*)
+vector<utils::Vector<double, 3> > gravForce;
 
 list<Particle> particleList;
 utils::ParticleContainer container;
@@ -375,30 +375,64 @@ int main(int argc, char* argsv[]) {
 		//for XML input:
 		else if (option1 == 3) {
 			//getting information from InputSetting first
+			int inputSize=0;
 			pgen.extractSetting(start_time, end_time, delta_t, EPSILON, SIGMA,
 					inputNames, inputTypes, outputMask, freq, domainSize,
-					R_CUTOFF, domainCondition, G_CONST);
+					R_CUTOFF, domainCondition, G_CONST, inputSize);
 			particleList.clear();
 			list<string>::iterator itT = inputTypes.begin();
 			int i = 1;
+
+				/*// calculate the number of cuboids + spheres in input file
+				for (list<string>::iterator itN = inputNames.begin();
+						itN != inputNames.end(); itN++) {
+					if (*itT == "cuboids") {
+						pgen.extractCuboids(*itN);
+						inputSize += pgen.getCuboidList().size();
+					} else if (*itT == "spheres") {
+						pgen.extractSpheres(*itN);
+						inputSize += pgen.getSphereList().size();
+					}
+					itT++;
+					i++;
+				}*/
+
+			//initialize the size of gravForce
+			gravForce.resize(inputSize);
 
 			for (list<string>::iterator itN = inputNames.begin();
 					itN != inputNames.end(); itN++) {
 				if (*itT == "particles") {
 					cout << i << ". input file: " << "[particles]." << endl;
 					pgen.extractParticles(*itN);
+					for (list<Particle>::iterator it=pgen.getParticleList().begin();
+							it!=pgen.getParticleList().end(); it++){
+						gDirMass[1] = (*it).getM();
+						gravForce[(*it).getType()] = utils::Vector<double, 3> (gDirMass);
+					}
 					pgen.mergeWithParticleList(particleList);
 				} else if (*itT == "cuboids") {
 					cout << i << ". input file: " << "[cuboids]" << endl;
 					pgen.extractCuboids(*itN);
 					pgen.cuboidsToList();
+						// For each type
+						for (list<Cuboid>::iterator it=pgen.getCuboidList().begin();
+								it!=pgen.getCuboidList().end(); it++){
+							gDirMass[1] = (*it).getMass();
+							gravForce[(*it).getType()] = utils::Vector<double, 3> (gDirMass);
+						}
 					pgen.mergeWithParticleList(particleList);
-					// For bassin in gravity field (falling drop)
-					mass = (*particleList.begin()).getM();
+
 				} else {
 					cout << i << ". input file: " << "[spheres]" << endl;
 					pgen.extractSpheres(*itN);
 					pgen.spheresToList();
+						// For each type
+						for (list<Sphere>::iterator it=pgen.getSphereList().begin();
+								it!=pgen.getSphereList().end(); it++){
+							gDirMass[1] = (*it).getM();
+							gravForce[(*it).getType()] = utils::Vector<double, 3> (gDirMass);
+						}
 					pgen.mergeWithParticleList(particleList);
 				}
 				itT++;
@@ -419,8 +453,10 @@ int main(int argc, char* argsv[]) {
 				cout 	<< "Gravity disabled." << endl;
 				G_CONST = 0;
 			}
-			gDirVec[1] = G_CONST*mass;
-			gravForce = utils::Vector<double, 3> (gDirVec);
+			//multiply with G_CONST
+			for(int indexGrav=0; indexGrav<gravForce.size(); indexGrav++){
+				gravForce[indexGrav] = G_CONST*gravForce[indexGrav];
+			}
 			//======================GRAVITY=====================
 
 			//======================FALLING DROP=====================
@@ -608,7 +644,7 @@ void calculateFLJ() {
 			++j;
 		}
 		// GRAVITY (G_CONST = 0 when gravity is disabled)
-		(*iterator).setF(gravForce + sumF[i]);
+		(*iterator).setF(gravForce[(*iterator).getType()] + sumF[i]);
 		++iterator;
 		++i;
 	}
@@ -905,7 +941,7 @@ void LCcalculateFLJ() {
 		}
 
 		// GRAVITY (G_CONST = 0 when gravity is disabled)
-		(*iterator).setF(gravForce + (*iterator).getTempF());
+		(*iterator).setF(gravForce[(*iterator).getType()] + (*iterator).getTempF());
 		(*iterator).deleteTempF();
 		++iterator;
 	}
@@ -1030,11 +1066,4 @@ void writeOutputFile(list<Particle> parList){
 				<< setw(10) << (*it).getType() << endl;
 	}
 	file.close();
-}
-
-void addGravity(list<Particle>& parList){
-	for (list<Particle>::iterator it=parList.begin(); it!=parList.end(); it++){
-		//(*it).getOldF() = (*it).getOldF() + gravForce;
-		(*it).getF() = (*it).getF() + gravForce;
-	}
 }

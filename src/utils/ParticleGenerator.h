@@ -83,13 +83,14 @@ public:
 	 * @param[out] r_cutoff Cutoff radius (Short Range Algorithm).
 	 * @param[out] domainBoundCond Saves boundary conditions ("outflow"/"reflecting") for 6 sides of domain.
 	 * @param[out] g_const The constant g of gravitational force
+	 * @param[out] inputSize Number of particle types
 	 */
 	void extractSetting(double& start_time, double& end_time, double& delta_t, 
 				double& EPSILON, double& SIGMA, 
 				std::list<string>& inputNames, std::list<string>& inputTypes, 
 				string& outputMask, int& outputFreq, 
 				utils::Vector<double, 3>& domainSize, double& r_cutoff, 
-				std::vector<int>& domainBoundCond, double& g_const);
+				std::vector<int>& domainBoundCond, double& g_const, int& inputSize);
 
 	/** The reading procedure, which can convert information 
 	 *  from a given XML input file into particle generator's list of unstructered particles.

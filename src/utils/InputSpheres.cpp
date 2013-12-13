@@ -159,6 +159,24 @@ vZ (const vZ_type& x)
 // sphere_t
 // 
 
+const sphere_t::parTypeS_type& sphere_t::
+parTypeS () const
+{
+  return this->parTypeS_.get ();
+}
+
+sphere_t::parTypeS_type& sphere_t::
+parTypeS ()
+{
+  return this->parTypeS_.get ();
+}
+
+void sphere_t::
+parTypeS (const parTypeS_type& x)
+{
+  this->parTypeS_.set (x);
+}
+
 const sphere_t::radiussph_type& sphere_t::
 radiussph () const
 {
@@ -550,10 +568,12 @@ startVel_t::
 //
 
 sphere_t::
-sphere_t (const radiussph_type& radiussph,
+sphere_t (const parTypeS_type& parTypeS,
+          const radiussph_type& radiussph,
           const centerPos_type& centerPos,
           const startVel_type& startVel)
 : ::xml_schema::type (),
+  parTypeS_ (parTypeS, ::xml_schema::flags (), this),
   radiussph_ (radiussph, ::xml_schema::flags (), this),
   centerPos_ (centerPos, ::xml_schema::flags (), this),
   startVel_ (startVel, ::xml_schema::flags (), this)
@@ -561,10 +581,12 @@ sphere_t (const radiussph_type& radiussph,
 }
 
 sphere_t::
-sphere_t (const radiussph_type& radiussph,
+sphere_t (const parTypeS_type& parTypeS,
+          const radiussph_type& radiussph,
           ::std::auto_ptr< centerPos_type >& centerPos,
           ::std::auto_ptr< startVel_type >& startVel)
 : ::xml_schema::type (),
+  parTypeS_ (parTypeS, ::xml_schema::flags (), this),
   radiussph_ (radiussph, ::xml_schema::flags (), this),
   centerPos_ (centerPos, ::xml_schema::flags (), this),
   startVel_ (startVel, ::xml_schema::flags (), this)
@@ -576,6 +598,7 @@ sphere_t (const sphere_t& x,
           ::xml_schema::flags f,
           ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
+  parTypeS_ (x.parTypeS_, f, this),
   radiussph_ (x.radiussph_, f, this),
   centerPos_ (x.centerPos_, f, this),
   startVel_ (x.startVel_, f, this)
@@ -587,6 +610,7 @@ sphere_t (const ::xercesc::DOMElement& e,
           ::xml_schema::flags f,
           ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  parTypeS_ (f, this),
   radiussph_ (f, this),
   centerPos_ (f, this),
   startVel_ (f, this)
@@ -607,6 +631,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     const ::xercesc::DOMElement& i (p.cur_element ());
     const ::xsd::cxx::xml::qualified_name< char > n (
       ::xsd::cxx::xml::dom::name< char > (i));
+
+    // parTypeS
+    //
+    if (n.name () == "parTypeS" && n.namespace_ ().empty ())
+    {
+      if (!parTypeS_.present ())
+      {
+        this->parTypeS_.set (parTypeS_traits::create (i, f, this));
+        continue;
+      }
+    }
 
     // radiussph
     //
@@ -648,6 +683,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     }
 
     break;
+  }
+
+  if (!parTypeS_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "parTypeS",
+      "");
   }
 
   if (!radiussph_.present ())

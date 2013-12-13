@@ -549,6 +549,24 @@ delta_t (const delta_t_type& x)
   this->delta_t_.set (x);
 }
 
+const pse_t::numberOfTypes_type& pse_t::
+numberOfTypes () const
+{
+  return this->numberOfTypes_.get ();
+}
+
+pse_t::numberOfTypes_type& pse_t::
+numberOfTypes ()
+{
+  return this->numberOfTypes_.get ();
+}
+
+void pse_t::
+numberOfTypes (const numberOfTypes_type& x)
+{
+  this->numberOfTypes_.set (x);
+}
+
 const pse_t::gconst_type& pse_t::
 gconst () const
 {
@@ -1560,6 +1578,7 @@ pse_t::
 pse_t (const start_time_type& start_time,
        const t_end_type& t_end,
        const delta_t_type& delta_t,
+       const numberOfTypes_type& numberOfTypes,
        const gconst_type& gconst,
        const ljf_type& ljf,
        const lc_type& lc,
@@ -1569,6 +1588,7 @@ pse_t (const start_time_type& start_time,
   start_time_ (start_time, ::xml_schema::flags (), this),
   t_end_ (t_end, ::xml_schema::flags (), this),
   delta_t_ (delta_t, ::xml_schema::flags (), this),
+  numberOfTypes_ (numberOfTypes, ::xml_schema::flags (), this),
   gconst_ (gconst, ::xml_schema::flags (), this),
   ljf_ (ljf, ::xml_schema::flags (), this),
   lc_ (lc, ::xml_schema::flags (), this),
@@ -1582,6 +1602,7 @@ pse_t::
 pse_t (const start_time_type& start_time,
        const t_end_type& t_end,
        const delta_t_type& delta_t,
+       const numberOfTypes_type& numberOfTypes,
        const gconst_type& gconst,
        ::std::auto_ptr< ljf_type >& ljf,
        ::std::auto_ptr< lc_type >& lc,
@@ -1591,6 +1612,7 @@ pse_t (const start_time_type& start_time,
   start_time_ (start_time, ::xml_schema::flags (), this),
   t_end_ (t_end, ::xml_schema::flags (), this),
   delta_t_ (delta_t, ::xml_schema::flags (), this),
+  numberOfTypes_ (numberOfTypes, ::xml_schema::flags (), this),
   gconst_ (gconst, ::xml_schema::flags (), this),
   ljf_ (ljf, ::xml_schema::flags (), this),
   lc_ (lc, ::xml_schema::flags (), this),
@@ -1608,6 +1630,7 @@ pse_t (const pse_t& x,
   start_time_ (x.start_time_, f, this),
   t_end_ (x.t_end_, f, this),
   delta_t_ (x.delta_t_, f, this),
+  numberOfTypes_ (x.numberOfTypes_, f, this),
   gconst_ (x.gconst_, f, this),
   ljf_ (x.ljf_, f, this),
   lc_ (x.lc_, f, this),
@@ -1625,6 +1648,7 @@ pse_t (const ::xercesc::DOMElement& e,
   start_time_ (f, this),
   t_end_ (f, this),
   delta_t_ (f, this),
+  numberOfTypes_ (f, this),
   gconst_ (f, this),
   ljf_ (f, this),
   lc_ (f, this),
@@ -1678,6 +1702,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!delta_t_.present ())
       {
         this->delta_t_.set (delta_t_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // numberOfTypes
+    //
+    if (n.name () == "numberOfTypes" && n.namespace_ ().empty ())
+    {
+      if (!numberOfTypes_.present ())
+      {
+        this->numberOfTypes_.set (numberOfTypes_traits::create (i, f, this));
         continue;
       }
     }
@@ -1781,6 +1816,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
   {
     throw ::xsd::cxx::tree::expected_element< char > (
       "delta_t",
+      "");
+  }
+
+  if (!numberOfTypes_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "numberOfTypes",
       "");
   }
 

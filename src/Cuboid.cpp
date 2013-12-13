@@ -17,7 +17,7 @@ Cuboid::Cuboid(){
 
 Cuboid::Cuboid(int height, int width, int depth, double distance, double mass,
 		utils::Vector<double, 3> ori, utils::Vector<double, 3> startVelocity,
-		double meanVelocity) {
+		double meanVelocity, int parType) {
 	// Initialize first variables
 	cHeight = height;
 	cWidth = width;
@@ -27,6 +27,7 @@ Cuboid::Cuboid(int height, int width, int depth, double distance, double mass,
 	m = mass;
 	startV = startVelocity;
 	meanV = meanVelocity;
+	this->parType = parType;
 
 	// Initialize cub
 	cub.clear();
@@ -41,7 +42,7 @@ Cuboid::Cuboid(int height, int width, int depth, double distance, double mass,
 				utils::Vector<double, 3> addVector(addTemp);
 				utils::Vector<double, 3> vel(ori + addVector);
 
-				Particle p(vel, startVelocity, mass, 0);
+				Particle p(vel, startVelocity, mass, parType);
 
 				// Movement of each particle superposed by Brownian Motion
 				MaxwellBoltzmannDistribution(p, meanVelocity, 2);
@@ -157,6 +158,10 @@ void Cuboid::setMeanV(double newV) {
 
 int Cuboid::getSize() {
 	return cHeight * cWidth * cDepth;
+}
+
+int& Cuboid::getType(){
+	return parType;
 }
 
 Cuboid::~Cuboid() {
