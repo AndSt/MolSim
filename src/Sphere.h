@@ -46,6 +46,16 @@ private:
 	/** Type of particles in sphere.*/
 	int parType;
 
+	/**
+	 * For Lennard Jones Force.
+	 */
+	double EPSILON;
+
+	/**
+	 * For Lennard Jones Force.
+	 */
+	double SIGMA;
+
 	/** The list of particles stored in this sphere.*/
 	std::list<Particle> sph;
 
@@ -134,9 +144,13 @@ public:
 	 * @param[in] m Mass of each particle in sphere.	 
 	 * @param[in] radius Radius of the sphere in particles (int not double!).
 	 * @param[in] meshWidth The mesh distance between every 2 nearest particles of sphere.
+	 * @param[in] parType Particle type of sphere.
+	 * @param[in] EPSILON For Lennard Jones Force.
+	 * @param[in] SIGMA For Lennard Jones Force.
 	 */
 	Sphere(utils::Vector<double, 3> center, utils::Vector<double, 3> startV,
-			double meanV, double m, int radius, double meshWidth, int parType);
+			double meanV, double m, int radius, double meshWidth,
+			int parType, double EPSILON, double SIGMA);
 
 	/** \returns Sphere's center's location.
 	 */
@@ -169,6 +183,14 @@ public:
 	/** \returns particle type of the sphere.
 	 */
 	int& getType();
+
+	/** \returns Cuboid's epsilon for Lennard Jones Force.
+	 */
+	double& getEpsilon();
+
+	/** \returns Cuboid's sigma for Lennard Jones Force.
+	 */
+	double& getSigma();
 
 	virtual ~Sphere();
 };

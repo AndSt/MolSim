@@ -221,7 +221,6 @@ namespace xml_schema
 
 // Forward declarations.
 //
-class ljf_t;
 class lc_t;
 class domainsize_t;
 class condition_t;
@@ -243,69 +242,6 @@ class pse_t;
 #include <xsd/cxx/tree/list.hxx>
 
 #include <xsd/cxx/xml/dom/parsing-header.hxx>
-
-class ljf_t: public ::xml_schema::type
-{
-  public:
-  // epsilon
-  // 
-  typedef ::xml_schema::decimal epsilon_type;
-  typedef ::xsd::cxx::tree::traits< epsilon_type, char, ::xsd::cxx::tree::schema_type::decimal > epsilon_traits;
-
-  const epsilon_type&
-  epsilon () const;
-
-  epsilon_type&
-  epsilon ();
-
-  void
-  epsilon (const epsilon_type& x);
-
-  // sigma
-  // 
-  typedef ::xml_schema::decimal sigma_type;
-  typedef ::xsd::cxx::tree::traits< sigma_type, char, ::xsd::cxx::tree::schema_type::decimal > sigma_traits;
-
-  const sigma_type&
-  sigma () const;
-
-  sigma_type&
-  sigma ();
-
-  void
-  sigma (const sigma_type& x);
-
-  // Constructors.
-  //
-  ljf_t (const epsilon_type&,
-         const sigma_type&);
-
-  ljf_t (const ::xercesc::DOMElement& e,
-         ::xml_schema::flags f = 0,
-         ::xml_schema::container* c = 0);
-
-  ljf_t (const ljf_t& x,
-         ::xml_schema::flags f = 0,
-         ::xml_schema::container* c = 0);
-
-  virtual ljf_t*
-  _clone (::xml_schema::flags f = 0,
-          ::xml_schema::container* c = 0) const;
-
-  virtual 
-  ~ljf_t ();
-
-  // Implementation.
-  //
-  protected:
-  void
-  parse (::xsd::cxx::xml::dom::parser< char >&,
-         ::xml_schema::flags);
-
-  protected:
-  ::xsd::cxx::tree::one< epsilon_type > epsilon_;
-  ::xsd::cxx::tree::one< sigma_type > sigma_;
-};
 
 class lc_t: public ::xml_schema::type
 {
@@ -908,23 +844,6 @@ class pse_t: public ::xml_schema::type
   void
   gconst (const gconst_type& x);
 
-  // ljf
-  // 
-  typedef ::ljf_t ljf_type;
-  typedef ::xsd::cxx::tree::traits< ljf_type, char > ljf_traits;
-
-  const ljf_type&
-  ljf () const;
-
-  ljf_type&
-  ljf ();
-
-  void
-  ljf (const ljf_type& x);
-
-  void
-  ljf (::std::auto_ptr< ljf_type > p);
-
   // lc
   // 
   typedef ::lc_t lc_type;
@@ -1000,7 +919,6 @@ class pse_t: public ::xml_schema::type
          const delta_t_type&,
          const numberOfTypes_type&,
          const gconst_type&,
-         const ljf_type&,
          const lc_type&,
          const thermo_type&,
          const outputfile_type&);
@@ -1010,7 +928,6 @@ class pse_t: public ::xml_schema::type
          const delta_t_type&,
          const numberOfTypes_type&,
          const gconst_type&,
-         ::std::auto_ptr< ljf_type >&,
          ::std::auto_ptr< lc_type >&,
          ::std::auto_ptr< thermo_type >&,
          ::std::auto_ptr< outputfile_type >&);
@@ -1043,7 +960,6 @@ class pse_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< delta_t_type > delta_t_;
   ::xsd::cxx::tree::one< numberOfTypes_type > numberOfTypes_;
   ::xsd::cxx::tree::one< gconst_type > gconst_;
-  ::xsd::cxx::tree::one< ljf_type > ljf_;
   ::xsd::cxx::tree::one< lc_type > lc_;
   ::xsd::cxx::tree::one< thermo_type > thermo_;
   inputfile_sequence inputfile_;

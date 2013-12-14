@@ -10,14 +10,6 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 	
 	<gconst>-12.44</gconst>
 	
-	<!-- Lennard-Jones Force --> 
-	<ljf>
-		<!-- potential well --> 
-		<epsilon>5.0</epsilon>
-		<!-- zero crossing --> 
-		<sigma>1</sigma>
-	</ljf>
-	
 	<!-- Short range, linked cell algorithm -->
 	<lc>
 		<domainsize>

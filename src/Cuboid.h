@@ -39,6 +39,16 @@ private:
 
 	int parType;				/*< Type of particles. */
 
+	/**
+	 * For Lennard Jones Force.
+	 */
+	double EPSILON;
+
+	/**
+	 * For Lennard Jones Force.
+	 */
+	double SIGMA;
+
 public:
 	/** Default constructor.
 	 */
@@ -58,10 +68,12 @@ public:
 	 * @param[in] startVelocity Velocity at the beginning of each particle in cuboid.
 	 * @param[in] meanVelocity Mean velocity (aka. brownian factor) of each partcile in cuboid.
 	 * @param[in] parType Particle type of cuboid.
+	 * @param[in] EPSILON For Lennard Jones Force.
+	 * @param[in] SIGMA For Lennard Jones Force.
 	 */
 	Cuboid(int height, int width, int depth, double distance, double mass,
 			utils::Vector<double, 3> ori, utils::Vector<double, 3> startVelocity,
-			double meanVelocity, int parType);
+			double meanVelocity, int parType, double EPSILON, double SIGMA);
 
 	/** \returns Cuboid's lower left corner's location.
 	 */
@@ -136,6 +148,14 @@ public:
 	/** \returns Cuboid's particle type.
 	 */
 	int& getType();
+
+	/** \returns Cuboid's epsilon for Lennard Jones Force.
+	 */
+	double& getEpsilon();
+
+	/** \returns Cuboid's sigma for Lennard Jones Force.
+	 */
+	double& getSigma();
 
 	virtual ~Cuboid();
 };

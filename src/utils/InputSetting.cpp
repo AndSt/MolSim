@@ -40,46 +40,6 @@
 
 #include "InputSetting.h"
 
-// ljf_t
-// 
-
-const ljf_t::epsilon_type& ljf_t::
-epsilon () const
-{
-  return this->epsilon_.get ();
-}
-
-ljf_t::epsilon_type& ljf_t::
-epsilon ()
-{
-  return this->epsilon_.get ();
-}
-
-void ljf_t::
-epsilon (const epsilon_type& x)
-{
-  this->epsilon_.set (x);
-}
-
-const ljf_t::sigma_type& ljf_t::
-sigma () const
-{
-  return this->sigma_.get ();
-}
-
-ljf_t::sigma_type& ljf_t::
-sigma ()
-{
-  return this->sigma_.get ();
-}
-
-void ljf_t::
-sigma (const sigma_type& x)
-{
-  this->sigma_.set (x);
-}
-
-
 // lc_t
 // 
 
@@ -585,30 +545,6 @@ gconst (const gconst_type& x)
   this->gconst_.set (x);
 }
 
-const pse_t::ljf_type& pse_t::
-ljf () const
-{
-  return this->ljf_.get ();
-}
-
-pse_t::ljf_type& pse_t::
-ljf ()
-{
-  return this->ljf_.get ();
-}
-
-void pse_t::
-ljf (const ljf_type& x)
-{
-  this->ljf_.set (x);
-}
-
-void pse_t::
-ljf (::std::auto_ptr< ljf_type > x)
-{
-  this->ljf_.set (x);
-}
-
 const pse_t::lc_type& pse_t::
 lc () const
 {
@@ -701,105 +637,6 @@ outputfile (::std::auto_ptr< outputfile_type > x)
 
 
 #include <xsd/cxx/xml/dom/parsing-source.hxx>
-
-// ljf_t
-//
-
-ljf_t::
-ljf_t (const epsilon_type& epsilon,
-       const sigma_type& sigma)
-: ::xml_schema::type (),
-  epsilon_ (epsilon, ::xml_schema::flags (), this),
-  sigma_ (sigma, ::xml_schema::flags (), this)
-{
-}
-
-ljf_t::
-ljf_t (const ljf_t& x,
-       ::xml_schema::flags f,
-       ::xml_schema::container* c)
-: ::xml_schema::type (x, f, c),
-  epsilon_ (x.epsilon_, f, this),
-  sigma_ (x.sigma_, f, this)
-{
-}
-
-ljf_t::
-ljf_t (const ::xercesc::DOMElement& e,
-       ::xml_schema::flags f,
-       ::xml_schema::container* c)
-: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
-  epsilon_ (f, this),
-  sigma_ (f, this)
-{
-  if ((f & ::xml_schema::flags::base) == 0)
-  {
-    ::xsd::cxx::xml::dom::parser< char > p (e, true, false);
-    this->parse (p, f);
-  }
-}
-
-void ljf_t::
-parse (::xsd::cxx::xml::dom::parser< char >& p,
-       ::xml_schema::flags f)
-{
-  for (; p.more_elements (); p.next_element ())
-  {
-    const ::xercesc::DOMElement& i (p.cur_element ());
-    const ::xsd::cxx::xml::qualified_name< char > n (
-      ::xsd::cxx::xml::dom::name< char > (i));
-
-    // epsilon
-    //
-    if (n.name () == "epsilon" && n.namespace_ ().empty ())
-    {
-      if (!epsilon_.present ())
-      {
-        this->epsilon_.set (epsilon_traits::create (i, f, this));
-        continue;
-      }
-    }
-
-    // sigma
-    //
-    if (n.name () == "sigma" && n.namespace_ ().empty ())
-    {
-      if (!sigma_.present ())
-      {
-        this->sigma_.set (sigma_traits::create (i, f, this));
-        continue;
-      }
-    }
-
-    break;
-  }
-
-  if (!epsilon_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "epsilon",
-      "");
-  }
-
-  if (!sigma_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "sigma",
-      "");
-  }
-}
-
-ljf_t* ljf_t::
-_clone (::xml_schema::flags f,
-        ::xml_schema::container* c) const
-{
-  return new class ljf_t (*this, f, c);
-}
-
-ljf_t::
-~ljf_t ()
-{
-}
 
 // lc_t
 //
@@ -1580,7 +1417,6 @@ pse_t (const start_time_type& start_time,
        const delta_t_type& delta_t,
        const numberOfTypes_type& numberOfTypes,
        const gconst_type& gconst,
-       const ljf_type& ljf,
        const lc_type& lc,
        const thermo_type& thermo,
        const outputfile_type& outputfile)
@@ -1590,7 +1426,6 @@ pse_t (const start_time_type& start_time,
   delta_t_ (delta_t, ::xml_schema::flags (), this),
   numberOfTypes_ (numberOfTypes, ::xml_schema::flags (), this),
   gconst_ (gconst, ::xml_schema::flags (), this),
-  ljf_ (ljf, ::xml_schema::flags (), this),
   lc_ (lc, ::xml_schema::flags (), this),
   thermo_ (thermo, ::xml_schema::flags (), this),
   inputfile_ (::xml_schema::flags (), this),
@@ -1604,7 +1439,6 @@ pse_t (const start_time_type& start_time,
        const delta_t_type& delta_t,
        const numberOfTypes_type& numberOfTypes,
        const gconst_type& gconst,
-       ::std::auto_ptr< ljf_type >& ljf,
        ::std::auto_ptr< lc_type >& lc,
        ::std::auto_ptr< thermo_type >& thermo,
        ::std::auto_ptr< outputfile_type >& outputfile)
@@ -1614,7 +1448,6 @@ pse_t (const start_time_type& start_time,
   delta_t_ (delta_t, ::xml_schema::flags (), this),
   numberOfTypes_ (numberOfTypes, ::xml_schema::flags (), this),
   gconst_ (gconst, ::xml_schema::flags (), this),
-  ljf_ (ljf, ::xml_schema::flags (), this),
   lc_ (lc, ::xml_schema::flags (), this),
   thermo_ (thermo, ::xml_schema::flags (), this),
   inputfile_ (::xml_schema::flags (), this),
@@ -1632,7 +1465,6 @@ pse_t (const pse_t& x,
   delta_t_ (x.delta_t_, f, this),
   numberOfTypes_ (x.numberOfTypes_, f, this),
   gconst_ (x.gconst_, f, this),
-  ljf_ (x.ljf_, f, this),
   lc_ (x.lc_, f, this),
   thermo_ (x.thermo_, f, this),
   inputfile_ (x.inputfile_, f, this),
@@ -1650,7 +1482,6 @@ pse_t (const ::xercesc::DOMElement& e,
   delta_t_ (f, this),
   numberOfTypes_ (f, this),
   gconst_ (f, this),
-  ljf_ (f, this),
   lc_ (f, this),
   thermo_ (f, this),
   inputfile_ (f, this),
@@ -1724,20 +1555,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!gconst_.present ())
       {
         this->gconst_.set (gconst_traits::create (i, f, this));
-        continue;
-      }
-    }
-
-    // ljf
-    //
-    if (n.name () == "ljf" && n.namespace_ ().empty ())
-    {
-      ::std::auto_ptr< ljf_type > r (
-        ljf_traits::create (i, f, this));
-
-      if (!ljf_.present ())
-      {
-        this->ljf_.set (r);
         continue;
       }
     }
@@ -1830,13 +1647,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
   {
     throw ::xsd::cxx::tree::expected_element< char > (
       "gconst",
-      "");
-  }
-
-  if (!ljf_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "ljf",
       "");
   }
 

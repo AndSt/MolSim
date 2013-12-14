@@ -400,112 +400,6 @@ class startVel_t: public ::xml_schema::type
 class sphere_t: public ::xml_schema::type
 {
   public:
-  // parTypeS
-  // 
-  typedef ::xml_schema::int_ parTypeS_type;
-  typedef ::xsd::cxx::tree::traits< parTypeS_type, char > parTypeS_traits;
-
-  const parTypeS_type&
-  parTypeS () const;
-
-  parTypeS_type&
-  parTypeS ();
-
-  void
-  parTypeS (const parTypeS_type& x);
-
-  // radiussph
-  // 
-  typedef ::xml_schema::int_ radiussph_type;
-  typedef ::xsd::cxx::tree::traits< radiussph_type, char > radiussph_traits;
-
-  const radiussph_type&
-  radiussph () const;
-
-  radiussph_type&
-  radiussph ();
-
-  void
-  radiussph (const radiussph_type& x);
-
-  // centerPos
-  // 
-  typedef ::centerPos_t centerPos_type;
-  typedef ::xsd::cxx::tree::traits< centerPos_type, char > centerPos_traits;
-
-  const centerPos_type&
-  centerPos () const;
-
-  centerPos_type&
-  centerPos ();
-
-  void
-  centerPos (const centerPos_type& x);
-
-  void
-  centerPos (::std::auto_ptr< centerPos_type > p);
-
-  // startVel
-  // 
-  typedef ::startVel_t startVel_type;
-  typedef ::xsd::cxx::tree::traits< startVel_type, char > startVel_traits;
-
-  const startVel_type&
-  startVel () const;
-
-  startVel_type&
-  startVel ();
-
-  void
-  startVel (const startVel_type& x);
-
-  void
-  startVel (::std::auto_ptr< startVel_type > p);
-
-  // Constructors.
-  //
-  sphere_t (const parTypeS_type&,
-            const radiussph_type&,
-            const centerPos_type&,
-            const startVel_type&);
-
-  sphere_t (const parTypeS_type&,
-            const radiussph_type&,
-            ::std::auto_ptr< centerPos_type >&,
-            ::std::auto_ptr< startVel_type >&);
-
-  sphere_t (const ::xercesc::DOMElement& e,
-            ::xml_schema::flags f = 0,
-            ::xml_schema::container* c = 0);
-
-  sphere_t (const sphere_t& x,
-            ::xml_schema::flags f = 0,
-            ::xml_schema::container* c = 0);
-
-  virtual sphere_t*
-  _clone (::xml_schema::flags f = 0,
-          ::xml_schema::container* c = 0) const;
-
-  virtual 
-  ~sphere_t ();
-
-  // Implementation.
-  //
-  protected:
-  void
-  parse (::xsd::cxx::xml::dom::parser< char >&,
-         ::xml_schema::flags);
-
-  protected:
-  ::xsd::cxx::tree::one< parTypeS_type > parTypeS_;
-  ::xsd::cxx::tree::one< radiussph_type > radiussph_;
-  ::xsd::cxx::tree::one< centerPos_type > centerPos_;
-  ::xsd::cxx::tree::one< startVel_type > startVel_;
-};
-
-class spheres_t: public ::xml_schema::type
-{
-  public:
   // meshWidthS
   // 
   typedef ::xml_schema::decimal meshWidthS_type;
@@ -548,6 +442,155 @@ class spheres_t: public ::xml_schema::type
   void
   meanVS (const meanVS_type& x);
 
+  // parTypeS
+  // 
+  typedef ::xml_schema::int_ parTypeS_type;
+  typedef ::xsd::cxx::tree::traits< parTypeS_type, char > parTypeS_traits;
+
+  const parTypeS_type&
+  parTypeS () const;
+
+  parTypeS_type&
+  parTypeS ();
+
+  void
+  parTypeS (const parTypeS_type& x);
+
+  // radiussph
+  // 
+  typedef ::xml_schema::int_ radiussph_type;
+  typedef ::xsd::cxx::tree::traits< radiussph_type, char > radiussph_traits;
+
+  const radiussph_type&
+  radiussph () const;
+
+  radiussph_type&
+  radiussph ();
+
+  void
+  radiussph (const radiussph_type& x);
+
+  // epsilon
+  // 
+  typedef ::xml_schema::decimal epsilon_type;
+  typedef ::xsd::cxx::tree::traits< epsilon_type, char, ::xsd::cxx::tree::schema_type::decimal > epsilon_traits;
+
+  const epsilon_type&
+  epsilon () const;
+
+  epsilon_type&
+  epsilon ();
+
+  void
+  epsilon (const epsilon_type& x);
+
+  // sigma
+  // 
+  typedef ::xml_schema::decimal sigma_type;
+  typedef ::xsd::cxx::tree::traits< sigma_type, char, ::xsd::cxx::tree::schema_type::decimal > sigma_traits;
+
+  const sigma_type&
+  sigma () const;
+
+  sigma_type&
+  sigma ();
+
+  void
+  sigma (const sigma_type& x);
+
+  // centerPos
+  // 
+  typedef ::centerPos_t centerPos_type;
+  typedef ::xsd::cxx::tree::traits< centerPos_type, char > centerPos_traits;
+
+  const centerPos_type&
+  centerPos () const;
+
+  centerPos_type&
+  centerPos ();
+
+  void
+  centerPos (const centerPos_type& x);
+
+  void
+  centerPos (::std::auto_ptr< centerPos_type > p);
+
+  // startVel
+  // 
+  typedef ::startVel_t startVel_type;
+  typedef ::xsd::cxx::tree::traits< startVel_type, char > startVel_traits;
+
+  const startVel_type&
+  startVel () const;
+
+  startVel_type&
+  startVel ();
+
+  void
+  startVel (const startVel_type& x);
+
+  void
+  startVel (::std::auto_ptr< startVel_type > p);
+
+  // Constructors.
+  //
+  sphere_t (const meshWidthS_type&,
+            const massS_type&,
+            const meanVS_type&,
+            const parTypeS_type&,
+            const radiussph_type&,
+            const epsilon_type&,
+            const sigma_type&,
+            const centerPos_type&,
+            const startVel_type&);
+
+  sphere_t (const meshWidthS_type&,
+            const massS_type&,
+            const meanVS_type&,
+            const parTypeS_type&,
+            const radiussph_type&,
+            const epsilon_type&,
+            const sigma_type&,
+            ::std::auto_ptr< centerPos_type >&,
+            ::std::auto_ptr< startVel_type >&);
+
+  sphere_t (const ::xercesc::DOMElement& e,
+            ::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0);
+
+  sphere_t (const sphere_t& x,
+            ::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0);
+
+  virtual sphere_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  virtual 
+  ~sphere_t ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  ::xsd::cxx::tree::one< meshWidthS_type > meshWidthS_;
+  ::xsd::cxx::tree::one< massS_type > massS_;
+  ::xsd::cxx::tree::one< meanVS_type > meanVS_;
+  ::xsd::cxx::tree::one< parTypeS_type > parTypeS_;
+  ::xsd::cxx::tree::one< radiussph_type > radiussph_;
+  ::xsd::cxx::tree::one< epsilon_type > epsilon_;
+  ::xsd::cxx::tree::one< sigma_type > sigma_;
+  ::xsd::cxx::tree::one< centerPos_type > centerPos_;
+  ::xsd::cxx::tree::one< startVel_type > startVel_;
+};
+
+class spheres_t: public ::xml_schema::type
+{
+  public:
   // sphere
   // 
   typedef ::sphere_t sphere_type;
@@ -567,9 +610,7 @@ class spheres_t: public ::xml_schema::type
 
   // Constructors.
   //
-  spheres_t (const meshWidthS_type&,
-             const massS_type&,
-             const meanVS_type&);
+  spheres_t ();
 
   spheres_t (const ::xercesc::DOMElement& e,
              ::xml_schema::flags f = 0,
@@ -594,9 +635,6 @@ class spheres_t: public ::xml_schema::type
          ::xml_schema::flags);
 
   protected:
-  ::xsd::cxx::tree::one< meshWidthS_type > meshWidthS_;
-  ::xsd::cxx::tree::one< massS_type > massS_;
-  ::xsd::cxx::tree::one< meanVS_type > meanVS_;
   sphere_sequence sphere_;
 };
 

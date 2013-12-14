@@ -74,7 +74,7 @@ void FileReader::readFile(std::list<Particle>& particles, char* filename) {
     			exit(-1);
     		}
     		datastream >> m;
-    		Particle p(x, v, m);
+    		Particle p(x, v, m, 0, 5.0, 1.0);
     		particles.push_back(p);
 
     		getline(input_file, tmp_string);
@@ -146,7 +146,7 @@ void FileReader::readFileCub(std::list<Cuboid>& cuboids, char* filename) {
     	    datastream >> meanVelocity;
 
     	    // Create a new cuboid with extracted information from file
-    	    Cuboid cub(hei, w, d, distance, mass, ori, startVelocity, meanVelocity,0);
+    	    Cuboid cub(hei, w, d, distance, mass, ori, startVelocity, meanVelocity,0, 5.0, 1.0);
     	    cuboids.push_back(cub);
 
     	    getline(input_file, tmp_string);
@@ -164,6 +164,8 @@ void FileReader::readStatus(std::list<Particle>& particles, char* filename) {
 	double v[] = {1,1,1};
 	double f[] = {0,0,0};
 	double old_f[] = {0,0,0};
+	double eps = 0.0;
+	double sig = 0.0;
 
 	double m = 1;
 	int t = 1;
@@ -210,7 +212,9 @@ void FileReader::readStatus(std::list<Particle>& particles, char* filename) {
     		}
     		datastream >> m;
     		datastream >> t;
-    		Particle p(x, v, m, t);
+    		datastream >> eps;
+    		datastream >> sig;
+    		Particle p(x, v, m, t, eps, sig);
     		p.getF() = utils::Vector<double, 3> (f);
     		p.getOldF() = utils::Vector<double, 3> (old_f);
     		particles.push_back(p);

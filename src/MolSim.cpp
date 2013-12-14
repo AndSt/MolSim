@@ -99,15 +99,11 @@ list<string> inputTypes;
 string outputMask = "MD_vtk";
 int freq = 10;
 
-// For Lennard-Jones
-double SIGMA = 1.0;
-double EPSILON = 5.0;
-
 // For Linked Cell Algorithm
 double R_CUTOFF = 3.0;
 utils::Vector<double, 3> domainSize;
 bool outflow_flag = false;
-const double h = (pow(2, (1 / 6)) * SIGMA);
+const double h = 1.2;
 int depth = 0;
 
 // For gravity
@@ -376,7 +372,7 @@ int main(int argc, char* argsv[]) {
 		else if (option1 == 3) {
 			//getting information from InputSetting first
 			int inputSize=0;
-			pgen.extractSetting(start_time, end_time, delta_t, EPSILON, SIGMA,
+			pgen.extractSetting(start_time, end_time, delta_t,
 					inputNames, inputTypes, outputMask, freq, domainSize,
 					R_CUTOFF, domainCondition, G_CONST, inputSize);
 			particleList.clear();
@@ -629,6 +625,10 @@ void calculateFLJ() {
 			utils::Vector<double, 3> tempD = p2.getX() - p1.getX();
 			double tempDNorm = tempD.L2Norm();
 
+			//Lorentz-Berthelot Mixing rule
+			double EPSILON = ((*iterator).getEpsilon()) + ((*innerIterator).getEpsilon())/2;
+			double SIGMA = sqrt(((*iterator).getSigma())*((*innerIterator).getSigma()));
+
 			//if(tempDNorm < R_CUTOFF) {
 			double tempDSigDivNormPowSix = pow(SIGMA / tempDNorm, 6);
 			utils::Vector<double, 3> tempF =
@@ -860,7 +860,8 @@ void LCcalculateFLJ() {
 							(*iterator).getX()[2] };
 					utils::Vector<double, 3> x(x_arg);
 					utils::Vector<double, 3> v(0.0);
-					Particle p(x, v, 1);
+					Particle p(x, v, (*iterator).getM(), (*iterator).getType(),
+								(*iterator).getEpsilon(), (*iterator).getSigma());
 					computeForce((*iterator), p);
 				}
 		}
@@ -875,7 +876,8 @@ void LCcalculateFLJ() {
 							(*iterator).getX()[2] };
 					utils::Vector<double, 3> x(x_arg);
 					utils::Vector<double, 3> v(0.0);
-					Particle p(x, v, 1);
+					Particle p(x, v, (*iterator).getM(), (*iterator).getType(),
+							(*iterator).getEpsilon(), (*iterator).getSigma());
 					computeForce((*iterator), p);
 				}
 		}
@@ -890,7 +892,8 @@ void LCcalculateFLJ() {
 							(*iterator).getX()[2] };
 					utils::Vector<double, 3> x(x_arg);
 					utils::Vector<double, 3> v(0.0);
-					Particle p(x, v, 1);
+					Particle p(x, v, (*iterator).getM(), (*iterator).getType(),
+							(*iterator).getEpsilon(), (*iterator).getSigma());
 					computeForce((*iterator), p);
 			}
 		}
@@ -905,7 +908,8 @@ void LCcalculateFLJ() {
 							(*iterator).getX()[2] };
 					utils::Vector<double, 3> x(x_arg);
 					utils::Vector<double, 3> v(0.0);
-					Particle p(x, v, 1);
+					Particle p(x, v, (*iterator).getM(), (*iterator).getType(),
+							(*iterator).getEpsilon(), (*iterator).getSigma());
 					computeForce((*iterator), p);
 			}
 		}
@@ -920,7 +924,8 @@ void LCcalculateFLJ() {
 							(*iterator).getX()[1], 0 };
 					utils::Vector<double, 3> x(x_arg);
 					utils::Vector<double, 3> v(0.0);
-					Particle p(x, v, 1);
+					Particle p(x, v, (*iterator).getM(), (*iterator).getType(),
+							(*iterator).getEpsilon(), (*iterator).getSigma());
 					computeForce((*iterator), p);
 			}
 		}
@@ -935,7 +940,8 @@ void LCcalculateFLJ() {
 							(*iterator).getX()[1], domainSize[2] };
 					utils::Vector<double, 3> x(x_arg);
 					utils::Vector<double, 3> v(0.0);
-					Particle p(x, v, 1);
+					Particle p(x, v, (*iterator).getM(), (*iterator).getType(),
+							(*iterator).getEpsilon(), (*iterator).getSigma());
 					computeForce((*iterator), p);
 			}
 		}
@@ -996,6 +1002,11 @@ void LCcalculateV() {
 void computeForce(Particle& p1, Particle& p2) {
 	utils::Vector<double, 3> tempD = p2.getX() - p1.getX();
 	double tempDNorm = tempD.L2Norm();
+
+	//Lorentz-Berthelot Mixing rule
+	double EPSILON = (p1.getEpsilon() + p2.getEpsilon())/2;
+	double SIGMA = sqrt((p1.getSigma())*(p2.getSigma()));
+
 	if (tempDNorm < R_CUTOFF) {
 		double tempDSigDivNorm = pow(SIGMA / tempDNorm, 6);
 		utils::Vector<double, 3> tempF = 24 * EPSILON * pow(1 / tempDNorm, 2)
@@ -1063,7 +1074,9 @@ void writeOutputFile(list<Particle> parList){
 				<< setw(15) << (*it).getOldF()[2]
 
 				<< setw(15) << (*it).getM()
-				<< setw(10) << (*it).getType() << endl;
+				<< setw(10) << (*it).getType()
+				<< setw(10) << (*it).getEpsilon()
+				<< setw(15) << (*it).getSigma()	<< endl;
 	}
 	file.close();
 }

@@ -14,7 +14,8 @@
 Sphere::Sphere(){}
 
 Sphere::Sphere(utils::Vector<double, 3> center1, utils::Vector<double, 3> startV1, 
-					double meanV1, double m1, int radius1, double meshWidth1, int parType){
+					double meanV1, double m1, int radius1, double meshWidth1,
+					int parType, double EPSILON, double SIGMA){
 	center = center1;
 	startV = startV1;
 	meanV = meanV1;
@@ -22,6 +23,8 @@ Sphere::Sphere(utils::Vector<double, 3> center1, utils::Vector<double, 3> startV
 	radius = radius1;
 	meshWidth = meshWidth1;
 	this->parType = parType;
+	this->EPSILON = EPSILON;
+	this->SIGMA = SIGMA;
 	/*
 //-->>	// ALTERNATIVE 1 =================================
 	int l = 2*radius + 1;
@@ -83,7 +86,7 @@ void Sphere::plot(utils::Vector<double, 3> tempCenter, int x, int y){
 	utils::Vector<double, 3> pos(a);
 
 	// Being used in the beginning --> v = startV
-	Particle p(pos, startV, m, parType);
+	Particle p(pos, startV, m, parType, EPSILON, SIGMA);
 	// BROWNIAN as well!
 	MaxwellBoltzmannDistribution(p, meanV, 2);
 	sph.push_back(p);
@@ -221,6 +224,14 @@ double& Sphere::getMeshWidth(){
 
 int& Sphere::getType(){
 	return parType;
+}
+
+double& Sphere::getEpsilon(){
+	return EPSILON;
+}
+
+double& Sphere::getSigma(){
+	return SIGMA;
 }
 
 Sphere::~Sphere() {

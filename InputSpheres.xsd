@@ -33,12 +33,17 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:complexType name="sphere_t">
 			<xs:annotation>
 			  <xs:documentation>
-				The sphere_t type consists of a set of 3 variables of a sphere.
+				The sphere_t type consists of all properties of a sphere.
 			  </xs:documentation>
 			</xs:annotation>
 		<xs:sequence>
+			<xs:element name="meshWidthS" type="xs:decimal"/>
+			<xs:element name="massS" type="xs:decimal"/>
+			<xs:element name="meanVS" type="xs:decimal"/>
 			<xs:element name="parTypeS" type="xs:int"/>
 			<xs:element name="radiussph" type="xs:int"/>
+			<xs:element name="epsilon" type="xs:decimal"/>
+			<xs:element name="sigma" type="xs:decimal"/>
 			<xs:element name="centerPos" type="centerPos_t"/>
 			<xs:element name="startVel" type="startVel_t"/>
 		</xs:sequence>
@@ -48,13 +53,10 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:complexType name="spheres_t">
 			<xs:annotation>
 			  <xs:documentation>
-				The spheres_t type consists of a set of 3 variables and a list of spheres.
+				The spheres_t type consists of a list of spheres.
 			  </xs:documentation>
 			</xs:annotation>
 		<xs:sequence>
-			<xs:element name="meshWidthS" type="xs:decimal"/>
-			<xs:element name="massS" type="xs:decimal"/>
-			<xs:element name="meanVS" type="xs:decimal"/>
 			<xs:element name="sphere" type="sphere_t" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>

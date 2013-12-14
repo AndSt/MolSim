@@ -480,6 +480,48 @@ class size3D_t: public ::xml_schema::type
 class cuboid_t: public ::xml_schema::type
 {
   public:
+  // meshWidth
+  // 
+  typedef ::xml_schema::decimal meshWidth_type;
+  typedef ::xsd::cxx::tree::traits< meshWidth_type, char, ::xsd::cxx::tree::schema_type::decimal > meshWidth_traits;
+
+  const meshWidth_type&
+  meshWidth () const;
+
+  meshWidth_type&
+  meshWidth ();
+
+  void
+  meshWidth (const meshWidth_type& x);
+
+  // mass
+  // 
+  typedef ::xml_schema::decimal mass_type;
+  typedef ::xsd::cxx::tree::traits< mass_type, char, ::xsd::cxx::tree::schema_type::decimal > mass_traits;
+
+  const mass_type&
+  mass () const;
+
+  mass_type&
+  mass ();
+
+  void
+  mass (const mass_type& x);
+
+  // meanV
+  // 
+  typedef ::xml_schema::decimal meanV_type;
+  typedef ::xsd::cxx::tree::traits< meanV_type, char, ::xsd::cxx::tree::schema_type::decimal > meanV_traits;
+
+  const meanV_type&
+  meanV () const;
+
+  meanV_type&
+  meanV ();
+
+  void
+  meanV (const meanV_type& x);
+
   // parTypeC
   // 
   typedef ::xml_schema::int_ parTypeC_type;
@@ -493,6 +535,34 @@ class cuboid_t: public ::xml_schema::type
 
   void
   parTypeC (const parTypeC_type& x);
+
+  // epsilon
+  // 
+  typedef ::xml_schema::decimal epsilon_type;
+  typedef ::xsd::cxx::tree::traits< epsilon_type, char, ::xsd::cxx::tree::schema_type::decimal > epsilon_traits;
+
+  const epsilon_type&
+  epsilon () const;
+
+  epsilon_type&
+  epsilon ();
+
+  void
+  epsilon (const epsilon_type& x);
+
+  // sigma
+  // 
+  typedef ::xml_schema::decimal sigma_type;
+  typedef ::xsd::cxx::tree::traits< sigma_type, char, ::xsd::cxx::tree::schema_type::decimal > sigma_traits;
+
+  const sigma_type&
+  sigma () const;
+
+  sigma_type&
+  sigma ();
+
+  void
+  sigma (const sigma_type& x);
 
   // originVector
   // 
@@ -547,12 +617,22 @@ class cuboid_t: public ::xml_schema::type
 
   // Constructors.
   //
-  cuboid_t (const parTypeC_type&,
+  cuboid_t (const meshWidth_type&,
+            const mass_type&,
+            const meanV_type&,
+            const parTypeC_type&,
+            const epsilon_type&,
+            const sigma_type&,
             const originVector_type&,
             const startVelocity_type&,
             const size3D_type&);
 
-  cuboid_t (const parTypeC_type&,
+  cuboid_t (const meshWidth_type&,
+            const mass_type&,
+            const meanV_type&,
+            const parTypeC_type&,
+            const epsilon_type&,
+            const sigma_type&,
             ::std::auto_ptr< originVector_type >&,
             ::std::auto_ptr< startVelocity_type >&,
             ::std::auto_ptr< size3D_type >&);
@@ -580,7 +660,12 @@ class cuboid_t: public ::xml_schema::type
          ::xml_schema::flags);
 
   protected:
+  ::xsd::cxx::tree::one< meshWidth_type > meshWidth_;
+  ::xsd::cxx::tree::one< mass_type > mass_;
+  ::xsd::cxx::tree::one< meanV_type > meanV_;
   ::xsd::cxx::tree::one< parTypeC_type > parTypeC_;
+  ::xsd::cxx::tree::one< epsilon_type > epsilon_;
+  ::xsd::cxx::tree::one< sigma_type > sigma_;
   ::xsd::cxx::tree::one< originVector_type > originVector_;
   ::xsd::cxx::tree::one< startVelocity_type > startVelocity_;
   ::xsd::cxx::tree::one< size3D_type > size3D_;
@@ -589,48 +674,6 @@ class cuboid_t: public ::xml_schema::type
 class cuboids_t: public ::xml_schema::type
 {
   public:
-  // meshWidth
-  // 
-  typedef ::xml_schema::decimal meshWidth_type;
-  typedef ::xsd::cxx::tree::traits< meshWidth_type, char, ::xsd::cxx::tree::schema_type::decimal > meshWidth_traits;
-
-  const meshWidth_type&
-  meshWidth () const;
-
-  meshWidth_type&
-  meshWidth ();
-
-  void
-  meshWidth (const meshWidth_type& x);
-
-  // mass
-  // 
-  typedef ::xml_schema::decimal mass_type;
-  typedef ::xsd::cxx::tree::traits< mass_type, char, ::xsd::cxx::tree::schema_type::decimal > mass_traits;
-
-  const mass_type&
-  mass () const;
-
-  mass_type&
-  mass ();
-
-  void
-  mass (const mass_type& x);
-
-  // meanV
-  // 
-  typedef ::xml_schema::decimal meanV_type;
-  typedef ::xsd::cxx::tree::traits< meanV_type, char, ::xsd::cxx::tree::schema_type::decimal > meanV_traits;
-
-  const meanV_type&
-  meanV () const;
-
-  meanV_type&
-  meanV ();
-
-  void
-  meanV (const meanV_type& x);
-
   // cuboid
   // 
   typedef ::cuboid_t cuboid_type;
@@ -650,9 +693,7 @@ class cuboids_t: public ::xml_schema::type
 
   // Constructors.
   //
-  cuboids_t (const meshWidth_type&,
-             const mass_type&,
-             const meanV_type&);
+  cuboids_t ();
 
   cuboids_t (const ::xercesc::DOMElement& e,
              ::xml_schema::flags f = 0,
@@ -677,9 +718,6 @@ class cuboids_t: public ::xml_schema::type
          ::xml_schema::flags);
 
   protected:
-  ::xsd::cxx::tree::one< meshWidth_type > meshWidth_;
-  ::xsd::cxx::tree::one< mass_type > mass_;
-  ::xsd::cxx::tree::one< meanV_type > meanV_;
   cuboid_sequence cuboid_;
 };
 

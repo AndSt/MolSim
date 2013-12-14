@@ -37,6 +37,16 @@ private:
 	 */
 	int type;
 
+	/**
+	 * For Lennard Jones Force
+	 */
+	double EPSILON;
+
+	/**
+	 * For Lennard Jones Force
+	 */
+	double SIGMA;
+
 public:
 	Particle(int type = 0);
 
@@ -48,7 +58,8 @@ public:
 			utils::Vector<double, 3> x_arg,
 	        utils::Vector<double, 3> v_arg,
 	        double m_arg,
-	        int type = 0
+	        int type,
+	        double EPSILON, double SIGMA
 	);
 
 	virtual ~Particle();
@@ -66,6 +77,10 @@ public:
 	double& getM();
 
 	int& getType();
+
+	double& getEpsilon();
+
+	double& getSigma();
 
 	bool operator==(Particle& other);
 

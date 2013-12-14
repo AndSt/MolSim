@@ -109,12 +109,15 @@ void ParticleGenerator::extractCuboids(const string filename)
   	{
 		cuboidList.clear();
 		auto_ptr<cuboids_t> h (cuboids (filename, xml_schema::flags::dont_validate));
-		double mesh = h->meshWidth();
-		double m = h->mass();
-		double meanV = h->meanV();
 	
 		cuboids_t::cuboid_const_iterator i;
 	    	for (i = h->cuboid().begin(); i != h->cuboid().end(); ++i){
+	    		double mesh = i->meshWidth();
+				double m = i->mass();
+				double meanV = i->meanV();
+				double typeC = i->parTypeC();
+				double EPSILON = i->epsilon();
+				double SIGMA = i->sigma();
 				double a[] = {i->originVector().oriX(), i->originVector().oriY(), i->originVector().oriZ()};
 				utils::Vector<double, 3> ori(a);
 				double b[] = {i->startVelocity().velX(), i->startVelocity().velY(), i->startVelocity().velZ()};
@@ -122,9 +125,9 @@ void ParticleGenerator::extractCuboids(const string filename)
 				int hei = i->size3D().height();
 				int w = i->size3D().width();
 				int d = i->size3D().depth();
-				double typeC = i->parTypeC();
 
-				Cuboid c(hei, w, d, mesh, m, ori, vel, meanV, typeC);
+
+				Cuboid c(hei, w, d, mesh, m, ori, vel, meanV, typeC, EPSILON, SIGMA);
 				cuboidList.push_back(c);
 	    	}
 	
@@ -141,20 +144,24 @@ void ParticleGenerator::extractSpheres(const string filename){
   	{
 		sphereList.clear();
 		auto_ptr<spheres_t> h (spheres (filename, xml_schema::flags::dont_validate));
-		double mesh = h->meshWidthS();
-		double m = h->massS();
-		double meanV = h->meanVS();
-	
+
 		spheres_t::sphere_const_iterator i;
 	    	for (i = h->sphere().begin(); i != h->sphere().end(); ++i){
+	    		double mesh = i->meshWidthS();
+				double m = i->massS();
+				double meanV = i->meanVS();
+				double typeS = i->parTypeS();
+				int radiuss = i->radiussph();
+				double EPSILON = i->epsilon();
+				double SIGMA = i->sigma();
 				double a[] = {i->centerPos().x(), i->centerPos().y(), i->centerPos().z()};
 				utils::Vector<double, 3> centerP(a);
 				double b[] = {i->startVel().vX(), i->startVel().vY(), i->startVel().vZ()};
 				utils::Vector<double, 3> vel(b);
-				int radiuss = i->radiussph();
-				double typeS = i->parTypeS();
 
-				Sphere s(centerP, vel, meanV, m, radiuss, mesh, typeS);
+
+
+				Sphere s(centerP, vel, meanV, m, radiuss, mesh, typeS, EPSILON, SIGMA);
 				sphereList.push_back(s);
 	    	}
 	
@@ -181,7 +188,7 @@ void ParticleGenerator::extractParticles(const string filename)
 				double m = i->mass();
 				double typeP = i->parTypeP();
 
-				Particle p(pos, vel, m, typeP);
+				Particle p(pos, vel, m, typeP, 5.0, 1.0);
 				particleList.push_back(p);
 	    	}
 	
@@ -193,8 +200,7 @@ void ParticleGenerator::extractParticles(const string filename)
   	}
 }
 
-void ParticleGenerator::extractSetting(double& start_time, double& end_time, 
-				double& delta_t, double& EPSILON, double& SIGMA,
+void ParticleGenerator::extractSetting(double& start_time, double& end_time, double& delta_t,
 				std::list<string>& inputNames, std::list<string>& inputTypes, 
 				string& outputMask, int& outputFreq,
 				utils::Vector<double, 3>& domainSize, double& r_cutoff,
@@ -208,9 +214,6 @@ void ParticleGenerator::extractSetting(double& start_time, double& end_time,
 		delta_t = h->delta_t();
 		inputSize = h->numberOfTypes();
 		g_const = h->gconst();
-
-		EPSILON = h->ljf().epsilon();
-		SIGMA = h->ljf().sigma();
 
 		inputNames.clear();
 		inputTypes.clear();

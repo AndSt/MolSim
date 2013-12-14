@@ -23,14 +23,14 @@ void ParticleGeneratorTest::setUp() {
 	//Set up cuboid1
 	utils::Vector<double, 3> oriXYZ(0.0);
 	utils::Vector<double, 3> startVel(0.0);
-	cuboid1 = Cuboid(8, 40, 1, 1.1225, 1, oriXYZ, startVel, 0.1, 0);
+	cuboid1 = Cuboid(8, 40, 1, 1.1225, 1, oriXYZ, startVel, 0.1, 0, 5.0, 1.0);
 
 	//Set up cuboid2
 	double args[3] = { 15.0, 15.0, 0.0 };
 	oriXYZ = utils::Vector<double, 3>(args);
 	double argz[3] = { 0.0, -10.0, 0.0 };
 	startVel = utils::Vector<double, 3>(argz);
-	cuboid2 = Cuboid(8, 8, 1, 1.1225, 1, oriXYZ, startVel, 0.1, 1);
+	cuboid2 = Cuboid(8, 8, 1, 1.1225, 1, oriXYZ, startVel, 0.1, 1, 5.0, 1.0);
 
 	//set up the particle generator
 	std::string fileName = "src/tests/testFiles/generator.txt";
@@ -44,28 +44,28 @@ void ParticleGeneratorTest::setUp() {
 	double dataV1[3] = {0.0, 0.0, 0.0};
 	utils::Vector<double, 3> x1(dataX1);
 	utils::Vector<double, 3> v1(dataV1); 
-	Particle par1(x1, v1, 1.0, 0);
+	Particle par1(x1, v1, 1.0, 0, 5.0, 1.0);
 
 	//Set up par2
 	double dataX2[3] = {0.0, 1.0, 0.0};
 	double dataV2[3] = {-1.0, 0.0, 0.0};
 	utils::Vector<double, 3> x2(dataX2);
 	utils::Vector<double, 3> v2(dataV2); 
-	Particle par2(x2, v2, 3.0e-6, 0);
+	Particle par2(x2, v2, 3.0e-6, 0, 5.0, 1.0);
 
 	//Set up par3
 	double dataX3[3] = {0.0, 5.36, 0.0};
 	double dataV3[3] = {-0.425, 0.0, 0.0};
 	utils::Vector<double, 3> x3(dataX3);
 	utils::Vector<double, 3> v3(dataV3); 
-	Particle par3(x3, v3, 9.55e-4, 0);
+	Particle par3(x3, v3, 9.55e-4, 0, 5.0, 1.0);
 
 	//Set up par4
 	double dataX4[3] = {34.75, 0.0, 0.0};
 	double dataV4[3] = {0.0, 0.0296, 0.0};
 	utils::Vector<double, 3> x4(dataX4);
 	utils::Vector<double, 3> v4(dataV4); 
-	Particle par4(x4, v4, 1.0e-14, 0);
+	Particle par4(x4, v4, 1.0e-14, 0, 5.0, 1.0);
 
 	//Set up particles
 	particles.clear();
@@ -111,6 +111,9 @@ void ParticleGeneratorTest::testReadCuboids() {
 	CPPUNIT_ASSERT(cuboid1.getOrigin() == testCuboid.getOrigin());
 	CPPUNIT_ASSERT(cuboid1.getStartV() == testCuboid.getStartV());
 	CPPUNIT_ASSERT(cuboid1.getMeanV() == testCuboid.getMeanV());
+	CPPUNIT_ASSERT(cuboid1.getType() == testCuboid.getType());
+	CPPUNIT_ASSERT(cuboid1.getEpsilon() == testCuboid.getEpsilon());
+	CPPUNIT_ASSERT(cuboid1.getSigma() == testCuboid.getSigma());
 
 	//Check second cuboid
 	testCuboid = *(++generator.getCuboidList().begin());
@@ -122,6 +125,9 @@ void ParticleGeneratorTest::testReadCuboids() {
 	CPPUNIT_ASSERT(cuboid2.getOrigin() == testCuboid.getOrigin());
 	CPPUNIT_ASSERT(cuboid2.getStartV() == testCuboid.getStartV());
 	CPPUNIT_ASSERT(cuboid2.getMeanV() == testCuboid.getMeanV());
+	CPPUNIT_ASSERT(cuboid2.getType() == testCuboid.getType());
+	CPPUNIT_ASSERT(cuboid2.getEpsilon() == testCuboid.getEpsilon());
+	CPPUNIT_ASSERT(cuboid2.getSigma() == testCuboid.getSigma());
 }
 
 void ParticleGeneratorTest::testExtractCuboids(){
@@ -141,6 +147,8 @@ void ParticleGeneratorTest::testExtractCuboids(){
 	CPPUNIT_ASSERT(testCuboid.getStartV()==vv);
 	CPPUNIT_ASSERT(testCuboid.getMeanV()==0.1);
 	CPPUNIT_ASSERT(testCuboid.getType() == 0);
+	CPPUNIT_ASSERT(testCuboid.getEpsilon() == 5.0);
+	CPPUNIT_ASSERT(testCuboid.getSigma() == 1.0);
 
 	//Check second cuboid
 	testCuboid = *(++generator.getCuboidList().begin());
@@ -157,6 +165,8 @@ void ParticleGeneratorTest::testExtractCuboids(){
 	CPPUNIT_ASSERT(testCuboid.getStartV()==vv);
 	CPPUNIT_ASSERT(testCuboid.getMeanV()==0.1);
 	CPPUNIT_ASSERT(testCuboid.getType() == 1);
+	CPPUNIT_ASSERT(testCuboid.getEpsilon() == 5.0);
+	CPPUNIT_ASSERT(testCuboid.getSigma() == 1.0);
 }
 
 
@@ -183,6 +193,8 @@ void ParticleGeneratorTest::testExtractSpheres(){
 	CPPUNIT_ASSERT(sp.getStartV()[1]==-10);
 	CPPUNIT_ASSERT(sp.getStartV()[2]==0);
 	CPPUNIT_ASSERT(sp.getType()==0);
+	CPPUNIT_ASSERT(sp.getEpsilon() == 5.0);
+	CPPUNIT_ASSERT(sp.getSigma() == 1.0);
 }
 	
 void ParticleGeneratorTest::testExtractParticles(){
@@ -196,14 +208,15 @@ void ParticleGeneratorTest::testExtractParticles(){
 		CPPUNIT_ASSERT(par.getV()==testPar.getV());
 		CPPUNIT_ASSERT(par.getM()==testPar.getM());
 		CPPUNIT_ASSERT(par.getType()==testPar.getType());
-		
+		CPPUNIT_ASSERT(par.getEpsilon()==testPar.getEpsilon());
+		CPPUNIT_ASSERT(par.getSigma()==testPar.getSigma());
 		++iterator;
 	}
 
 }
 	
 void ParticleGeneratorTest::testExtractSetting(){
-	double start_timeT, end_timeT, delta_tT, EPSILONT, SIGMAT; 
+	double start_timeT, end_timeT, delta_tT;
 	std::list<std::string> inputNamesT, inputTypesT;
 	string outputMaskT;
 	int outputFreqT;
@@ -213,16 +226,14 @@ void ParticleGeneratorTest::testExtractSetting(){
 	double gT;
 	int inputSizeT;
 	
-	generator.extractSetting(start_timeT, end_timeT, delta_tT, EPSILONT,
-	 			SIGMAT, inputNamesT, inputTypesT, outputMaskT, 
+	generator.extractSetting(start_timeT, end_timeT, delta_tT,
+				inputNamesT, inputTypesT, outputMaskT,
 				outputFreqT, domainSizeT, rcutoffT, cond, gT, inputSize);
 
 	CPPUNIT_ASSERT(start_time==start_timeT);
 	CPPUNIT_ASSERT(end_time==end_timeT);
 	CPPUNIT_ASSERT(delta_t==delta_tT);
 	CPPUNIT_ASSERT(g==gT);
-	CPPUNIT_ASSERT(inputSize==inputSizeT);
-	CPPUNIT_ASSERT(EPSILON==EPSILONT);
 	CPPUNIT_ASSERT(inputSize==inputSizeT);
 
 	list<string>::iterator itN = inputNamesT.begin();

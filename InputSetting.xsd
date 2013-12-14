@@ -2,18 +2,6 @@
 <xs:schema 
 xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<!-- definition of small complex types -->
-	<xs:complexType name="ljf_t">
-			<xs:annotation>
-			  <xs:documentation>
-				The ljf_t (Lennard-Jones Force) type consists of a set of 2 constants epsilon and sigma.
-			  </xs:documentation>
-			</xs:annotation>
-		<xs:sequence>
-			<xs:element name="epsilon" type="xs:decimal"/>
-			<xs:element name="sigma" type="xs:decimal"/>
-		</xs:sequence>
-	</xs:complexType>
-	
 	<xs:complexType name="lc_t">
 			<xs:annotation>
 			  <xs:documentation>
@@ -118,7 +106,8 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:complexType name="pse_t">
 			<xs:annotation>
 			  <xs:documentation>
-				The pse_t type consists of all information needed for a simple simulation.
+				The pse_t type consists of all general information needed 
+				for a simple simulation.
 			  </xs:documentation>
 			</xs:annotation>
 		<xs:sequence>
@@ -127,7 +116,6 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 			<xs:element name="delta_t" type="xs:decimal"/>
 			<xs:element name="numberOfTypes" type="xs:int"/>
 			<xs:element name="gconst" type="xs:decimal"/>
-			<xs:element name="ljf" type="ljf_t"/>
 			<xs:element name="lc" type="lc_t"/>
 			<xs:element name="thermo" type="thermo_t"/>
 			<xs:element name="inputfile" type="inputfile_t" maxOccurs="unbounded"/>

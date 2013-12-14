@@ -217,6 +217,60 @@ depth (const depth_type& x)
 // cuboid_t
 // 
 
+const cuboid_t::meshWidth_type& cuboid_t::
+meshWidth () const
+{
+  return this->meshWidth_.get ();
+}
+
+cuboid_t::meshWidth_type& cuboid_t::
+meshWidth ()
+{
+  return this->meshWidth_.get ();
+}
+
+void cuboid_t::
+meshWidth (const meshWidth_type& x)
+{
+  this->meshWidth_.set (x);
+}
+
+const cuboid_t::mass_type& cuboid_t::
+mass () const
+{
+  return this->mass_.get ();
+}
+
+cuboid_t::mass_type& cuboid_t::
+mass ()
+{
+  return this->mass_.get ();
+}
+
+void cuboid_t::
+mass (const mass_type& x)
+{
+  this->mass_.set (x);
+}
+
+const cuboid_t::meanV_type& cuboid_t::
+meanV () const
+{
+  return this->meanV_.get ();
+}
+
+cuboid_t::meanV_type& cuboid_t::
+meanV ()
+{
+  return this->meanV_.get ();
+}
+
+void cuboid_t::
+meanV (const meanV_type& x)
+{
+  this->meanV_.set (x);
+}
+
 const cuboid_t::parTypeC_type& cuboid_t::
 parTypeC () const
 {
@@ -233,6 +287,42 @@ void cuboid_t::
 parTypeC (const parTypeC_type& x)
 {
   this->parTypeC_.set (x);
+}
+
+const cuboid_t::epsilon_type& cuboid_t::
+epsilon () const
+{
+  return this->epsilon_.get ();
+}
+
+cuboid_t::epsilon_type& cuboid_t::
+epsilon ()
+{
+  return this->epsilon_.get ();
+}
+
+void cuboid_t::
+epsilon (const epsilon_type& x)
+{
+  this->epsilon_.set (x);
+}
+
+const cuboid_t::sigma_type& cuboid_t::
+sigma () const
+{
+  return this->sigma_.get ();
+}
+
+cuboid_t::sigma_type& cuboid_t::
+sigma ()
+{
+  return this->sigma_.get ();
+}
+
+void cuboid_t::
+sigma (const sigma_type& x)
+{
+  this->sigma_.set (x);
 }
 
 const cuboid_t::originVector_type& cuboid_t::
@@ -310,60 +400,6 @@ size3D (::std::auto_ptr< size3D_type > x)
 
 // cuboids_t
 // 
-
-const cuboids_t::meshWidth_type& cuboids_t::
-meshWidth () const
-{
-  return this->meshWidth_.get ();
-}
-
-cuboids_t::meshWidth_type& cuboids_t::
-meshWidth ()
-{
-  return this->meshWidth_.get ();
-}
-
-void cuboids_t::
-meshWidth (const meshWidth_type& x)
-{
-  this->meshWidth_.set (x);
-}
-
-const cuboids_t::mass_type& cuboids_t::
-mass () const
-{
-  return this->mass_.get ();
-}
-
-cuboids_t::mass_type& cuboids_t::
-mass ()
-{
-  return this->mass_.get ();
-}
-
-void cuboids_t::
-mass (const mass_type& x)
-{
-  this->mass_.set (x);
-}
-
-const cuboids_t::meanV_type& cuboids_t::
-meanV () const
-{
-  return this->meanV_.get ();
-}
-
-cuboids_t::meanV_type& cuboids_t::
-meanV ()
-{
-  return this->meanV_.get ();
-}
-
-void cuboids_t::
-meanV (const meanV_type& x)
-{
-  this->meanV_.set (x);
-}
 
 const cuboids_t::cuboid_sequence& cuboids_t::
 cuboid () const
@@ -753,12 +789,22 @@ size3D_t::
 //
 
 cuboid_t::
-cuboid_t (const parTypeC_type& parTypeC,
+cuboid_t (const meshWidth_type& meshWidth,
+          const mass_type& mass,
+          const meanV_type& meanV,
+          const parTypeC_type& parTypeC,
+          const epsilon_type& epsilon,
+          const sigma_type& sigma,
           const originVector_type& originVector,
           const startVelocity_type& startVelocity,
           const size3D_type& size3D)
 : ::xml_schema::type (),
+  meshWidth_ (meshWidth, ::xml_schema::flags (), this),
+  mass_ (mass, ::xml_schema::flags (), this),
+  meanV_ (meanV, ::xml_schema::flags (), this),
   parTypeC_ (parTypeC, ::xml_schema::flags (), this),
+  epsilon_ (epsilon, ::xml_schema::flags (), this),
+  sigma_ (sigma, ::xml_schema::flags (), this),
   originVector_ (originVector, ::xml_schema::flags (), this),
   startVelocity_ (startVelocity, ::xml_schema::flags (), this),
   size3D_ (size3D, ::xml_schema::flags (), this)
@@ -766,12 +812,22 @@ cuboid_t (const parTypeC_type& parTypeC,
 }
 
 cuboid_t::
-cuboid_t (const parTypeC_type& parTypeC,
+cuboid_t (const meshWidth_type& meshWidth,
+          const mass_type& mass,
+          const meanV_type& meanV,
+          const parTypeC_type& parTypeC,
+          const epsilon_type& epsilon,
+          const sigma_type& sigma,
           ::std::auto_ptr< originVector_type >& originVector,
           ::std::auto_ptr< startVelocity_type >& startVelocity,
           ::std::auto_ptr< size3D_type >& size3D)
 : ::xml_schema::type (),
+  meshWidth_ (meshWidth, ::xml_schema::flags (), this),
+  mass_ (mass, ::xml_schema::flags (), this),
+  meanV_ (meanV, ::xml_schema::flags (), this),
   parTypeC_ (parTypeC, ::xml_schema::flags (), this),
+  epsilon_ (epsilon, ::xml_schema::flags (), this),
+  sigma_ (sigma, ::xml_schema::flags (), this),
   originVector_ (originVector, ::xml_schema::flags (), this),
   startVelocity_ (startVelocity, ::xml_schema::flags (), this),
   size3D_ (size3D, ::xml_schema::flags (), this)
@@ -783,7 +839,12 @@ cuboid_t (const cuboid_t& x,
           ::xml_schema::flags f,
           ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
+  meshWidth_ (x.meshWidth_, f, this),
+  mass_ (x.mass_, f, this),
+  meanV_ (x.meanV_, f, this),
   parTypeC_ (x.parTypeC_, f, this),
+  epsilon_ (x.epsilon_, f, this),
+  sigma_ (x.sigma_, f, this),
   originVector_ (x.originVector_, f, this),
   startVelocity_ (x.startVelocity_, f, this),
   size3D_ (x.size3D_, f, this)
@@ -795,7 +856,12 @@ cuboid_t (const ::xercesc::DOMElement& e,
           ::xml_schema::flags f,
           ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  meshWidth_ (f, this),
+  mass_ (f, this),
+  meanV_ (f, this),
   parTypeC_ (f, this),
+  epsilon_ (f, this),
+  sigma_ (f, this),
   originVector_ (f, this),
   startVelocity_ (f, this),
   size3D_ (f, this)
@@ -817,6 +883,39 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     const ::xsd::cxx::xml::qualified_name< char > n (
       ::xsd::cxx::xml::dom::name< char > (i));
 
+    // meshWidth
+    //
+    if (n.name () == "meshWidth" && n.namespace_ ().empty ())
+    {
+      if (!meshWidth_.present ())
+      {
+        this->meshWidth_.set (meshWidth_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // mass
+    //
+    if (n.name () == "mass" && n.namespace_ ().empty ())
+    {
+      if (!mass_.present ())
+      {
+        this->mass_.set (mass_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // meanV
+    //
+    if (n.name () == "meanV" && n.namespace_ ().empty ())
+    {
+      if (!meanV_.present ())
+      {
+        this->meanV_.set (meanV_traits::create (i, f, this));
+        continue;
+      }
+    }
+
     // parTypeC
     //
     if (n.name () == "parTypeC" && n.namespace_ ().empty ())
@@ -824,6 +923,28 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!parTypeC_.present ())
       {
         this->parTypeC_.set (parTypeC_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // epsilon
+    //
+    if (n.name () == "epsilon" && n.namespace_ ().empty ())
+    {
+      if (!epsilon_.present ())
+      {
+        this->epsilon_.set (epsilon_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // sigma
+    //
+    if (n.name () == "sigma" && n.namespace_ ().empty ())
+    {
+      if (!sigma_.present ())
+      {
+        this->sigma_.set (sigma_traits::create (i, f, this));
         continue;
       }
     }
@@ -873,10 +994,45 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     break;
   }
 
+  if (!meshWidth_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "meshWidth",
+      "");
+  }
+
+  if (!mass_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "mass",
+      "");
+  }
+
+  if (!meanV_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "meanV",
+      "");
+  }
+
   if (!parTypeC_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
       "parTypeC",
+      "");
+  }
+
+  if (!epsilon_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "epsilon",
+      "");
+  }
+
+  if (!sigma_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "sigma",
       "");
   }
 
@@ -918,13 +1074,8 @@ cuboid_t::
 //
 
 cuboids_t::
-cuboids_t (const meshWidth_type& meshWidth,
-           const mass_type& mass,
-           const meanV_type& meanV)
+cuboids_t ()
 : ::xml_schema::type (),
-  meshWidth_ (meshWidth, ::xml_schema::flags (), this),
-  mass_ (mass, ::xml_schema::flags (), this),
-  meanV_ (meanV, ::xml_schema::flags (), this),
   cuboid_ (::xml_schema::flags (), this)
 {
 }
@@ -934,9 +1085,6 @@ cuboids_t (const cuboids_t& x,
            ::xml_schema::flags f,
            ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
-  meshWidth_ (x.meshWidth_, f, this),
-  mass_ (x.mass_, f, this),
-  meanV_ (x.meanV_, f, this),
   cuboid_ (x.cuboid_, f, this)
 {
 }
@@ -946,9 +1094,6 @@ cuboids_t (const ::xercesc::DOMElement& e,
            ::xml_schema::flags f,
            ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
-  meshWidth_ (f, this),
-  mass_ (f, this),
-  meanV_ (f, this),
   cuboid_ (f, this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
@@ -968,39 +1113,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     const ::xsd::cxx::xml::qualified_name< char > n (
       ::xsd::cxx::xml::dom::name< char > (i));
 
-    // meshWidth
-    //
-    if (n.name () == "meshWidth" && n.namespace_ ().empty ())
-    {
-      if (!meshWidth_.present ())
-      {
-        this->meshWidth_.set (meshWidth_traits::create (i, f, this));
-        continue;
-      }
-    }
-
-    // mass
-    //
-    if (n.name () == "mass" && n.namespace_ ().empty ())
-    {
-      if (!mass_.present ())
-      {
-        this->mass_.set (mass_traits::create (i, f, this));
-        continue;
-      }
-    }
-
-    // meanV
-    //
-    if (n.name () == "meanV" && n.namespace_ ().empty ())
-    {
-      if (!meanV_.present ())
-      {
-        this->meanV_.set (meanV_traits::create (i, f, this));
-        continue;
-      }
-    }
-
     // cuboid
     //
     if (n.name () == "cuboid" && n.namespace_ ().empty ())
@@ -1013,27 +1125,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     }
 
     break;
-  }
-
-  if (!meshWidth_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "meshWidth",
-      "");
-  }
-
-  if (!mass_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "mass",
-      "");
-  }
-
-  if (!meanV_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "meanV",
-      "");
   }
 }
 

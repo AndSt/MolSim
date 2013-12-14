@@ -4,13 +4,15 @@
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:noNamespaceSchemaLocation="InputSpheres.xsd">
 
-	<meshWidthS>1.1225</meshWidthS>
-	<massS>1.0</massS>
-	<meanVS>0.1</meanVS>
-	
 	<sphere>
+		<meshWidthS>1.2</meshWidthS>
+		<massS>1.0</massS>
+		<meanVS>0.1</meanVS>
 		<parTypeS>1</parTypeS>
 		<radiussph>10</radiussph>
+		<epsilon>1.0</epsilon>
+		<sigma>1</sigma>
+		
 		<centerPos>
 			<x>30.0</x>
 			<y>150.0</y>

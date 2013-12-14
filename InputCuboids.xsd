@@ -46,11 +46,16 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:complexType name="cuboid_t">
 			<xs:annotation>
 			  <xs:documentation>
-				The cuboid_t type consists of a set of 3 variables of a cuboid.
+				The cuboid_t type consists of a set of properties of a cuboid.
 			  </xs:documentation>
 			</xs:annotation>
 		<xs:sequence>
+			<xs:element name="meshWidth" type="xs:decimal"/>
+			<xs:element name="mass" type="xs:decimal"/>
+			<xs:element name="meanV" type="xs:decimal"/>
 			<xs:element name="parTypeC" type="xs:int"/>
+			<xs:element name="epsilon" type="xs:decimal"/>
+			<xs:element name="sigma" type="xs:decimal"/>
 			<xs:element name="originVector" type="ori_t"/>
 			<xs:element name="startVelocity" type="startV_t"/>
 			<xs:element name="size3D" type="size3D_t"/>
@@ -61,13 +66,10 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:complexType name="cuboids_t">
 			<xs:annotation>
 			  <xs:documentation>
-				The cuboids_t type consists of a set of 3 variables and a list of cuboids.
+				The cuboids_t type consists of a list of cuboids.
 			  </xs:documentation>
 			</xs:annotation>
 		<xs:sequence>
-			<xs:element name="meshWidth" type="xs:decimal"/>
-			<xs:element name="mass" type="xs:decimal"/>
-			<xs:element name="meanV" type="xs:decimal"/>
 			<xs:element name="cuboid" type="cuboid_t" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>

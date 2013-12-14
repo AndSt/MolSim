@@ -159,6 +159,60 @@ vZ (const vZ_type& x)
 // sphere_t
 // 
 
+const sphere_t::meshWidthS_type& sphere_t::
+meshWidthS () const
+{
+  return this->meshWidthS_.get ();
+}
+
+sphere_t::meshWidthS_type& sphere_t::
+meshWidthS ()
+{
+  return this->meshWidthS_.get ();
+}
+
+void sphere_t::
+meshWidthS (const meshWidthS_type& x)
+{
+  this->meshWidthS_.set (x);
+}
+
+const sphere_t::massS_type& sphere_t::
+massS () const
+{
+  return this->massS_.get ();
+}
+
+sphere_t::massS_type& sphere_t::
+massS ()
+{
+  return this->massS_.get ();
+}
+
+void sphere_t::
+massS (const massS_type& x)
+{
+  this->massS_.set (x);
+}
+
+const sphere_t::meanVS_type& sphere_t::
+meanVS () const
+{
+  return this->meanVS_.get ();
+}
+
+sphere_t::meanVS_type& sphere_t::
+meanVS ()
+{
+  return this->meanVS_.get ();
+}
+
+void sphere_t::
+meanVS (const meanVS_type& x)
+{
+  this->meanVS_.set (x);
+}
+
 const sphere_t::parTypeS_type& sphere_t::
 parTypeS () const
 {
@@ -193,6 +247,42 @@ void sphere_t::
 radiussph (const radiussph_type& x)
 {
   this->radiussph_.set (x);
+}
+
+const sphere_t::epsilon_type& sphere_t::
+epsilon () const
+{
+  return this->epsilon_.get ();
+}
+
+sphere_t::epsilon_type& sphere_t::
+epsilon ()
+{
+  return this->epsilon_.get ();
+}
+
+void sphere_t::
+epsilon (const epsilon_type& x)
+{
+  this->epsilon_.set (x);
+}
+
+const sphere_t::sigma_type& sphere_t::
+sigma () const
+{
+  return this->sigma_.get ();
+}
+
+sphere_t::sigma_type& sphere_t::
+sigma ()
+{
+  return this->sigma_.get ();
+}
+
+void sphere_t::
+sigma (const sigma_type& x)
+{
+  this->sigma_.set (x);
 }
 
 const sphere_t::centerPos_type& sphere_t::
@@ -246,60 +336,6 @@ startVel (::std::auto_ptr< startVel_type > x)
 
 // spheres_t
 // 
-
-const spheres_t::meshWidthS_type& spheres_t::
-meshWidthS () const
-{
-  return this->meshWidthS_.get ();
-}
-
-spheres_t::meshWidthS_type& spheres_t::
-meshWidthS ()
-{
-  return this->meshWidthS_.get ();
-}
-
-void spheres_t::
-meshWidthS (const meshWidthS_type& x)
-{
-  this->meshWidthS_.set (x);
-}
-
-const spheres_t::massS_type& spheres_t::
-massS () const
-{
-  return this->massS_.get ();
-}
-
-spheres_t::massS_type& spheres_t::
-massS ()
-{
-  return this->massS_.get ();
-}
-
-void spheres_t::
-massS (const massS_type& x)
-{
-  this->massS_.set (x);
-}
-
-const spheres_t::meanVS_type& spheres_t::
-meanVS () const
-{
-  return this->meanVS_.get ();
-}
-
-spheres_t::meanVS_type& spheres_t::
-meanVS ()
-{
-  return this->meanVS_.get ();
-}
-
-void spheres_t::
-meanVS (const meanVS_type& x)
-{
-  this->meanVS_.set (x);
-}
 
 const spheres_t::sphere_sequence& spheres_t::
 sphere () const
@@ -568,26 +604,46 @@ startVel_t::
 //
 
 sphere_t::
-sphere_t (const parTypeS_type& parTypeS,
+sphere_t (const meshWidthS_type& meshWidthS,
+          const massS_type& massS,
+          const meanVS_type& meanVS,
+          const parTypeS_type& parTypeS,
           const radiussph_type& radiussph,
+          const epsilon_type& epsilon,
+          const sigma_type& sigma,
           const centerPos_type& centerPos,
           const startVel_type& startVel)
 : ::xml_schema::type (),
+  meshWidthS_ (meshWidthS, ::xml_schema::flags (), this),
+  massS_ (massS, ::xml_schema::flags (), this),
+  meanVS_ (meanVS, ::xml_schema::flags (), this),
   parTypeS_ (parTypeS, ::xml_schema::flags (), this),
   radiussph_ (radiussph, ::xml_schema::flags (), this),
+  epsilon_ (epsilon, ::xml_schema::flags (), this),
+  sigma_ (sigma, ::xml_schema::flags (), this),
   centerPos_ (centerPos, ::xml_schema::flags (), this),
   startVel_ (startVel, ::xml_schema::flags (), this)
 {
 }
 
 sphere_t::
-sphere_t (const parTypeS_type& parTypeS,
+sphere_t (const meshWidthS_type& meshWidthS,
+          const massS_type& massS,
+          const meanVS_type& meanVS,
+          const parTypeS_type& parTypeS,
           const radiussph_type& radiussph,
+          const epsilon_type& epsilon,
+          const sigma_type& sigma,
           ::std::auto_ptr< centerPos_type >& centerPos,
           ::std::auto_ptr< startVel_type >& startVel)
 : ::xml_schema::type (),
+  meshWidthS_ (meshWidthS, ::xml_schema::flags (), this),
+  massS_ (massS, ::xml_schema::flags (), this),
+  meanVS_ (meanVS, ::xml_schema::flags (), this),
   parTypeS_ (parTypeS, ::xml_schema::flags (), this),
   radiussph_ (radiussph, ::xml_schema::flags (), this),
+  epsilon_ (epsilon, ::xml_schema::flags (), this),
+  sigma_ (sigma, ::xml_schema::flags (), this),
   centerPos_ (centerPos, ::xml_schema::flags (), this),
   startVel_ (startVel, ::xml_schema::flags (), this)
 {
@@ -598,8 +654,13 @@ sphere_t (const sphere_t& x,
           ::xml_schema::flags f,
           ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
+  meshWidthS_ (x.meshWidthS_, f, this),
+  massS_ (x.massS_, f, this),
+  meanVS_ (x.meanVS_, f, this),
   parTypeS_ (x.parTypeS_, f, this),
   radiussph_ (x.radiussph_, f, this),
+  epsilon_ (x.epsilon_, f, this),
+  sigma_ (x.sigma_, f, this),
   centerPos_ (x.centerPos_, f, this),
   startVel_ (x.startVel_, f, this)
 {
@@ -610,8 +671,13 @@ sphere_t (const ::xercesc::DOMElement& e,
           ::xml_schema::flags f,
           ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  meshWidthS_ (f, this),
+  massS_ (f, this),
+  meanVS_ (f, this),
   parTypeS_ (f, this),
   radiussph_ (f, this),
+  epsilon_ (f, this),
+  sigma_ (f, this),
   centerPos_ (f, this),
   startVel_ (f, this)
 {
@@ -623,154 +689,6 @@ sphere_t (const ::xercesc::DOMElement& e,
 }
 
 void sphere_t::
-parse (::xsd::cxx::xml::dom::parser< char >& p,
-       ::xml_schema::flags f)
-{
-  for (; p.more_elements (); p.next_element ())
-  {
-    const ::xercesc::DOMElement& i (p.cur_element ());
-    const ::xsd::cxx::xml::qualified_name< char > n (
-      ::xsd::cxx::xml::dom::name< char > (i));
-
-    // parTypeS
-    //
-    if (n.name () == "parTypeS" && n.namespace_ ().empty ())
-    {
-      if (!parTypeS_.present ())
-      {
-        this->parTypeS_.set (parTypeS_traits::create (i, f, this));
-        continue;
-      }
-    }
-
-    // radiussph
-    //
-    if (n.name () == "radiussph" && n.namespace_ ().empty ())
-    {
-      if (!radiussph_.present ())
-      {
-        this->radiussph_.set (radiussph_traits::create (i, f, this));
-        continue;
-      }
-    }
-
-    // centerPos
-    //
-    if (n.name () == "centerPos" && n.namespace_ ().empty ())
-    {
-      ::std::auto_ptr< centerPos_type > r (
-        centerPos_traits::create (i, f, this));
-
-      if (!centerPos_.present ())
-      {
-        this->centerPos_.set (r);
-        continue;
-      }
-    }
-
-    // startVel
-    //
-    if (n.name () == "startVel" && n.namespace_ ().empty ())
-    {
-      ::std::auto_ptr< startVel_type > r (
-        startVel_traits::create (i, f, this));
-
-      if (!startVel_.present ())
-      {
-        this->startVel_.set (r);
-        continue;
-      }
-    }
-
-    break;
-  }
-
-  if (!parTypeS_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "parTypeS",
-      "");
-  }
-
-  if (!radiussph_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "radiussph",
-      "");
-  }
-
-  if (!centerPos_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "centerPos",
-      "");
-  }
-
-  if (!startVel_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "startVel",
-      "");
-  }
-}
-
-sphere_t* sphere_t::
-_clone (::xml_schema::flags f,
-        ::xml_schema::container* c) const
-{
-  return new class sphere_t (*this, f, c);
-}
-
-sphere_t::
-~sphere_t ()
-{
-}
-
-// spheres_t
-//
-
-spheres_t::
-spheres_t (const meshWidthS_type& meshWidthS,
-           const massS_type& massS,
-           const meanVS_type& meanVS)
-: ::xml_schema::type (),
-  meshWidthS_ (meshWidthS, ::xml_schema::flags (), this),
-  massS_ (massS, ::xml_schema::flags (), this),
-  meanVS_ (meanVS, ::xml_schema::flags (), this),
-  sphere_ (::xml_schema::flags (), this)
-{
-}
-
-spheres_t::
-spheres_t (const spheres_t& x,
-           ::xml_schema::flags f,
-           ::xml_schema::container* c)
-: ::xml_schema::type (x, f, c),
-  meshWidthS_ (x.meshWidthS_, f, this),
-  massS_ (x.massS_, f, this),
-  meanVS_ (x.meanVS_, f, this),
-  sphere_ (x.sphere_, f, this)
-{
-}
-
-spheres_t::
-spheres_t (const ::xercesc::DOMElement& e,
-           ::xml_schema::flags f,
-           ::xml_schema::container* c)
-: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
-  meshWidthS_ (f, this),
-  massS_ (f, this),
-  meanVS_ (f, this),
-  sphere_ (f, this)
-{
-  if ((f & ::xml_schema::flags::base) == 0)
-  {
-    ::xsd::cxx::xml::dom::parser< char > p (e, true, false);
-    this->parse (p, f);
-  }
-}
-
-void spheres_t::
 parse (::xsd::cxx::xml::dom::parser< char >& p,
        ::xml_schema::flags f)
 {
@@ -813,15 +731,76 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
-    // sphere
+    // parTypeS
     //
-    if (n.name () == "sphere" && n.namespace_ ().empty ())
+    if (n.name () == "parTypeS" && n.namespace_ ().empty ())
     {
-      ::std::auto_ptr< sphere_type > r (
-        sphere_traits::create (i, f, this));
+      if (!parTypeS_.present ())
+      {
+        this->parTypeS_.set (parTypeS_traits::create (i, f, this));
+        continue;
+      }
+    }
 
-      this->sphere_.push_back (r);
-      continue;
+    // radiussph
+    //
+    if (n.name () == "radiussph" && n.namespace_ ().empty ())
+    {
+      if (!radiussph_.present ())
+      {
+        this->radiussph_.set (radiussph_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // epsilon
+    //
+    if (n.name () == "epsilon" && n.namespace_ ().empty ())
+    {
+      if (!epsilon_.present ())
+      {
+        this->epsilon_.set (epsilon_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // sigma
+    //
+    if (n.name () == "sigma" && n.namespace_ ().empty ())
+    {
+      if (!sigma_.present ())
+      {
+        this->sigma_.set (sigma_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // centerPos
+    //
+    if (n.name () == "centerPos" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< centerPos_type > r (
+        centerPos_traits::create (i, f, this));
+
+      if (!centerPos_.present ())
+      {
+        this->centerPos_.set (r);
+        continue;
+      }
+    }
+
+    // startVel
+    //
+    if (n.name () == "startVel" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< startVel_type > r (
+        startVel_traits::create (i, f, this));
+
+      if (!startVel_.present ())
+      {
+        this->startVel_.set (r);
+        continue;
+      }
     }
 
     break;
@@ -846,6 +825,118 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     throw ::xsd::cxx::tree::expected_element< char > (
       "meanVS",
       "");
+  }
+
+  if (!parTypeS_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "parTypeS",
+      "");
+  }
+
+  if (!radiussph_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "radiussph",
+      "");
+  }
+
+  if (!epsilon_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "epsilon",
+      "");
+  }
+
+  if (!sigma_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "sigma",
+      "");
+  }
+
+  if (!centerPos_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "centerPos",
+      "");
+  }
+
+  if (!startVel_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "startVel",
+      "");
+  }
+}
+
+sphere_t* sphere_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class sphere_t (*this, f, c);
+}
+
+sphere_t::
+~sphere_t ()
+{
+}
+
+// spheres_t
+//
+
+spheres_t::
+spheres_t ()
+: ::xml_schema::type (),
+  sphere_ (::xml_schema::flags (), this)
+{
+}
+
+spheres_t::
+spheres_t (const spheres_t& x,
+           ::xml_schema::flags f,
+           ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  sphere_ (x.sphere_, f, this)
+{
+}
+
+spheres_t::
+spheres_t (const ::xercesc::DOMElement& e,
+           ::xml_schema::flags f,
+           ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  sphere_ (f, this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, true, false);
+    this->parse (p, f);
+  }
+}
+
+void spheres_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  for (; p.more_elements (); p.next_element ())
+  {
+    const ::xercesc::DOMElement& i (p.cur_element ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    // sphere
+    //
+    if (n.name () == "sphere" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< sphere_type > r (
+        sphere_traits::create (i, f, this));
+
+      this->sphere_.push_back (r);
+      continue;
+    }
+
+    break;
   }
 }
 

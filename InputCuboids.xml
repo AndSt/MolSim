@@ -3,13 +3,16 @@
 <cuboids
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:noNamespaceSchemaLocation="InputCuboids.xsd">
-
-	<meshWidth>1.2</meshWidth>
-	<mass>1.0</mass>
-	<meanV>0.1</meanV>
 	
 	<cuboid>
+		<meshWidth>1.2</meshWidth>
+		<mass>1.0</mass>
+		<meanV>0.1</meanV>
 		<parTypeC>0</parTypeC>
+		 
+		<epsilon>5.0</epsilon>
+		<sigma>1</sigma>		
+		
 		<originVector>
 			<oriX>1.5</oriX>
 			<oriY>2.0</oriY>
@@ -24,6 +27,6 @@ xsi:noNamespaceSchemaLocation="InputCuboids.xsd">
 			<width>40</width>
 			<height>20</height>
 			<depth>1</depth>
-		</size3D>		
+		</size3D>
 	</cuboid>	
 </cuboids> 

@@ -73,8 +73,6 @@ public:
 	 * @param[out] start_time Start time of simulation will be stored here.
 	 * @param[out] end_time End time of simulation will be stored here.
 	 * @param[out] delta_t Delta time (between 2 iterations) of simulation will be stored here.
-	 * @param[out] EPSILON Needed for Lennard Jones Force.
-	 * @param[out] SIGMA Needed for Lennard Jones Force.
 	 * @param[out] inputNames A list of XML input names, which will be extracted.
 	 * @param[out] inputTypes A list of types each XML input name has ("cuboids"/"spheres").
 	 * @param[out] outputMask Output files will named after this mask.
@@ -85,8 +83,7 @@ public:
 	 * @param[out] g_const The constant g of gravitational force
 	 * @param[out] inputSize Number of particle types
 	 */
-	void extractSetting(double& start_time, double& end_time, double& delta_t, 
-				double& EPSILON, double& SIGMA, 
+	void extractSetting(double& start_time, double& end_time, double& delta_t,
 				std::list<string>& inputNames, std::list<string>& inputTypes, 
 				string& outputMask, int& outputFreq, 
 				utils::Vector<double, 3>& domainSize, double& r_cutoff, 
