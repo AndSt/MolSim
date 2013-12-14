@@ -9,7 +9,7 @@ xsi:noNamespaceSchemaLocation="InputSpheres.xsd">
 		<massS>1.0</massS>
 		<meanVS>0.1</meanVS>
 		<parTypeS>1</parTypeS>
-		<radiussph>10</radiussph>
+		<radiussph>5</radiussph>
 		<epsilon>1.0</epsilon>
 		<sigma>1</sigma>
 		

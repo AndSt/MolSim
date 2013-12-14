@@ -44,28 +44,28 @@ void ParticleGeneratorTest::setUp() {
 	double dataV1[3] = {0.0, 0.0, 0.0};
 	utils::Vector<double, 3> x1(dataX1);
 	utils::Vector<double, 3> v1(dataV1); 
-	Particle par1(x1, v1, 1.0, 0, 5.0, 1.0);
+	Particle par1(x1, v1, 1.0, 0);
 
 	//Set up par2
 	double dataX2[3] = {0.0, 1.0, 0.0};
 	double dataV2[3] = {-1.0, 0.0, 0.0};
 	utils::Vector<double, 3> x2(dataX2);
 	utils::Vector<double, 3> v2(dataV2); 
-	Particle par2(x2, v2, 3.0e-6, 0, 5.0, 1.0);
+	Particle par2(x2, v2, 3.0e-6, 0);
 
 	//Set up par3
 	double dataX3[3] = {0.0, 5.36, 0.0};
 	double dataV3[3] = {-0.425, 0.0, 0.0};
 	utils::Vector<double, 3> x3(dataX3);
 	utils::Vector<double, 3> v3(dataV3); 
-	Particle par3(x3, v3, 9.55e-4, 0, 5.0, 1.0);
+	Particle par3(x3, v3, 9.55e-4, 0);
 
 	//Set up par4
 	double dataX4[3] = {34.75, 0.0, 0.0};
 	double dataV4[3] = {0.0, 0.0296, 0.0};
 	utils::Vector<double, 3> x4(dataX4);
 	utils::Vector<double, 3> v4(dataV4); 
-	Particle par4(x4, v4, 1.0e-14, 0, 5.0, 1.0);
+	Particle par4(x4, v4, 1.0e-14, 0);
 
 	//Set up particles
 	particles.clear();
@@ -208,8 +208,6 @@ void ParticleGeneratorTest::testExtractParticles(){
 		CPPUNIT_ASSERT(par.getV()==testPar.getV());
 		CPPUNIT_ASSERT(par.getM()==testPar.getM());
 		CPPUNIT_ASSERT(par.getType()==testPar.getType());
-		CPPUNIT_ASSERT(par.getEpsilon()==testPar.getEpsilon());
-		CPPUNIT_ASSERT(par.getSigma()==testPar.getSigma());
 		++iterator;
 	}
 

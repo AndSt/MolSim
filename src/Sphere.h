@@ -186,11 +186,11 @@ public:
 
 	/** \returns Cuboid's epsilon for Lennard Jones Force.
 	 */
-	double& getEpsilon();
+	double getEpsilon();
 
 	/** \returns Cuboid's sigma for Lennard Jones Force.
 	 */
-	double& getSigma();
+	double getSigma();
 
 	virtual ~Sphere();
 };

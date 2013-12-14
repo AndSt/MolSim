@@ -44,7 +44,7 @@ Cuboid::Cuboid(int height, int width, int depth, double distance, double mass,
 				utils::Vector<double, 3> addVector(addTemp);
 				utils::Vector<double, 3> vel(ori + addVector);
 
-				Particle p(vel, startVelocity, mass, parType, EPSILON, SIGMA);
+				Particle p(vel, startVelocity, mass, parType);
 
 				// Movement of each particle superposed by Brownian Motion
 				MaxwellBoltzmannDistribution(p, meanVelocity, 2);

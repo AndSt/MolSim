@@ -10,8 +10,8 @@ xsi:noNamespaceSchemaLocation="InputCuboids.xsd">
 		<meanV>0.1</meanV>
 		<parTypeC>0</parTypeC>
 		 
-		<epsilon>5.0</epsilon>
-		<sigma>1</sigma>		
+		<epsilon>1.0</epsilon>
+		<sigma>1.0</sigma>		
 		
 		<originVector>
 			<oriX>1.5</oriX>

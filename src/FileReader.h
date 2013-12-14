@@ -22,7 +22,8 @@ public:
 
 	void readFileCub(std::list<Cuboid>& cuboids, char* filename);
 
-	void readStatus(std::list<Particle>& particles, char* filename);
+	void readStatus(std::list<Particle>& particles,
+					double& eps, double& sig, char* filename);
 };
 
 #endif /* FILE_READER_H_ */

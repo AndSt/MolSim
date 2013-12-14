@@ -86,7 +86,7 @@ void Sphere::plot(utils::Vector<double, 3> tempCenter, int x, int y){
 	utils::Vector<double, 3> pos(a);
 
 	// Being used in the beginning --> v = startV
-	Particle p(pos, startV, m, parType, EPSILON, SIGMA);
+	Particle p(pos, startV, m, parType);
 	// BROWNIAN as well!
 	MaxwellBoltzmannDistribution(p, meanV, 2);
 	sph.push_back(p);
@@ -226,11 +226,11 @@ int& Sphere::getType(){
 	return parType;
 }
 
-double& Sphere::getEpsilon(){
+double Sphere::getEpsilon(){
 	return EPSILON;
 }
 
-double& Sphere::getSigma(){
+double Sphere::getSigma(){
 	return SIGMA;
 }
 

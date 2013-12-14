@@ -51,6 +51,12 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 	</thermo>
 
 	<inputfile>
+		<name>InputCuboids.xml</name>
+		<!-- particles/cuboids/spheres -->
+		<type>cuboids</type>
+	</inputfile>
+	
+	<inputfile>
 		<name>InputSpheres.xml</name>
 		<!-- particles/cuboids/spheres -->
 		<type>spheres</type>

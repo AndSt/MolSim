@@ -188,7 +188,7 @@ void ParticleGenerator::extractParticles(const string filename)
 				double m = i->mass();
 				double typeP = i->parTypeP();
 
-				Particle p(pos, vel, m, typeP, 5.0, 1.0);
+				Particle p(pos, vel, m, typeP);
 				particleList.push_back(p);
 	    	}
 	

@@ -74,7 +74,7 @@ void FileReader::readFile(std::list<Particle>& particles, char* filename) {
     			exit(-1);
     		}
     		datastream >> m;
-    		Particle p(x, v, m, 0, 5.0, 1.0);
+    		Particle p(x, v, m, 0);
     		particles.push_back(p);
 
     		getline(input_file, tmp_string);
@@ -159,13 +159,11 @@ void FileReader::readFileCub(std::list<Cuboid>& cuboids, char* filename) {
 
 }
 
-void FileReader::readStatus(std::list<Particle>& particles, char* filename) {
+void FileReader::readStatus(std::list<Particle>& particles, double& eps, double& sig, char* filename) {
 	double x[] = {0,0,0};
 	double v[] = {1,1,1};
 	double f[] = {0,0,0};
 	double old_f[] = {0,0,0};
-	double eps = 0.0;
-	double sig = 0.0;
 
 	double m = 1;
 	int t = 1;
@@ -188,6 +186,8 @@ void FileReader::readStatus(std::list<Particle>& particles, char* filename) {
     	istringstream numstream(tmp_string);
     	numstream >> num_particles;
     	LOG4CXX_DEBUG(filereaderlogger,"Reading " << num_particles);
+    	numstream >> eps;
+    	numstream >> sig;
     	getline(input_file, tmp_string);
     	LOG4CXX_DEBUG(filereaderlogger,"Read line: " << tmp_string << ".");
 
@@ -212,9 +212,7 @@ void FileReader::readStatus(std::list<Particle>& particles, char* filename) {
     		}
     		datastream >> m;
     		datastream >> t;
-    		datastream >> eps;
-    		datastream >> sig;
-    		Particle p(x, v, m, t, eps, sig);
+    		Particle p(x, v, m, t);
     		p.getF() = utils::Vector<double, 3> (f);
     		p.getOldF() = utils::Vector<double, 3> (old_f);
     		particles.push_back(p);

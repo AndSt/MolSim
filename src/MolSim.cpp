@@ -114,6 +114,8 @@ double G_CONST = -12.44;
 //type = index
 double gDirMass[] = {0.0, 1.0, 0.0}; //will store mass (without G_CONST*)
 vector<utils::Vector<double, 3> > gravForce;
+vector<double> EPS;
+vector<double> SIG;
 
 list<Particle> particleList;
 utils::ParticleContainer container;
@@ -395,6 +397,8 @@ int main(int argc, char* argsv[]) {
 
 			//initialize the size of gravForce
 			gravForce.resize(inputSize);
+			EPS.resize(inputSize);
+			SIG.resize(inputSize);
 
 			for (list<string>::iterator itN = inputNames.begin();
 					itN != inputNames.end(); itN++) {
@@ -410,25 +414,29 @@ int main(int argc, char* argsv[]) {
 				} else if (*itT == "cuboids") {
 					cout << i << ". input file: " << "[cuboids]" << endl;
 					pgen.extractCuboids(*itN);
-					pgen.cuboidsToList();
 						// For each type
 						for (list<Cuboid>::iterator it=pgen.getCuboidList().begin();
 								it!=pgen.getCuboidList().end(); it++){
 							gDirMass[1] = (*it).getMass();
 							gravForce[(*it).getType()] = utils::Vector<double, 3> (gDirMass);
+							EPS[(*it).getType()] = (*it).getEpsilon();
+							SIG[(*it).getType()] = (*it).getSigma();
 						}
+					pgen.cuboidsToList();
 					pgen.mergeWithParticleList(particleList);
 
 				} else {
 					cout << i << ". input file: " << "[spheres]" << endl;
 					pgen.extractSpheres(*itN);
-					pgen.spheresToList();
 						// For each type
 						for (list<Sphere>::iterator it=pgen.getSphereList().begin();
 								it!=pgen.getSphereList().end(); it++){
 							gDirMass[1] = (*it).getM();
 							gravForce[(*it).getType()] = utils::Vector<double, 3> (gDirMass);
+							EPS[(*it).getType()] = (*it).getEpsilon();
+							SIG[(*it).getType()] = (*it).getSigma();
 						}
+					pgen.spheresToList();
 					pgen.mergeWithParticleList(particleList);
 				}
 				itT++;
@@ -464,7 +472,10 @@ int main(int argc, char* argsv[]) {
 			if (fd==1){
 				cout << "Falling drop chosen." << endl;
 				pgen.getParticleList().clear();
-				fileReader.readStatus(pgen.getParticleList(),"ParListStatus.txt");
+				fileReader.readStatus(pgen.getParticleList(),
+								EPS[(*pgen.getParticleList().begin()).getType()],
+								SIG[(*pgen.getParticleList().begin()).getType()],
+								"ParListStatus.txt");
 				pgen.mergeWithParticleList(particleList);
 				cout << "Input data from ParListStatus imported." << endl;
 			}else{
@@ -626,8 +637,8 @@ void calculateFLJ() {
 			double tempDNorm = tempD.L2Norm();
 
 			//Lorentz-Berthelot Mixing rule
-			double EPSILON = ((*iterator).getEpsilon()) + ((*innerIterator).getEpsilon())/2;
-			double SIGMA = sqrt(((*iterator).getSigma())*((*innerIterator).getSigma()));
+			double EPSILON = (EPS[(*iterator).getType()] + EPS[(*innerIterator).getType()])/2;
+			double SIGMA = sqrt((SIG[(*iterator).getType()])*(SIG[(*innerIterator).getType()]));
 
 			//if(tempDNorm < R_CUTOFF) {
 			double tempDSigDivNormPowSix = pow(SIGMA / tempDNorm, 6);
@@ -860,8 +871,7 @@ void LCcalculateFLJ() {
 							(*iterator).getX()[2] };
 					utils::Vector<double, 3> x(x_arg);
 					utils::Vector<double, 3> v(0.0);
-					Particle p(x, v, (*iterator).getM(), (*iterator).getType(),
-								(*iterator).getEpsilon(), (*iterator).getSigma());
+					Particle p(x, v, (*iterator).getM(), (*iterator).getType());
 					computeForce((*iterator), p);
 				}
 		}
@@ -876,8 +886,7 @@ void LCcalculateFLJ() {
 							(*iterator).getX()[2] };
 					utils::Vector<double, 3> x(x_arg);
 					utils::Vector<double, 3> v(0.0);
-					Particle p(x, v, (*iterator).getM(), (*iterator).getType(),
-							(*iterator).getEpsilon(), (*iterator).getSigma());
+					Particle p(x, v, (*iterator).getM(), (*iterator).getType());
 					computeForce((*iterator), p);
 				}
 		}
@@ -892,8 +901,7 @@ void LCcalculateFLJ() {
 							(*iterator).getX()[2] };
 					utils::Vector<double, 3> x(x_arg);
 					utils::Vector<double, 3> v(0.0);
-					Particle p(x, v, (*iterator).getM(), (*iterator).getType(),
-							(*iterator).getEpsilon(), (*iterator).getSigma());
+					Particle p(x, v, (*iterator).getM(), (*iterator).getType());
 					computeForce((*iterator), p);
 			}
 		}
@@ -908,8 +916,7 @@ void LCcalculateFLJ() {
 							(*iterator).getX()[2] };
 					utils::Vector<double, 3> x(x_arg);
 					utils::Vector<double, 3> v(0.0);
-					Particle p(x, v, (*iterator).getM(), (*iterator).getType(),
-							(*iterator).getEpsilon(), (*iterator).getSigma());
+					Particle p(x, v, (*iterator).getM(), (*iterator).getType());
 					computeForce((*iterator), p);
 			}
 		}
@@ -924,8 +931,7 @@ void LCcalculateFLJ() {
 							(*iterator).getX()[1], 0 };
 					utils::Vector<double, 3> x(x_arg);
 					utils::Vector<double, 3> v(0.0);
-					Particle p(x, v, (*iterator).getM(), (*iterator).getType(),
-							(*iterator).getEpsilon(), (*iterator).getSigma());
+					Particle p(x, v, (*iterator).getM(), (*iterator).getType());
 					computeForce((*iterator), p);
 			}
 		}
@@ -940,8 +946,7 @@ void LCcalculateFLJ() {
 							(*iterator).getX()[1], domainSize[2] };
 					utils::Vector<double, 3> x(x_arg);
 					utils::Vector<double, 3> v(0.0);
-					Particle p(x, v, (*iterator).getM(), (*iterator).getType(),
-							(*iterator).getEpsilon(), (*iterator).getSigma());
+					Particle p(x, v, (*iterator).getM(), (*iterator).getType());
 					computeForce((*iterator), p);
 			}
 		}
@@ -1004,8 +1009,8 @@ void computeForce(Particle& p1, Particle& p2) {
 	double tempDNorm = tempD.L2Norm();
 
 	//Lorentz-Berthelot Mixing rule
-	double EPSILON = (p1.getEpsilon() + p2.getEpsilon())/2;
-	double SIGMA = sqrt((p1.getSigma())*(p2.getSigma()));
+	double EPSILON = (EPS[p1.getType()] + EPS[p2.getType()])/2;
+	double SIGMA = sqrt((SIG[p1.getType()])*(SIG[p2.getType()]));
 
 	if (tempDNorm < R_CUTOFF) {
 		double tempDSigDivNorm = pow(SIGMA / tempDNorm, 6);
@@ -1036,7 +1041,8 @@ void writeOutputFile(list<Particle> parList){
 	file	<< "# file format:\n"
 			<< "# Lines of comment start with '#' and are only allowed at the beginning of the file\n"
 			<< "# Empty lines are not allowed.\n"
-			<< "# The first line not being a comment has to be one integer, indicating the number of\n"
+			<< "# The first line not being a comment has to be "
+			<< "# <int: number of particles> <double: epsilon> <double: sigma>\n"
 			<< "# molecule data sets.\n"
 			<< "#\n"
 			<< "# Molecule data consists of\n"
@@ -1054,7 +1060,9 @@ void writeOutputFile(list<Particle> parList){
 				<< setw(45) << "old force"
 				<< setw(15) << "mass"
 				<< setw(10) << "type\n"
-			<< parList.size() << endl;
+			<< setw(10) << parList.size()
+			<< setw(10) << EPS[(*parList.begin()).getType()]
+			<< setw(10) << SIG[(*parList.begin()).getType()] << endl;
 	for (list<Particle>::iterator it=parList.begin();
 			it!=parList.end(); it++){
 		file 	<< setw(15) << (*it).getX()[0]
@@ -1074,9 +1082,7 @@ void writeOutputFile(list<Particle> parList){
 				<< setw(15) << (*it).getOldF()[2]
 
 				<< setw(15) << (*it).getM()
-				<< setw(10) << (*it).getType()
-				<< setw(10) << (*it).getEpsilon()
-				<< setw(15) << (*it).getSigma()	<< endl;
+				<< setw(10) << (*it).getType() << endl;
 	}
 	file.close();
 }
