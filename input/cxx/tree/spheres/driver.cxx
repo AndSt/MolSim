@@ -3,7 +3,7 @@
 // copyright : not copyrighted - public domain
 
 int
-main (int argc, char* argv[])
+main ()
 {
   return 0;
 }

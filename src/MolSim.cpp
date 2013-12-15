@@ -481,10 +481,13 @@ int main(int argc, char* argsv[]) {
 			if (fd == 1) {
 				cout << "Falling drop chosen." << endl;
 				pgen.getParticleList().clear();
+				double eps1 = 1.0;
+				double sig1 = 1.0;
 				fileReader.readStatus(pgen.getParticleList(),
-						EPS[(*pgen.getParticleList().begin()).getType()],
-						SIG[(*pgen.getParticleList().begin()).getType()],
-						"ParListStatus.txt");
+						eps1, sig1,	"ParListStatus.txt");
+				EPS[(*pgen.getParticleList().begin()).getType()] = eps1;
+				SIG[(*pgen.getParticleList().begin()).getType()] = sig1;
+
 				pgen.mergeWithParticleList(particleList);
 				cout << "Input data from ParListStatus imported." << endl;
 			} else {
