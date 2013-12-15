@@ -112,7 +112,7 @@ vector<double> mass;
 double G_CONST = -12.44;
 //only for cuboids and spheres, not for particles alone
 //type = index
-double gDirMass[] = {0.0, 1.0, 0.0}; //will store mass (without G_CONST*)
+double gDirMass[] = { 0.0, 1.0, 0.0 }; //will store mass (without G_CONST*)
 vector<utils::Vector<double, 3> > gravForce;
 vector<double> EPS;
 vector<double> SIG;
@@ -297,7 +297,8 @@ int main(int argc, char* argsv[]) {
 					<< "\tInputSpheres: contains all information needed for spheres."
 					<< endl;
 			cout << "\nPress 1 to use Linked Cell Algorithm." << endl;
-			cout << "Press 2 to simulate without Linked Cell Algorithm." << endl;
+			cout << "Press 2 to simulate without Linked Cell Algorithm."
+					<< endl;
 			break;
 		}
 
@@ -373,27 +374,27 @@ int main(int argc, char* argsv[]) {
 		//for XML input:
 		else if (option1 == 3) {
 			//getting information from InputSetting first
-			int inputSize=0;
-			pgen.extractSetting(start_time, end_time, delta_t,
-					inputNames, inputTypes, outputMask, freq, domainSize,
-					R_CUTOFF, domainCondition, G_CONST, inputSize);
+			int inputSize = 0;
+			pgen.extractSetting(start_time, end_time, delta_t, inputNames,
+					inputTypes, outputMask, freq, domainSize, R_CUTOFF,
+					domainCondition, G_CONST, inputSize);
 			particleList.clear();
 			list<string>::iterator itT = inputTypes.begin();
 			int i = 1;
 
-				/*// calculate the number of cuboids + spheres in input file
-				for (list<string>::iterator itN = inputNames.begin();
-						itN != inputNames.end(); itN++) {
-					if (*itT == "cuboids") {
-						pgen.extractCuboids(*itN);
-						inputSize += pgen.getCuboidList().size();
-					} else if (*itT == "spheres") {
-						pgen.extractSpheres(*itN);
-						inputSize += pgen.getSphereList().size();
-					}
-					itT++;
-					i++;
-				}*/
+			/*// calculate the number of cuboids + spheres in input file
+			 for (list<string>::iterator itN = inputNames.begin();
+			 itN != inputNames.end(); itN++) {
+			 if (*itT == "cuboids") {
+			 pgen.extractCuboids(*itN);
+			 inputSize += pgen.getCuboidList().size();
+			 } else if (*itT == "spheres") {
+			 pgen.extractSpheres(*itN);
+			 inputSize += pgen.getSphereList().size();
+			 }
+			 itT++;
+			 i++;
+			 }*/
 
 			//initialize the size of gravForce
 			gravForce.resize(inputSize);
@@ -405,37 +406,43 @@ int main(int argc, char* argsv[]) {
 				if (*itT == "particles") {
 					cout << i << ". input file: " << "[particles]." << endl;
 					pgen.extractParticles(*itN);
-					for (list<Particle>::iterator it=pgen.getParticleList().begin();
-							it!=pgen.getParticleList().end(); it++){
+					for (list<Particle>::iterator it =
+							pgen.getParticleList().begin();
+							it != pgen.getParticleList().end(); it++) {
 						gDirMass[1] = (*it).getM();
-						gravForce[(*it).getType()] = utils::Vector<double, 3> (gDirMass);
+						gravForce[(*it).getType()] = utils::Vector<double, 3>(
+								gDirMass);
 					}
 					pgen.mergeWithParticleList(particleList);
 				} else if (*itT == "cuboids") {
 					cout << i << ". input file: " << "[cuboids]" << endl;
 					pgen.extractCuboids(*itN);
-						// For each type
-						for (list<Cuboid>::iterator it=pgen.getCuboidList().begin();
-								it!=pgen.getCuboidList().end(); it++){
-							gDirMass[1] = (*it).getMass();
-							gravForce[(*it).getType()] = utils::Vector<double, 3> (gDirMass);
-							EPS[(*it).getType()] = (*it).getEpsilon();
-							SIG[(*it).getType()] = (*it).getSigma();
-						}
+					// For each type
+					for (list<Cuboid>::iterator it =
+							pgen.getCuboidList().begin();
+							it != pgen.getCuboidList().end(); it++) {
+						gDirMass[1] = (*it).getMass();
+						gravForce[(*it).getType()] = utils::Vector<double, 3>(
+								gDirMass);
+						EPS[(*it).getType()] = (*it).getEpsilon();
+						SIG[(*it).getType()] = (*it).getSigma();
+					}
 					pgen.cuboidsToList();
 					pgen.mergeWithParticleList(particleList);
 
 				} else {
 					cout << i << ". input file: " << "[spheres]" << endl;
 					pgen.extractSpheres(*itN);
-						// For each type
-						for (list<Sphere>::iterator it=pgen.getSphereList().begin();
-								it!=pgen.getSphereList().end(); it++){
-							gDirMass[1] = (*it).getM();
-							gravForce[(*it).getType()] = utils::Vector<double, 3> (gDirMass);
-							EPS[(*it).getType()] = (*it).getEpsilon();
-							SIG[(*it).getType()] = (*it).getSigma();
-						}
+					// For each type
+					for (list<Sphere>::iterator it =
+							pgen.getSphereList().begin();
+							it != pgen.getSphereList().end(); it++) {
+						gDirMass[1] = (*it).getM();
+						gravForce[(*it).getType()] = utils::Vector<double, 3>(
+								gDirMass);
+						EPS[(*it).getType()] = (*it).getEpsilon();
+						SIG[(*it).getType()] = (*it).getSigma();
+					}
 					pgen.spheresToList();
 					pgen.mergeWithParticleList(particleList);
 				}
@@ -448,18 +455,20 @@ int main(int argc, char* argsv[]) {
 
 			//======================GRAVITY=====================
 			int ag;
-			cout << "Do you want to add gravity?\nPress 1 to confirm, 2 to ignore." << endl;
+			cout
+					<< "Do you want to add gravity?\nPress 1 to confirm, 2 to ignore."
+					<< endl;
 			getIntegerInput(str, ag);
-			if (ag==1){
-				cout 	<< "Gravity enabled.\n"
-						<< "G = " << G_CONST << "." << endl;
-			}else{
-				cout 	<< "Gravity disabled." << endl;
+			if (ag == 1) {
+				cout << "Gravity enabled.\n" << "G = " << G_CONST << "."
+						<< endl;
+			} else {
+				cout << "Gravity disabled." << endl;
 				G_CONST = 0;
 			}
 			//multiply with G_CONST
-			for(int indexGrav=0; indexGrav<gravForce.size(); indexGrav++){
-				gravForce[indexGrav] = G_CONST*gravForce[indexGrav];
+			for (int indexGrav = 0; indexGrav < gravForce.size(); indexGrav++) {
+				gravForce[indexGrav] = G_CONST * gravForce[indexGrav];
 			}
 			//======================GRAVITY=====================
 
@@ -469,16 +478,16 @@ int main(int argc, char* argsv[]) {
 					<< "Note: ParListStatus.txt must exist!\n"
 					<< "Press 1 to confirm, 2 to ignore." << endl;
 			getIntegerInput(str, fd);
-			if (fd==1){
+			if (fd == 1) {
 				cout << "Falling drop chosen." << endl;
 				pgen.getParticleList().clear();
 				fileReader.readStatus(pgen.getParticleList(),
-								EPS[(*pgen.getParticleList().begin()).getType()],
-								SIG[(*pgen.getParticleList().begin()).getType()],
-								"ParListStatus.txt");
+						EPS[(*pgen.getParticleList().begin()).getType()],
+						SIG[(*pgen.getParticleList().begin()).getType()],
+						"ParListStatus.txt");
 				pgen.mergeWithParticleList(particleList);
 				cout << "Input data from ParListStatus imported." << endl;
-			}else{
+			} else {
 				cout << "Falling drop disabled." << endl;
 			}
 			//======================FALLING DROP=====================
@@ -494,20 +503,22 @@ int main(int argc, char* argsv[]) {
 
 		//======================THERMOSTAT=====================
 		int thermoOption;
-		cout << "Do you want to use Thermostat?\nPress 1 to confirm, 2 to ignore." << endl;
+		cout
+				<< "Do you want to use Thermostat?\nPress 1 to confirm, 2 to ignore."
+				<< endl;
 		getIntegerInput(str, thermoOption);
 
 		thermo = Thermostat();
 
-		if (thermoOption==1){
+		if (thermoOption == 1) {
 			//initialize thermostat to get enabled flag (true --> call, false --> ignore)
-			thermo.getEnabled()=true;
+			thermo.getEnabled() = true;
 			cout << "Thermostat enabled." << endl;
-			if (thermo.getDelta_T()!=0)
-				cout << "Target temperature: "
-							<< thermo.getT_target() << ".\n" << endl;
-		}else{
-			thermo.getEnabled()=false;
+			if (thermo.getDelta_T() != 0)
+				cout << "Target temperature: " << thermo.getT_target() << ".\n"
+						<< endl;
+		} else {
+			thermo.getEnabled() = false;
 			cout << "Thermostat disabled.\n" << endl;
 		}
 		//======================THERMOSTAT=====================
@@ -517,23 +528,23 @@ int main(int argc, char* argsv[]) {
 		if (option1 == 3 && option2 == 1) {
 			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
 			LCsimulate();
-				cout << "\nWrite ParListStatus.txt out?" << endl;
-				cout << "Press 1 to confirm, 2 to ignore." << endl;
-				getIntegerInput(str, wo);
-				if (wo==1){
-					writeOutputFile(lcContainer.getList());
-					cout << "ParListStatus.txt written." << endl;
-				}
+			cout << "\nWrite ParListStatus.txt out?" << endl;
+			cout << "Press 1 to confirm, 2 to ignore." << endl;
+			getIntegerInput(str, wo);
+			if (wo == 1) {
+				writeOutputFile(lcContainer.getList());
+				cout << "ParListStatus.txt written." << endl;
+			}
 		} else {
 			container.initialize(particleList);
 			simulate();
-				cout << "\nWrite ParListStatus.txt out?" << endl;
-				cout << "Press 1 to confirm, 2 to ignore." << endl;
-				getIntegerInput(str, wo);
-				if (wo==1){
-					writeOutputFile(container.getList());
-					cout << "ParListStatus.txt written." << endl;
-				}
+			cout << "\nWrite ParListStatus.txt out?" << endl;
+			cout << "Press 1 to confirm, 2 to ignore." << endl;
+			getIntegerInput(str, wo);
+			if (wo == 1) {
+				writeOutputFile(container.getList());
+				cout << "ParListStatus.txt written." << endl;
+			}
 		}
 
 		LOG4CXX_INFO(molsimlogger, "Arrived @ ending simulation.");
@@ -573,18 +584,18 @@ void simulate() {
 		cout << "\r" << "Iteration " << iteration << " completed." << flush;
 
 		// Thermostat
-		if (thermo.getEnabled()){
-			if (!target_temp_reached){
-				if (iteration % thermo.getn_delta() == 0){
+		if (thermo.getEnabled()) {
+			if (!target_temp_reached) {
+				if (iteration % thermo.getn_delta() == 0) {
 					temperature += thermo.getDelta_T();
-					if (temperature > thermo.getT_target()){
+					if (temperature > thermo.getT_target()) {
 						temperature -= thermo.getDelta_T();
 						target_temp_reached = true;
 					}
 				}
 			}
 
-			if (iteration % thermo.getn_thermo() == 0){
+			if (iteration % thermo.getn_thermo() == 0) {
 				thermo.setThermo(container.getList(), 2, temperature);
 			}
 		}
@@ -637,8 +648,11 @@ void calculateFLJ() {
 			double tempDNorm = tempD.L2Norm();
 
 			//Lorentz-Berthelot Mixing rule
-			double EPSILON = (EPS[(*iterator).getType()] + EPS[(*innerIterator).getType()])/2;
-			double SIGMA = sqrt((SIG[(*iterator).getType()])*(SIG[(*innerIterator).getType()]));
+			double EPSILON = (EPS[(*iterator).getType()]
+					+ EPS[(*innerIterator).getType()]) / 2;
+			double SIGMA = sqrt(
+					(SIG[(*iterator).getType()])
+							* (SIG[(*innerIterator).getType()]));
 
 			//if(tempDNorm < R_CUTOFF) {
 			double tempDSigDivNormPowSix = pow(SIGMA / tempDNorm, 6);
@@ -786,18 +800,18 @@ void LCsimulate() {
 		cout << "\r" << "Iteration " << iteration << " completed." << flush;
 
 		// Thermostat
-		if (thermo.getEnabled()){
-			if (!target_temp_reached){
-				if (iteration % thermo.getn_delta() == 0){
+		if (thermo.getEnabled()) {
+			if (!target_temp_reached) {
+				if (iteration % thermo.getn_delta() == 0) {
 					temperature += thermo.getDelta_T();
-					if (temperature > thermo.getT_target()){
+					if (temperature > thermo.getT_target()) {
 						temperature -= thermo.getDelta_T();
 						target_temp_reached = true;
 					}
 				}
 			}
 
-			if (iteration % thermo.getn_thermo() == 0){
+			if (iteration % thermo.getn_thermo() == 0) {
 				thermo.setThermo(lcContainer.getList(), 2, temperature);
 			}
 		}
@@ -867,13 +881,13 @@ void LCcalculateFLJ() {
 				if ((*iterator).getX()[0] <= 0)
 					outflow_flag = true;
 			} else if (domainCondition[0] == 2) {
-					double x_arg[3] = { 0, (*iterator).getX()[1],
-							(*iterator).getX()[2] };
-					utils::Vector<double, 3> x(x_arg);
-					utils::Vector<double, 3> v(0.0);
-					Particle p(x, v, (*iterator).getM(), (*iterator).getType());
-					computeForce((*iterator), p);
-				}
+				double x_arg[3] = { 0, (*iterator).getX()[1],
+						(*iterator).getX()[2] };
+				utils::Vector<double, 3> x(x_arg);
+				utils::Vector<double, 3> v(0.0);
+				Particle p(x, v, (*iterator).getM(), (*iterator).getType());
+				computeForce((*iterator), p);
+			}
 		}
 
 		/* check if the right boundary will affect the force threw reflection */
@@ -882,13 +896,13 @@ void LCcalculateFLJ() {
 				if ((*iterator).getX()[0] >= domainSize[0])
 					outflow_flag = true;
 			} else if (domainCondition[1] == 2) {
-					double x_arg[3] = { domainSize[0], (*iterator).getX()[1],
-							(*iterator).getX()[2] };
-					utils::Vector<double, 3> x(x_arg);
-					utils::Vector<double, 3> v(0.0);
-					Particle p(x, v, (*iterator).getM(), (*iterator).getType());
-					computeForce((*iterator), p);
-				}
+				double x_arg[3] = { domainSize[0], (*iterator).getX()[1],
+						(*iterator).getX()[2] };
+				utils::Vector<double, 3> x(x_arg);
+				utils::Vector<double, 3> v(0.0);
+				Particle p(x, v, (*iterator).getM(), (*iterator).getType());
+				computeForce((*iterator), p);
+			}
 		}
 
 		/* check if the bottom boundary will affect the force threw reflection */
@@ -897,12 +911,12 @@ void LCcalculateFLJ() {
 				if ((*iterator).getX()[1] <= 0)
 					outflow_flag = true;
 			} else if (domainCondition[2] == 2) {
-					double x_arg[3] = { (*iterator).getX()[0], 0,
-							(*iterator).getX()[2] };
-					utils::Vector<double, 3> x(x_arg);
-					utils::Vector<double, 3> v(0.0);
-					Particle p(x, v, (*iterator).getM(), (*iterator).getType());
-					computeForce((*iterator), p);
+				double x_arg[3] = { (*iterator).getX()[0], 0,
+						(*iterator).getX()[2] };
+				utils::Vector<double, 3> x(x_arg);
+				utils::Vector<double, 3> v(0.0);
+				Particle p(x, v, (*iterator).getM(), (*iterator).getType());
+				computeForce((*iterator), p);
 			}
 		}
 
@@ -912,12 +926,12 @@ void LCcalculateFLJ() {
 				if ((*iterator).getX()[1] >= domainSize[1])
 					outflow_flag = true;
 			} else if (domainCondition[3] == 2) {
-					double x_arg[3] = { (*iterator).getX()[0], domainSize[1],
-							(*iterator).getX()[2] };
-					utils::Vector<double, 3> x(x_arg);
-					utils::Vector<double, 3> v(0.0);
-					Particle p(x, v, (*iterator).getM(), (*iterator).getType());
-					computeForce((*iterator), p);
+				double x_arg[3] = { (*iterator).getX()[0], domainSize[1],
+						(*iterator).getX()[2] };
+				utils::Vector<double, 3> x(x_arg);
+				utils::Vector<double, 3> v(0.0);
+				Particle p(x, v, (*iterator).getM(), (*iterator).getType());
+				computeForce((*iterator), p);
 			}
 		}
 
@@ -926,13 +940,13 @@ void LCcalculateFLJ() {
 			if (domainCondition[4] == 1) {
 				if ((*iterator).getX()[2] < 0)
 					outflow_flag = true;
-				} else if (domainCondition[4] == 2) {
-					double x_arg[3] = { (*iterator).getX()[0],
-							(*iterator).getX()[1], 0 };
-					utils::Vector<double, 3> x(x_arg);
-					utils::Vector<double, 3> v(0.0);
-					Particle p(x, v, (*iterator).getM(), (*iterator).getType());
-					computeForce((*iterator), p);
+			} else if (domainCondition[4] == 2) {
+				double x_arg[3] = { (*iterator).getX()[0],
+						(*iterator).getX()[1], 0 };
+				utils::Vector<double, 3> x(x_arg);
+				utils::Vector<double, 3> v(0.0);
+				Particle p(x, v, (*iterator).getM(), (*iterator).getType());
+				computeForce((*iterator), p);
 			}
 		}
 
@@ -942,17 +956,18 @@ void LCcalculateFLJ() {
 				if ((*iterator).getX()[2] >= domainSize[2])
 					outflow_flag = true;
 			} else if (domainCondition[5] == 2) {
-					double x_arg[3] = { (*iterator).getX()[0],
-							(*iterator).getX()[1], domainSize[2] };
-					utils::Vector<double, 3> x(x_arg);
-					utils::Vector<double, 3> v(0.0);
-					Particle p(x, v, (*iterator).getM(), (*iterator).getType());
-					computeForce((*iterator), p);
+				double x_arg[3] = { (*iterator).getX()[0],
+						(*iterator).getX()[1], domainSize[2] };
+				utils::Vector<double, 3> x(x_arg);
+				utils::Vector<double, 3> v(0.0);
+				Particle p(x, v, (*iterator).getM(), (*iterator).getType());
+				computeForce((*iterator), p);
 			}
 		}
 
 		// GRAVITY (G_CONST = 0 when gravity is disabled)
-		(*iterator).setF(gravForce[(*iterator).getType()] + (*iterator).getTempF());
+		(*iterator).setF(
+				gravForce[(*iterator).getType()] + (*iterator).getTempF());
 		(*iterator).deleteTempF();
 		++iterator;
 	}
@@ -972,8 +987,8 @@ void LCcalculateX() {
 				+ ((delta_t) * (delta_t) / (2 * p.getM())) * p.getOldF();
 
 		/*if (tempX[0] < 0 || tempX[1] < 0) {
-			cout << iterator.getCellNumber() << " " << (*iterator).toString();
-		}*/
+		 cout << iterator.getCellNumber() << " " << (*iterator).toString();
+		 }*/
 		p.getX() = tempX;
 
 		++iterator;
@@ -1008,11 +1023,19 @@ void computeForce(Particle& p1, Particle& p2) {
 	utils::Vector<double, 3> tempD = p2.getX() - p1.getX();
 	double tempDNorm = tempD.L2Norm();
 
-	//Lorentz-Berthelot Mixing rule
-	double EPSILON = (EPS[p1.getType()] + EPS[p2.getType()])/2;
-	double SIGMA = sqrt((SIG[p1.getType()])*(SIG[p2.getType()]));
-
 	if (tempDNorm < R_CUTOFF) {
+
+		double EPSILON;
+		double SIGMA;
+		//Lorentz-Berthelot Mixing rule
+		if (p1.getType() != p2.getType()) {
+			EPSILON = (EPS[p1.getType()] + EPS[p2.getType()]) / 2;
+			SIGMA = sqrt((SIG[p1.getType()]) * (SIG[p2.getType()]));
+		} else {
+			EPSILON = EPS[p1.getType()];
+			SIGMA = SIG[p1.getType()];
+		}
+
 		double tempDSigDivNorm = pow(SIGMA / tempDNorm, 6);
 		utils::Vector<double, 3> tempF = 24 * EPSILON * pow(1 / tempDNorm, 2)
 				* (tempDSigDivNorm - 2 * pow(tempDSigDivNorm, 2)) * tempD;
@@ -1035,54 +1058,42 @@ void LCplotVTK(int iteration) {
 	writer.writeFile(out_name, iteration);
 }
 
-void writeOutputFile(list<Particle> parList){
+void writeOutputFile(list<Particle> parList) {
 	ofstream file;
-	file.open ("ParListStatus.txt", ios::trunc);
-	file	<< "# file format:\n"
+	file.open("ParListStatus.txt", ios::trunc);
+	file << "# file format:\n"
 			<< "# Lines of comment start with '#' and are only allowed at the beginning of the file\n"
 			<< "# Empty lines are not allowed.\n"
 			<< "# The first line not being a comment has to be "
 			<< "# <int: number of particles> <double: epsilon> <double: sigma>\n"
-			<< "# molecule data sets.\n"
-			<< "#\n"
+			<< "# molecule data sets.\n" << "#\n"
 			<< "# Molecule data consists of\n"
 			<< "# * xyz-coordinates (3 double values)\n"
 			<< "# * velocities (3 double values)\n"
 			<< "# * force (3 double values)\n"
 			<< "# * old force (3 double values)\n"
-			<< "# * mass (1 double value)\n"
-			<< "# * type (1 int value)\n"
-			<< "#\n"
-			<< "# "
-				<< setw(45) << "xyz-coord"
-				<< setw(45) << "velocity"
-				<< setw(45) << "force"
-				<< setw(45) << "old force"
-				<< setw(15) << "mass"
-				<< setw(10) << "type\n"
-			<< setw(10) << parList.size()
-			<< setw(10) << EPS[(*parList.begin()).getType()]
+			<< "# * mass (1 double value)\n" << "# * type (1 int value)\n"
+			<< "#\n" << "# " << setw(45) << "xyz-coord" << setw(45)
+			<< "velocity" << setw(45) << "force" << setw(45) << "old force"
+			<< setw(15) << "mass" << setw(10) << "type\n" << setw(10)
+			<< parList.size() << setw(10) << EPS[(*parList.begin()).getType()]
 			<< setw(10) << SIG[(*parList.begin()).getType()] << endl;
-	for (list<Particle>::iterator it=parList.begin();
-			it!=parList.end(); it++){
-		file 	<< setw(15) << (*it).getX()[0]
-		     	<< setw(15) << (*it).getX()[1]
-		     	<< setw(15) << (*it).getX()[2]
+	for (list<Particle>::iterator it = parList.begin(); it != parList.end();
+			it++) {
+		file << setw(15) << (*it).getX()[0] << setw(15) << (*it).getX()[1]
+				<< setw(15) << (*it).getX()[2]
 
-		     	<< setw(15) << (*it).getV()[0]
-				<< setw(15) << (*it).getV()[1]
+				<< setw(15) << (*it).getV()[0] << setw(15) << (*it).getV()[1]
 				<< setw(15) << (*it).getV()[2]
 
-				<< setw(15) << (*it).getF()[0]
-				<< setw(15) << (*it).getF()[1]
+				<< setw(15) << (*it).getF()[0] << setw(15) << (*it).getF()[1]
 				<< setw(15) << (*it).getF()[2]
 
-				<< setw(15) << (*it).getOldF()[0]
-				<< setw(15) << (*it).getOldF()[1]
-				<< setw(15) << (*it).getOldF()[2]
+				<< setw(15) << (*it).getOldF()[0] << setw(15)
+				<< (*it).getOldF()[1] << setw(15) << (*it).getOldF()[2]
 
-				<< setw(15) << (*it).getM()
-				<< setw(10) << (*it).getType() << endl;
+				<< setw(15) << (*it).getM() << setw(10) << (*it).getType()
+				<< endl;
 	}
 	file.close();
 }
