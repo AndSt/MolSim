@@ -1,3 +1,21 @@
+15.12.2013 Linux Cluster
+1. Log in ssh USERNAME@lxlogin1.lrz.de
+2. Enter password
+3. git clone https://github.com/AndSt/MolSim
+4. Make sure you are NOT in the MolSim folder but in its parent
+5. wget http://www5.in.tum.de/lehre/praktika/pse/ws12/linux_cluster_software.tar.gz
+6. tar -xvf linux-cluster-software.tar.gz
+7. mv linux-cluster-software software
+8. cd software
+9. . ./envMolSim.sh (make sure to type the space between the first 2 dots)
+10. cd ..
+11. cd MolSim
+12. make
+13. salloc (perhaps with args...)
+14. srun ./MolSim
+
+Note: you might also have to type "module load xerces".
+
 27.11.2013 "Makefile changes"
 + It's now possible to change the XML files (only the contain, not the structure) in MolSim folder.
 + The folder Input is now just a temp. folder for XML building. However, don't delete this folder.
