@@ -647,14 +647,17 @@ void calculateFLJ() {
 			utils::Vector<double, 3> tempD = p2.getX() - p1.getX();
 			double tempDNorm = tempD.L2Norm();
 
+			double EPSILON;
+			double SIGMA;
 			//Lorentz-Berthelot Mixing rule
-			double EPSILON = (EPS[(*iterator).getType()]
-					+ EPS[(*innerIterator).getType()]) / 2;
-			double SIGMA = sqrt(
-					(SIG[(*iterator).getType()])
-							* (SIG[(*innerIterator).getType()]));
+			if (p1.getType() != p2.getType()) {
+				EPSILON = (EPS[p1.getType()] + EPS[p2.getType()]) / 2;
+				SIGMA = sqrt((SIG[p1.getType()]) * (SIG[p2.getType()]));
+			} else {
+				EPSILON = EPS[p1.getType()];
+				SIGMA = SIG[p1.getType()];
+			}
 
-			//if(tempDNorm < R_CUTOFF) {
 			double tempDSigDivNormPowSix = pow(SIGMA / tempDNorm, 6);
 			utils::Vector<double, 3> tempF =
 					24 * EPSILON * pow(1 / tempDNorm, 2)
@@ -664,7 +667,7 @@ void calculateFLJ() {
 
 			sumF[i] += tempF;
 			sumF[j] += (-1) * tempF;
-			//}
+
 			++innerIterator;
 			++j;
 		}
