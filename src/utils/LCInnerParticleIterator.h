@@ -22,7 +22,7 @@ public:
 			int original_index_arg, int cell_size_arg,
 			int width_arg, int height_arg, int depth_arg,
 			std::list<Particle *>::iterator iterator_arg,
-			std::vector<std::list<Particle *> >& cells_arg);
+			std::vector<std::list<Particle *> *>* cells_arg);
 
 	virtual ~LCInnerParticleIterator();
 
@@ -77,7 +77,7 @@ private:
 	/**
 	 * the members of the iterator
 	 */
-	std::vector<std::list<Particle *> >& cells;
+	std::vector<std::list<Particle *> *>* cells;
 	int cell_size;
 	int width, height, depth;
 	int index;

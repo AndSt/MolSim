@@ -9,7 +9,6 @@ src/tests/LCParticleContainerTest.cpp\
 src/tests/ParticleContainerTest.cpp\
 src/tests/ParticleIteratorTest.cpp\
 src/tests/LCOuterParticleIteratorTest.cpp\
-src/tests/ThermostatTest.cpp\
 src/tests/ParticleGeneratorTest.cpp\
 src/FileReader.cpp\
 src/Sphere.cpp\
@@ -26,3 +25,4 @@ src/utils/InputParticles.cpp\
 src/utils/InputSpheres.cpp\
 src/utils/LCInnerParticleIterator.cpp\
 src/utils/InputCuboids.cpp\
+src/utils/BoundaryHandler.cpp\

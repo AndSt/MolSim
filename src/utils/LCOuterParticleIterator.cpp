@@ -12,9 +12,12 @@ log4cxx::LoggerPtr lcouterparticleiteratorlogger(log4cxx::Logger::getLogger("uti
 
 namespace utils {
 
+LCOuterParticleIterator::LCOuterParticleIterator(){
+
+}
 
 LCOuterParticleIterator::LCOuterParticleIterator(int cell_size_arg,
-		std::vector<std::list<Particle *> >& cells_arg,
+		std::vector<std::list<Particle *> *>* cells_arg,
 	std::list<Particle *>::iterator iterator_arg, int index_arg) :
 	cells(cells_arg) {
 	cell_size = cell_size_arg;
@@ -42,24 +45,23 @@ bool LCOuterParticleIterator::operator!=(const LCOuterParticleIterator b) {
 }
 
 void  LCOuterParticleIterator::operator++() {
-	assert(cells[index].empty() == false);
-	//std::cout << it_index << " "<< cells[index].size() << " " << index << " " << (*iterator).toString() << std::endl;
+	assert((*cells)[index]->empty() == false);
+	//std::cout << (*cells)[index].size() << " " << index << " " << (*(*iterator)).toString() << std::endl;
 
 	++iterator;
-	if (iterator != cells[index].end()) {
-		assert(iterator != cells[index].end());
+	if (iterator != (*cells)[index]->end()) {
+		assert(iterator != (*cells)[index]->end());
 	} else {
 		int old_index = index;
-		assert(cells[index].empty() == false);
 		index++;
-		while (cells[index].empty() == true && index < cell_size) {
+		while (index < cell_size && (*cells)[index]->empty() == true) {
 			index++;
 		}
 		LOG4CXX_TRACE(lcouterparticleiteratorlogger, index);
 		assert(index > old_index);
-		assert(cells[index].empty() == false);
-		assert(cells[index].begin() != cells[index].end());
-		iterator = cells[index].begin();
+		if(index < cell_size){
+			iterator = (*cells)[index]->begin();
+		}
 	}
 }
 
@@ -76,7 +78,7 @@ LCOuterParticleIterator& LCOuterParticleIterator::operator=(const LCOuterParticl
 	if (this == &cpy)  return *this;
 	cells = cpy.cells;
 	cell_size = cpy.cell_size;
-	index = 0;
+	index = cpy.index;
 	iterator = cpy.iterator;
 	return *this;
 }

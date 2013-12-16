@@ -47,16 +47,6 @@ public:
 	void testUpdateCells();
 
 	/**
-	 * Check the deleteHalo() method of the ParticleContainer
-	 */
-	void testDeleteHalo();
-
-	/**
-	 * Check the getList() method of the ParticleContainer
-	 */
-	void testGetList();
-
-	/**
 	 * Check the size() method of the ParticleContainer
 	 */
 	void testSize();

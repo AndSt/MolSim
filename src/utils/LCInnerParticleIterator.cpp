@@ -13,7 +13,7 @@ LCInnerParticleIterator::LCInnerParticleIterator(int index_arg,
 		int original_index_arg, int cell_size_arg, int width_arg,
 		int height_arg, int depth_arg,
 		std::list<Particle *>::iterator iterator_arg,
-		std::vector<std::list<Particle *> >& cells_arg) :
+		std::vector<std::list<Particle *> *>* cells_arg) :
 		cells(cells_arg) {
 	original_index = original_index_arg;
 	index = index_arg;
@@ -39,8 +39,8 @@ void LCInnerParticleIterator::operator++() {
 	 * Checks whether the outer particle was already the last Particle in its cell
 	 * which would mean iterator were now on the dummy end of the list.
 	 */
-	if (iterator != cells[index].end()) {
-		assert(iterator != cells[index].end());
+	if (iterator != (*cells)[index]->end()) {
+		assert(iterator != (*cells)[index]->end());
 	} else {
 		int old_index = index;
 		bool done = false;
@@ -50,7 +50,8 @@ void LCInnerParticleIterator::operator++() {
 		 * Back bottom left, back bottom, back bottom right, back left, back, back right,
 		 * back top left, back top and back top right [for the 3-dimensional case]
 		 */
-		while (cells[index].empty() || done == false) {
+//		std::cout << index << std::endl;
+		while (index < cell_size && (done == false || (*cells)[index]->empty() )) {
 			done = false;
 			if (index == original_index) {
 				index++;
@@ -133,25 +134,30 @@ void LCInnerParticleIterator::operator++() {
 				}
 			} else if (depth > 0
 					&& index == original_index + width * height + width + 1) {
-				assert(cells[index].empty() == false);
+				assert((*cells)[index]->empty() == false);
 				index = old_index;
 				done = true;
 			} else {
 				index = original_index + width * height + width + 2;
+				//std::cout << index << std::endl;
 				done = true;
 			}
-		}
 
-		if(depth < 1 && index >= original_index + width + 2){
+//			std::cout << index << std::endl;
+		}
+		if((depth < 2 && index >= original_index + width + 2)){
 		}
 		else if(index >= original_index + width * height + width + 2){
 
 		}
+		else if(index >= cell_size){
+
+		}
 		else if (index > old_index) {
 			assert(index <= cell_size);
-			assert(cells[index].begin() != cells[index].end());
-			assert(cells[index].empty() == false);
-			iterator = cells[index].begin();
+			assert((*cells)[index]->begin() != (*cells)[index]->end());
+			assert((*cells)[index]->empty() == false);
+			iterator = (*cells)[index]->begin();
 			assert(index > old_index);
 		} else {
 			assert(index == old_index);
@@ -179,7 +185,6 @@ LCInnerParticleIterator& LCInnerParticleIterator::operator=(
 }
 
 int LCInnerParticleIterator::getCellNumber() {
-	assert(cells[index].empty() == false);
 	return index;
 }
 

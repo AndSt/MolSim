@@ -30,7 +30,7 @@ Thermostat::Thermostat(){
 	  	}
 	  	catch (const xml_schema::exception& e)
 	  	{
-			cerr << e << endl;
+			cerr << e;
 			exit(-1);
 	  	}
 }
@@ -46,32 +46,32 @@ Thermostat::Thermostat(double T_init, double T_target, double delta_T,
 	this->brownian_flag = brownian_flag;
 }
 
-double Thermostat::getEKin(std::list<Particle> parList){
+double Thermostat::getEKin(std::list<Particle *> parList){
 	double eKinTimes2 = 0;
 	double v = 0;
-	for (std::list<Particle>::iterator it = parList.begin(); it != parList.end(); it++){
-		v = pow((*it).getV()[0], 2) + pow((*it).getV()[1], 2) + pow((*it).getV()[2], 2);
-		eKinTimes2 += (*it).getM()*v;
+	for (std::list<Particle *>::iterator it = parList.begin(); it != parList.end(); it++){
+		v = pow((*it)->getV()[0], 2) + pow((*it)->getV()[1], 2) + pow((*it)->getV()[2], 2);
+		eKinTimes2 += (*it)->getM()*v;
 	}
 	return eKinTimes2/2;
 }
 
-double Thermostat::getMeanV(std::list<Particle> parList, int dim, double mass){
+double Thermostat::getMeanV(std::list<Particle *> parList, int dim, double mass){
 	return sqrt(2*getEKin(parList)/(dim*parList.size()*mass));
 }
 
-void Thermostat::setThermo(std::list<Particle>& parList, int dim, double temperature){
+void Thermostat::setThermo(std::list<Particle *>& parList, int dim, double temperature){
 	double newEKin = dim*parList.size()*temperature/2;
 	double beta = sqrt(newEKin/getEKin(parList));
 	if ((beta==1)&&(brownian_flag==false)) return;
 
 	//beta!=1 or brownian_flag==false
-	for (std::list<Particle>::iterator it = parList.begin();
+	for (std::list<Particle *>::iterator it = parList.begin();
 						it != parList.end(); it++){
-			(*it).getV() = beta*(*it).getV();
+			(*it)->getV() = beta*(*it)->getV();
 			if (brownian_flag==true)
 				//Hardcode mass=1
-				MaxwellBoltzmannDistribution(*it, this->getMeanV(parList, dim, 1), 2);
+				MaxwellBoltzmannDistribution(*(*it), this->getMeanV(parList, dim, 1), 2);
 	}
 }
 

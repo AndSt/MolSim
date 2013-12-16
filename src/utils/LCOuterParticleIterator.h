@@ -19,8 +19,10 @@ namespace utils {
 class LCOuterParticleIterator {
 public:
 
+	LCOuterParticleIterator();
+
 	LCOuterParticleIterator(int cell_size_arg,
-			std::vector<std::list<Particle *> >& cells_arg, std::list<Particle *>::iterator iterator_arg,
+			std::vector<std::list<Particle *> *>* cells_arg, std::list<Particle *>::iterator iterator_arg,
 			int index_arg);
 
 	virtual ~LCOuterParticleIterator();
@@ -52,7 +54,7 @@ private:
 	/**
 	 * the element of the iterator
 	 */
-	std::vector<std::list<Particle *> >& cells;
+	std::vector<std::list<Particle *> *>* cells;
 	int cell_size;
 	int index;
 	std::list<Particle *>::iterator iterator;

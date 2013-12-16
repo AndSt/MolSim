@@ -13,6 +13,7 @@
 #include "utils/LCInnerParticleIterator.h"
 #include "utils/LCOuterParticleIterator.h"
 #include "utils/Thermostat.h"
+#include "utils/BoundaryHandler.h"
 
 #include <log4cxx/logger.h>
 #include <log4cxx/propertyconfigurator.h>
@@ -32,7 +33,7 @@
 #include "tests/LCParticleContainerTest.h"
 #include "tests/LCInnerParticleIteratorTest.h"
 #include "tests/LCOuterParticleIteratorTest.h"
-#include "tests/ThermostatTest.h"
+//#include "tests/ThermostatTest.h"
 
 #include <list>
 #include <cassert>
@@ -84,7 +85,7 @@ void getDoubleInput(string &str, double &input);
 void plotVTK(int iteration);
 void LCplotVTK(int iteration);
 
-void writeOutputFile(list<Particle> parList);
+void writeOutputFile(list<Particle *> parList);
 
 double start_time = 0;
 double end_time = 1000;
@@ -127,7 +128,7 @@ vector<int> domainCondition;
 // 2: ground/lower	3:upper
 // 4: front	5: behind/gear
 // Value: 1 = outflow, 2= reflecting
-// default = "outflow"
+// 3 = periodic
 
 string fileName;
 
@@ -194,7 +195,7 @@ int main(int argc, char* argsv[]) {
 				runner.addTest(LCParticleContainerTest::suite());
 				//runner.addTest(LCInnerParticleIteratorTest::suite());
 				runner.addTest(LCOuterParticleIteratorTest::suite());
-				runner.addTest(ThermostatTest::suite());
+//				runner.addTest(ThermostatTest::suite());
 				runner.run();
 
 			} else if (option == 2) {
@@ -535,7 +536,7 @@ int main(int argc, char* argsv[]) {
 			cout << "Press 1 to confirm, 2 to ignore." << endl;
 			getIntegerInput(str, wo);
 			if (wo == 1) {
-				writeOutputFile(lcContainer.getList());
+				writeOutputFile((lcContainer.getList()));
 				cout << "ParListStatus.txt written." << endl;
 			}
 		} else {
@@ -545,7 +546,7 @@ int main(int argc, char* argsv[]) {
 			cout << "Press 1 to confirm, 2 to ignore." << endl;
 			getIntegerInput(str, wo);
 			if (wo == 1) {
-				writeOutputFile(container.getList());
+				//writeOutputFile(container.getList());
 				cout << "ParListStatus.txt written." << endl;
 			}
 		}
@@ -587,21 +588,21 @@ void simulate() {
 		cout << "\r" << "Iteration " << iteration << " completed." << flush;
 
 		// Thermostat
-		if (thermo.getEnabled()) {
-			if (!target_temp_reached) {
-				if (iteration % thermo.getn_delta() == 0) {
-					temperature += thermo.getDelta_T();
-					if (temperature > thermo.getT_target()) {
-						temperature -= thermo.getDelta_T();
-						target_temp_reached = true;
-					}
-				}
-			}
-
-			if (iteration % thermo.getn_thermo() == 0) {
-				thermo.setThermo(container.getList(), 2, temperature);
-			}
-		}
+//		if (thermo.getEnabled()) {
+//			if (!target_temp_reached) {
+//				if (iteration % thermo.getn_delta() == 0) {
+//					temperature += thermo.getDelta_T();
+//					if (temperature > thermo.getT_target()) {
+//						temperature -= thermo.getDelta_T();
+//						target_temp_reached = true;
+//					}
+//				}
+//			}
+//
+//			if (iteration % thermo.getn_thermo() == 0) {
+//				thermo.setThermo(container.getList(), 2, temperature);
+//			}
+//		}
 
 		if (iteration % freq == 0) {
 			plotVTK(iteration);
@@ -781,6 +782,10 @@ void LCsimulate() {
 	LOG4CXX_INFO(molsimlogger, "lcContainer.size: " << lcContainer.size());
 	LOG4CXX_INFO(molsimlogger, "particleList.size: " << particleList.size());
 	//assert(lcContainer.size() == particleList.size());
+
+	utils::BoundaryHandler boundHandler(domainCondition, lcContainer, h,
+			computeForce);
+
 	LCcalculateFLJ();
 	//addGravity(lcContainer.getList());
 
@@ -796,9 +801,18 @@ void LCsimulate() {
 
 		// calculate new x
 		LCcalculateX();
+
+		boundHandler.applyOutflow();
+		boundHandler.applyPeriodicMoving();
+
+		lcContainer.updateCells();
+
+		boundHandler.applyReflecting();
+		boundHandler.applyPeriodic();
+
+
 		// calculate new f
 		LCcalculateFLJ();
-		//addGravity(lcContainer.getList());
 		// calculate new v
 		LCcalculateV();
 
@@ -822,10 +836,6 @@ void LCsimulate() {
 			}
 		}
 
-		if (iteration % freq == 0 || outflow_flag) {
-			lcContainer.updateCells();
-			outflow_flag = false;
-		}
 		if (iteration % freq == 0) {
 			LCplotVTK(iteration);
 		}
@@ -881,95 +891,6 @@ void LCcalculateFLJ() {
 			}
 		}
 
-		/* check if the left boundary will affect the force threw reflection */
-		if ((*iterator).getX()[0] <= h) {
-			if (domainCondition[0] == 1) {
-				if ((*iterator).getX()[0] <= 0)
-					outflow_flag = true;
-			} else if (domainCondition[0] == 2) {
-				double x_arg[3] = { 0, (*iterator).getX()[1],
-						(*iterator).getX()[2] };
-				utils::Vector<double, 3> x(x_arg);
-				utils::Vector<double, 3> v(0.0);
-				Particle p(x, v, (*iterator).getM(), (*iterator).getType());
-				computeForce((*iterator), p);
-			}
-		}
-
-		/* check if the right boundary will affect the force threw reflection */
-		else if ((*iterator).getX()[0] >= domainSize[0] - h) {
-			if (domainCondition[1] == 1) {
-				if ((*iterator).getX()[0] >= domainSize[0])
-					outflow_flag = true;
-			} else if (domainCondition[1] == 2) {
-				double x_arg[3] = { domainSize[0], (*iterator).getX()[1],
-						(*iterator).getX()[2] };
-				utils::Vector<double, 3> x(x_arg);
-				utils::Vector<double, 3> v(0.0);
-				Particle p(x, v, (*iterator).getM(), (*iterator).getType());
-				computeForce((*iterator), p);
-			}
-		}
-
-		/* check if the bottom boundary will affect the force threw reflection */
-		if ((*iterator).getX()[1] <= h) {
-			if (domainCondition[2] == 1) {
-				if ((*iterator).getX()[1] <= 0)
-					outflow_flag = true;
-			} else if (domainCondition[2] == 2) {
-				double x_arg[3] = { (*iterator).getX()[0], 0,
-						(*iterator).getX()[2] };
-				utils::Vector<double, 3> x(x_arg);
-				utils::Vector<double, 3> v(0.0);
-				Particle p(x, v, (*iterator).getM(), (*iterator).getType());
-				computeForce((*iterator), p);
-			}
-		}
-
-		/* check if the upper boundary will affect the force threw reflection */
-		else if ((*iterator).getX()[1] >= domainSize[1] - h) {
-			if (domainCondition[3] == 1) {
-				if ((*iterator).getX()[1] >= domainSize[1])
-					outflow_flag = true;
-			} else if (domainCondition[3] == 2) {
-				double x_arg[3] = { (*iterator).getX()[0], domainSize[1],
-						(*iterator).getX()[2] };
-				utils::Vector<double, 3> x(x_arg);
-				utils::Vector<double, 3> v(0.0);
-				Particle p(x, v, (*iterator).getM(), (*iterator).getType());
-				computeForce((*iterator), p);
-			}
-		}
-
-		/* check if the front boundary will affect the force threw reflection */
-		if ((*iterator).getX()[2] <= h && depth > 0) {
-			if (domainCondition[4] == 1) {
-				if ((*iterator).getX()[2] < 0)
-					outflow_flag = true;
-			} else if (domainCondition[4] == 2) {
-				double x_arg[3] = { (*iterator).getX()[0],
-						(*iterator).getX()[1], 0 };
-				utils::Vector<double, 3> x(x_arg);
-				utils::Vector<double, 3> v(0.0);
-				Particle p(x, v, (*iterator).getM(), (*iterator).getType());
-				computeForce((*iterator), p);
-			}
-		}
-
-		/* check if the rear boundary will affect the force threw reflection */
-		else if ((*iterator).getX()[2] >= domainSize[2] - h && depth > 0) {
-			if (domainCondition[5] == 1) {
-				if ((*iterator).getX()[2] >= domainSize[2])
-					outflow_flag = true;
-			} else if (domainCondition[5] == 2) {
-				double x_arg[3] = { (*iterator).getX()[0],
-						(*iterator).getX()[1], domainSize[2] };
-				utils::Vector<double, 3> x(x_arg);
-				utils::Vector<double, 3> v(0.0);
-				Particle p(x, v, (*iterator).getM(), (*iterator).getType());
-				computeForce((*iterator), p);
-			}
-		}
 
 		// GRAVITY (G_CONST = 0 when gravity is disabled)
 		(*iterator).setF(
@@ -1053,9 +974,9 @@ void computeForce(Particle& p1, Particle& p2) {
 void LCplotVTK(int iteration) {
 
 	outputWriter::VTKWriter writer;
-	list<Particle>::iterator iterator = (lcContainer.getList()).begin();
+	utils::LCOuterParticleIterator iterator = lcContainer.beginOuter();
 	writer.initializeOutput((lcContainer.getList()).size());
-	while (iterator != (lcContainer.getList()).end()) {
+	while (iterator != lcContainer.endOuter()) {
 		Particle& p = *iterator;
 		writer.plotParticle(p);
 		++iterator;
@@ -1064,7 +985,7 @@ void LCplotVTK(int iteration) {
 	writer.writeFile(out_name, iteration);
 }
 
-void writeOutputFile(list<Particle> parList) {
+void writeOutputFile(list<Particle *> parList) {
 	ofstream file;
 	file.open("ParListStatus.txt", ios::trunc);
 	file << "# file format:\n"
@@ -1082,23 +1003,23 @@ void writeOutputFile(list<Particle> parList) {
 			<< "#\n" << "# " << setw(45) << "xyz-coord" << setw(45)
 			<< "velocity" << setw(45) << "force" << setw(45) << "old force"
 			<< setw(15) << "mass" << setw(10) << "type\n" << setw(10)
-			<< parList.size() << setw(10) << EPS[(*parList.begin()).getType()]
-			<< setw(10) << SIG[(*parList.begin()).getType()] << endl;
-	for (list<Particle>::iterator it = parList.begin(); it != parList.end();
+			<< parList.size() << setw(10) << EPS[(*parList.begin())->getType()]
+			<< setw(10) << SIG[(*parList.begin())->getType()] << endl;
+	for (list<Particle *>::iterator it = parList.begin(); it != parList.end();
 			it++) {
-		file << setw(15) << (*it).getX()[0] << setw(15) << (*it).getX()[1]
-				<< setw(15) << (*it).getX()[2]
+		file << setw(15) << (*it)->getX()[0] << setw(15) << (*it)->getX()[1]
+				<< setw(15) << (*it)->getX()[2]
 
-				<< setw(15) << (*it).getV()[0] << setw(15) << (*it).getV()[1]
-				<< setw(15) << (*it).getV()[2]
+				<< setw(15) << (*it)->getV()[0] << setw(15) << (*it)->getV()[1]
+				<< setw(15) << (*it)->getV()[2]
 
-				<< setw(15) << (*it).getF()[0] << setw(15) << (*it).getF()[1]
-				<< setw(15) << (*it).getF()[2]
+				<< setw(15) << (*it)->getF()[0] << setw(15) << (*it)->getF()[1]
+				<< setw(15) << (*it)->getF()[2]
 
-				<< setw(15) << (*it).getOldF()[0] << setw(15)
-				<< (*it).getOldF()[1] << setw(15) << (*it).getOldF()[2]
+				<< setw(15) << (*it)->getOldF()[0] << setw(15)
+				<< (*it)->getOldF()[1] << setw(15) << (*it)->getOldF()[2]
 
-				<< setw(15) << (*it).getM() << setw(10) << (*it).getType()
+				<< setw(15) << (*it)->getM() << setw(10) << (*it)->getType()
 				<< endl;
 	}
 	file.close();
