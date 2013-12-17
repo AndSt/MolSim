@@ -81,6 +81,10 @@ void getIntegerInput(string &str, int &input);
 
 void getDoubleInput(string &str, double &input);
 
+void resizeEpsSig(int inSize);
+
+void fillEpsSig(int inSize);
+
 // plot the particles to VTKWriter-File
 void plotVTK(int iteration);
 void LCplotVTK(int iteration);
@@ -115,8 +119,8 @@ double G_CONST = -12.44;
 //type = index
 double gDirMass[] = { 0.0, 1.0, 0.0 }; //will store mass (without G_CONST*)
 vector<utils::Vector<double, 3> > gravForce;
-vector<double> EPS;
-vector<double> SIG;
+vector<vector<double> > EPS;
+vector<vector<double> > SIG;
 
 int inputSize = 0;
 list<Particle> particleList;
@@ -244,8 +248,7 @@ int main(int argc, char* argsv[]) {
 
 			//initialize the size of gravForce
 			gravForce.resize(1);
-			EPS.resize(1);
-			SIG.resize(1);
+			resizeEpsSig(1);
 
 			pgen.extractCuboids(*inputNames.begin());
 			list<Cuboid>::iterator itC = pgen.getCuboidList().begin();
@@ -253,8 +256,9 @@ int main(int argc, char* argsv[]) {
 			//==================G + MIXING RULE====================
 			gDirMass[1] = G_CONST*((*itC).getMass());
 			gravForce[0] = utils::Vector<double, 3>(gDirMass);
-			EPS[0] = (*itC).getEpsilon();
-			SIG[0] = (*itC).getSigma();
+			EPS[0][0] = (*itC).getEpsilon();
+			SIG[0][0] = (*itC).getSigma();
+			fillEpsSig(1);
 
 			pgen.cuboidsToList();
 			particleList = pgen.getParticleList();
@@ -285,13 +289,12 @@ int main(int argc, char* argsv[]) {
 
 			//initialize the size of gravForce
 			gravForce.resize(2);
-			EPS.resize(2);
-			SIG.resize(2);
+			resizeEpsSig(2);
 
 			gDirMass[1] = G_CONST*((*particleList.begin()).getM());
 			gravForce[0] = utils::Vector<double, 3>(gDirMass);
-			EPS[0] = eps1;
-			SIG[0] = sig1;
+			EPS[0][0] = eps1;
+			SIG[0][0] = sig1;
 
 			pgen.extractSpheres(*inputNames.begin());
 			list<Sphere>::iterator itS = pgen.getSphereList().begin();
@@ -299,8 +302,10 @@ int main(int argc, char* argsv[]) {
 			//==================G + MIXING RULE====================
 			gDirMass[1] = G_CONST*((*itS).getM());
 			gravForce[1] = utils::Vector<double, 3>(gDirMass);
-			EPS[1] = (*itS).getEpsilon();
-			SIG[1] = (*itS).getSigma();
+			EPS[1][1] = (*itS).getEpsilon();
+			SIG[1][1] = (*itS).getSigma();
+
+			fillEpsSig(2);
 
 			pgen.spheresToList();
 			pgen.mergeWithParticleList(particleList);
@@ -322,8 +327,7 @@ int main(int argc, char* argsv[]) {
 
 			//initialize the size of gravForce
 			gravForce.resize(inputSize);
-			EPS.resize(inputSize);
-			SIG.resize(inputSize);
+			resizeEpsSig(inputSize);
 
 			pgen.extractCuboids(*inputNames.begin());
 			// For each type
@@ -331,9 +335,13 @@ int main(int argc, char* argsv[]) {
 					itCS != pgen.getCuboidList().end(); itCS++) {
 				gDirMass[1] = G_CONST*((*itCS).getMass());
 				gravForce[(*itCS).getType()] = utils::Vector<double, 3>(gDirMass);
-				EPS[(*itCS).getType()] = (*itCS).getEpsilon();
-				SIG[(*itCS).getType()] = (*itCS).getSigma();
+				// fill the diagonal first
+				EPS[(*itCS).getType()][(*itCS).getType()] = (*itCS).getEpsilon();
+				SIG[(*itCS).getType()][(*itCS).getType()] = (*itCS).getSigma();
 			}
+
+			fillEpsSig(inputSize);
+
 			pgen.cuboidsToList();
 			particleList = pgen.getParticleList();
 
@@ -353,8 +361,7 @@ int main(int argc, char* argsv[]) {
 
 			//initialize the size of gravForce
 			gravForce.resize(inputSize);
-			EPS.resize(inputSize);
-			SIG.resize(inputSize);
+			resizeEpsSig(inputSize);
 
 			pgen.extractCuboids(*inputNames.begin());
 			// For each type
@@ -362,9 +369,13 @@ int main(int argc, char* argsv[]) {
 					itCB != pgen.getCuboidList().end(); itCB++) {
 				gDirMass[1] = G_CONST*((*itCB).getMass());
 				gravForce[(*itCB).getType()] = utils::Vector<double, 3>(gDirMass);
-				EPS[(*itCB).getType()] = (*itCB).getEpsilon();
-				SIG[(*itCB).getType()] = (*itCB).getSigma();
+				// fill the diagonal first
+				EPS[(*itCB).getType()][(*itCB).getType()] = (*itCB).getEpsilon();
+				SIG[(*itCB).getType()][(*itCB).getType()] = (*itCB).getSigma();
 			}
+
+			fillEpsSig(inputSize);
+
 			pgen.cuboidsToList();
 			particleList = pgen.getParticleList();
 
@@ -549,8 +560,7 @@ int main(int argc, char* argsv[]) {
 
 			//initialize the size of gravForce
 			gravForce.resize(inputSize);
-			EPS.resize(inputSize);
-			SIG.resize(inputSize);
+			resizeEpsSig(inputSize);
 
 			for (list<string>::iterator itN = inputNames.begin();
 					itN != inputNames.end(); itN++) {
@@ -573,11 +583,12 @@ int main(int argc, char* argsv[]) {
 							pgen.getCuboidList().begin();
 							it != pgen.getCuboidList().end(); it++) {
 						gDirMass[1] = (*it).getMass();
-						gravForce[(*it).getType()] = utils::Vector<double, 3>(
-								gDirMass);
-						EPS[(*it).getType()] = (*it).getEpsilon();
-						SIG[(*it).getType()] = (*it).getSigma();
+						gravForce[(*it).getType()] = utils::Vector<double, 3>(gDirMass);
+						// fille the diagonal first
+						EPS[(*it).getType()][(*it).getType()] = (*it).getEpsilon();
+						SIG[(*it).getType()][(*it).getType()] = (*it).getSigma();
 					}
+
 					pgen.cuboidsToList();
 					pgen.mergeWithParticleList(particleList);
 
@@ -589,10 +600,10 @@ int main(int argc, char* argsv[]) {
 							pgen.getSphereList().begin();
 							it != pgen.getSphereList().end(); it++) {
 						gDirMass[1] = (*it).getM();
-						gravForce[(*it).getType()] = utils::Vector<double, 3>(
-								gDirMass);
-						EPS[(*it).getType()] = (*it).getEpsilon();
-						SIG[(*it).getType()] = (*it).getSigma();
+						gravForce[(*it).getType()] = utils::Vector<double, 3>(gDirMass);
+						// fill the diagonal first
+						EPS[(*it).getType()][(*it).getType()] = (*it).getEpsilon();
+						SIG[(*it).getType()][(*it).getType()] = (*it).getSigma();
 					}
 					pgen.spheresToList();
 					pgen.mergeWithParticleList(particleList);
@@ -636,8 +647,9 @@ int main(int argc, char* argsv[]) {
 				double sig1 = 1.0;
 				fileReader.readStatus(pgen.getParticleList(),
 						eps1, sig1,	"ParListStatus.txt");
-				EPS[(*pgen.getParticleList().begin()).getType()] = eps1;
-				SIG[(*pgen.getParticleList().begin()).getType()] = sig1;
+				int typeP = (*pgen.getParticleList().begin()).getType();
+				EPS[typeP][typeP] = eps1;
+				SIG[typeP][typeP] = sig1;
 
 				pgen.mergeWithParticleList(particleList);
 				cout << "Input data from ParListStatus imported." << endl;
@@ -645,53 +657,55 @@ int main(int argc, char* argsv[]) {
 				cout << "Falling drop disabled." << endl;
 			}
 			//======================FALLING DROP=====================
+
+			fillEpsSig(inputSize);
+		}
+
+		cout << "\nReading input file..." << endl;
+
+		//initialize container with particle list
+		LOG4CXX_INFO(molsimlogger, "Arrived @ initialization call.");
+
+		//start simulation
+		LOG4CXX_INFO(molsimlogger, "Arrived @ simulation call.");
+
+		//======================THERMOSTAT=====================
+		int thermoOption;
+		cout
+				<< "Do you want to use Thermostat?\nPress 1 to confirm, 2 to ignore."
+				<< endl;
+		getIntegerInput(str, thermoOption);
+
+		thermo = Thermostat();
+
+		if (thermoOption == 1) {
+			//initialize thermostat to get enabled flag (true --> call, false --> ignore)
+			thermo.getEnabled() = true;
+			cout << "Thermostat enabled." << endl;
+			if (thermo.getDelta_T() != 0)
+				cout << "Target temperature: " << thermo.getT_target() << ".\n"
+						<< endl;
+		} else {
+			thermo.getEnabled() = false;
+			cout << "Thermostat disabled.\n" << endl;
+		}
+		//======================THERMOSTAT=====================
+		cout << "Running simulation..." << endl;
+		int wo;
+		if (option1 == 3 && option2 == 1) {
+			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
+			LCsimulate();
+			cout << "\nWrite ParListStatus.txt out?" << endl;
+			cout << "Press 1 to confirm, 2 to ignore." << endl;
+			getIntegerInput(str, wo);
+			if (wo == 1) {
+				writeOutputFile((lcContainer.getList()));
+				cout << "ParListStatus.txt written." << endl;
 			}
-
-			cout << "\nReading input file..." << endl;
-
-			//initialize container with particle list
-			LOG4CXX_INFO(molsimlogger, "Arrived @ initialization call.");
-
-			//start simulation
-			LOG4CXX_INFO(molsimlogger, "Arrived @ simulation call.");
-
-			//======================THERMOSTAT=====================
-			int thermoOption;
-			cout
-					<< "Do you want to use Thermostat?\nPress 1 to confirm, 2 to ignore."
-					<< endl;
-			getIntegerInput(str, thermoOption);
-
-			thermo = Thermostat();
-
-			if (thermoOption == 1) {
-				//initialize thermostat to get enabled flag (true --> call, false --> ignore)
-				thermo.getEnabled() = true;
-				cout << "Thermostat enabled." << endl;
-				if (thermo.getDelta_T() != 0)
-					cout << "Target temperature: " << thermo.getT_target() << ".\n"
-							<< endl;
-			} else {
-				thermo.getEnabled() = false;
-				cout << "Thermostat disabled.\n" << endl;
-			}
-			//======================THERMOSTAT=====================
-			cout << "Running simulation..." << endl;
-			int wo;
-			if (option1 == 3 && option2 == 1) {
-				lcContainer.initialize(particleList, domainSize, R_CUTOFF);
-				LCsimulate();
-				cout << "\nWrite ParListStatus.txt out?" << endl;
-				cout << "Press 1 to confirm, 2 to ignore." << endl;
-				getIntegerInput(str, wo);
-				if (wo == 1) {
-					writeOutputFile((lcContainer.getList()));
-					cout << "ParListStatus.txt written." << endl;
-				}
-			} else {
-				container.initialize(particleList);
-				simulate();
-			}
+		} else {
+			container.initialize(particleList);
+			simulate();
+		}
 	}
 
 	LOG4CXX_INFO(molsimlogger, "Arrived @ ending simulation.");
@@ -794,20 +808,10 @@ void calculateFLJ() {
 			utils::Vector<double, 3> tempD = p2.getX() - p1.getX();
 			double tempDNorm = tempD.L2Norm();
 
-			double EPSILON;
-			double SIGMA;
-			//Lorentz-Berthelot Mixing rule
-			if (p1.getType() != p2.getType()) {
-				EPSILON = (EPS[p1.getType()] + EPS[p2.getType()]) / 2;
-				SIGMA = sqrt((SIG[p1.getType()]) * (SIG[p2.getType()]));
-			} else {
-				EPSILON = EPS[p1.getType()];
-				SIGMA = SIG[p1.getType()];
-			}
-
-			double tempDSigDivNormPowSix = pow(SIGMA / tempDNorm, 6);
+			double tempDSigDivNormPowSix =
+					pow(SIG[p1.getType()][p2.getType()] / tempDNorm, 6);
 			utils::Vector<double, 3> tempF =
-					24 * EPSILON * pow(1 / tempDNorm, 2)
+					24 * EPS[p1.getType()][p2.getType()] * pow(1 / tempDNorm, 2)
 							* (tempDSigDivNormPowSix
 									- 2 * pow(tempDSigDivNormPowSix, 2))
 							* tempD;
@@ -953,7 +957,6 @@ void LCsimulate() {
 		boundHandler.applyReflecting();
 		boundHandler.applyPeriodic();
 
-
 		// calculate new f
 		LCcalculateFLJ();
 		// calculate new v
@@ -1094,20 +1097,10 @@ void computeForce(Particle& p1, Particle& p2) {
 	double tempDNorm = tempD.L2Norm();
 
 	if (tempDNorm < R_CUTOFF) {
-
-		double EPSILON;
-		double SIGMA;
-		//Lorentz-Berthelot Mixing rule
-		if (p1.getType() != p2.getType()) {
-			EPSILON = (EPS[p1.getType()] + EPS[p2.getType()]) / 2;
-			SIGMA = sqrt((SIG[p1.getType()]) * (SIG[p2.getType()]));
-		} else {
-			EPSILON = EPS[p1.getType()];
-			SIGMA = SIG[p1.getType()];
-		}
-
-		double tempDSigDivNorm = pow(SIGMA / tempDNorm, 6);
-		utils::Vector<double, 3> tempF = 24 * EPSILON * pow(1 / tempDNorm, 2)
+		double tempDSigDivNorm =
+				pow(SIG[p1.getType()][p2.getType()] / tempDNorm, 6);
+		utils::Vector<double, 3> tempF =
+				24 * EPS[p1.getType()][p2.getType()] * pow(1 / tempDNorm, 2)
 				* (tempDSigDivNorm - 2 * pow(tempDSigDivNorm, 2)) * tempD;
 		p2.updateTempF((-1) * tempF);
 		p1.updateTempF(tempF);
@@ -1146,8 +1139,8 @@ void writeOutputFile(list<Particle *> parList) {
 			<< "#\n" << "# " << setw(45) << "xyz-coord" << setw(45)
 			<< "velocity" << setw(45) << "force" << setw(45) << "old force"
 			<< setw(15) << "mass" << setw(10) << "type\n" << setw(10)
-			<< parList.size() << setw(10) << EPS[(*parList.begin())->getType()]
-			<< setw(10) << SIG[(*parList.begin())->getType()] << endl;
+			<< parList.size() << setw(10) << EPS[(*parList.begin())->getType()][(*parList.begin())->getType()]
+			<< setw(10) << SIG[(*parList.begin())->getType()][(*parList.begin())->getType()] << endl;
 	for (list<Particle *>::iterator it = parList.begin(); it != parList.end();
 			it++) {
 		file << setw(15) << (*it)->getX()[0] << setw(15) << (*it)->getX()[1]
@@ -1167,3 +1160,25 @@ void writeOutputFile(list<Particle *> parList) {
 	}
 	file.close();
 }
+
+
+void resizeEpsSig(int inSize){
+	EPS.resize(inSize);
+	SIG.resize(inSize);
+	for (int i=0; i<inSize; i++){
+		EPS[i].resize(inSize);
+		SIG[i].resize(inSize);
+	}
+}
+
+// the diagonal of the 2D matrix must have been filled before
+void fillEpsSig(int inSize){
+	for (int i=0; i<inSize; i++){
+		for (int j=0; j<inSize; j++){
+			//Lorentz-Berthelot Mixing rule
+			EPS[i][j] = (EPS[i][i] + EPS[j][j])/2;
+			SIG[i][j] = sqrt(SIG[i][i] * SIG[j][j]);
+		}
+	}
+}
+
