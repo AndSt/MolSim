@@ -11,6 +11,7 @@
 #include "Particle.h"
 
 #include <list>
+#include <string>
 
 class Thermostat {
 private:
@@ -30,6 +31,9 @@ private:
 
 public:
 	Thermostat();
+
+	Thermostat(const std::string filename);
+
 	virtual ~Thermostat();
 
 	Thermostat(double T_init, double T_target, double delta_T,

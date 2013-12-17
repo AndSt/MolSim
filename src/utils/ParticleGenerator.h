@@ -70,6 +70,7 @@ public:
 	/** The reading procedure, which can extract all information needed
 	 *  for configuring the simulation from a given XML input file .
 	 *
+	 * @param[in] filename Input file name.
 	 * @param[out] start_time Start time of simulation will be stored here.
 	 * @param[out] end_time End time of simulation will be stored here.
 	 * @param[out] delta_t Delta time (between 2 iterations) of simulation will be stored here.
@@ -83,7 +84,7 @@ public:
 	 * @param[out] g_const The constant g of gravitational force
 	 * @param[out] inputSize Number of particle types
 	 */
-	void extractSetting(double& start_time, double& end_time, double& delta_t,
+	void extractSetting(std::string filename, double& start_time, double& end_time, double& delta_t,
 				std::list<string>& inputNames, std::list<string>& inputTypes, 
 				string& outputMask, int& outputFreq, 
 				utils::Vector<double, 3>& domainSize, double& r_cutoff, 

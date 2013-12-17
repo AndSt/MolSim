@@ -1,0 +1,3 @@
+2013-12-17 01:33:13,352 INFO  src/MolSim.cpp:149 - Arrived @ main.
+2013-12-17 01:33:13,367 INFO  src/MolSim.cpp:925 - lcContainer.size: 1400
+2013-12-17 01:33:13,367 INFO  src/MolSim.cpp:926 - particleList.size: 1400

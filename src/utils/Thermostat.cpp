@@ -16,10 +16,12 @@ using namespace std;
 
 Thermostat::~Thermostat() {}
 
-Thermostat::Thermostat(){
+Thermostat::Thermostat(){}
+
+Thermostat::Thermostat(const std::string filename){
 	try
 	  	{
-			auto_ptr<pse_t> h (pse ("InputSetting.xml", xml_schema::flags::dont_validate));
+			auto_ptr<pse_t> h (pse (filename, xml_schema::flags::dont_validate));
 			this->enabled = h->thermo().enabled();
 			this->T_init = h->thermo().initT();
 			this->T_target = h->thermo().targetT();

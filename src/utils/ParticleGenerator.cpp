@@ -200,7 +200,7 @@ void ParticleGenerator::extractParticles(const string filename)
   	}
 }
 
-void ParticleGenerator::extractSetting(double& start_time, double& end_time, double& delta_t,
+void ParticleGenerator::extractSetting(string filename, double& start_time, double& end_time, double& delta_t,
 				std::list<string>& inputNames, std::list<string>& inputTypes, 
 				string& outputMask, int& outputFreq,
 				utils::Vector<double, 3>& domainSize, double& r_cutoff,
@@ -208,7 +208,7 @@ void ParticleGenerator::extractSetting(double& start_time, double& end_time, dou
 {
   	try
   	{
-		auto_ptr<pse_t> h (pse ("InputSetting.xml", xml_schema::flags::dont_validate));
+		auto_ptr<pse_t> h (pse (filename, xml_schema::flags::dont_validate));
 		start_time = h->start_time();
 		end_time = h->t_end();
 		delta_t = h->delta_t();

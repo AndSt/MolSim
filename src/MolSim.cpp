@@ -118,6 +118,7 @@ vector<utils::Vector<double, 3> > gravForce;
 vector<double> EPS;
 vector<double> SIG;
 
+int inputSize = 0;
 list<Particle> particleList;
 utils::ParticleContainer container;
 utils::ParticleGenerator pgen;
@@ -148,91 +149,240 @@ int main(int argc, char* argsv[]) {
 	LOG4CXX_INFO(molsimlogger, "Arrived @ main.");
 
 	/* Format input command line:
-	 * for running:
-	 * ./MolSim
 	 *
-	 * for testing:
-	 * ./MolSim -test
+	 * ./MolSim								: normal running
+	 *
+	 * ./MolSim --test						: for test
+	 *
+	 * ./MolSim --falling-drop-init			: for initilization of falling drop experiment
+	 *
+	 * ./MolSim --falling-drop-end			: for the falling drop experiment
+	 *
+	 * ./MolSim --rayleigh-taylor-small		: for the small Rayleigh-Taylor experiment
+	 *
+	 * ./MolSim --rayleigh-taylor-big		: for the big Rayleigh-Taylor experiment
 	 */
 
-	bool test = false;
-	if (argc >= 2) {
-		string arg1 = argsv[1];
-		if (arg1 == "-test")
-			test = true;
+	//bool test = false;
+	if (argc > 2) {
+		cout << "Maximal 2 arguments." << endl;
+		return -1;
 	}
 
-	/*
-	 * "Testing suite": Read in the Options and run the TestRunner
-	 */
-	if (test == true) {
+	if (argc==2){
+		string arg1 = argsv[1];
+		if (arg1 == "--test"){
+			/*
+			 * "Testing suite": Read in the Options and run the TestRunner
+			 */
+			LOG4CXX_INFO(molsimlogger, "Arrived @ testsuite.");
 
-		LOG4CXX_INFO(molsimlogger, "Arrived @ testsuite.");
+			string str;
+			int option = 0;
 
-		string str;
-		int option = 0;
-
-		cout << "Here are the testing options: " << endl;
-		cout
-				<< "Tipp: If you Enter Option '1' or '2' you will get back to this menu";
-		cout << endl << endl;
-		while (option != 3) {
-			cout << "Enter '1', if you want to test all unit tests." << endl;
-			cout << "Enter '2', if you want to test a specific unit test."
-					<< endl;
-			cout << "Enter '3', if you want to exit the 'test suite'." << endl;
-			cout << endl;
-
-			//Check for correct input
-			getIntegerInput(str, option);
-
-			if (option == 1) {
-
-				CppUnit::TextUi::TestRunner runner;
-				runner.addTest(ParticleIteratorTest::suite());
-				runner.addTest(ParticleContainerTest::suite());
-				runner.addTest(ParticleGeneratorTest::suite());
-				runner.addTest(LCParticleContainerTest::suite());
-				//runner.addTest(LCInnerParticleIteratorTest::suite());
-				runner.addTest(LCOuterParticleIteratorTest::suite());
-//				runner.addTest(ThermostatTest::suite());
-				runner.run();
-
-			} else if (option == 2) {
-				cout << "Enter '1', if you want to test the ParticleContainer."
+			cout << "Here are the testing options: " << endl;
+			cout
+					<< "Tipp: If you Enter Option '1' or '2' you will get back to this menu";
+			cout << endl << endl;
+			while (option != 3) {
+				cout << "Enter '1', if you want to test all unit tests." << endl;
+				cout << "Enter '2', if you want to test a specific unit test."
 						<< endl;
-				cout << "Enter '2', if you want to test the ParticleIterator."
-						<< endl;
-				cout << "Enter '3', if you want to test the ParticleGenerator."
-						<< endl;
+				cout << "Enter '3', if you want to exit the 'test suite'." << endl;
+				cout << endl;
 
 				//Check for correct input
 				getIntegerInput(str, option);
 
-				CppUnit::TextUi::TestRunner runner;
-				switch (option) {
-				case 1:
-					runner.addTest(ParticleContainerTest::suite());
-					break;
-				case 2:
+				if (option == 1) {
+
+					CppUnit::TextUi::TestRunner runner;
 					runner.addTest(ParticleIteratorTest::suite());
-					break;
-				case 3:
+					runner.addTest(ParticleContainerTest::suite());
 					runner.addTest(ParticleGeneratorTest::suite());
-					option = 2;
-					break;
+					runner.addTest(LCParticleContainerTest::suite());
+					//runner.addTest(LCInnerParticleIteratorTest::suite());
+					runner.addTest(LCOuterParticleIteratorTest::suite());
+					//runner.addTest(ThermostatTest::suite());
+					runner.run();
+
+				} else if (option == 2) {
+					cout << "Enter '1', if you want to test the ParticleContainer."
+							<< endl;
+					cout << "Enter '2', if you want to test the ParticleIterator."
+							<< endl;
+					cout << "Enter '3', if you want to test the ParticleGenerator."
+							<< endl;
+
+					//Check for correct input
+					getIntegerInput(str, option);
+
+					CppUnit::TextUi::TestRunner runner;
+					switch (option) {
+					case 1:
+						runner.addTest(ParticleContainerTest::suite());
+						break;
+					case 2:
+						runner.addTest(ParticleIteratorTest::suite());
+						break;
+					case 3:
+						runner.addTest(ParticleGeneratorTest::suite());
+						option = 2;
+						break;
+					}
+					runner.run();
 				}
-				runner.run();
 			}
 		}
+		else if (arg1 == "--falling-drop-init"){
+			//getting information from InputSetting first
+			string inpInit = "FallingDropInitSetting.xml";
+			pgen.extractSetting(inpInit, start_time, end_time, delta_t, inputNames,
+					inputTypes, outputMask, freq, domainSize, R_CUTOFF,
+					domainCondition, G_CONST, inputSize);
+			particleList.clear();
+
+			//initialize the size of gravForce
+			gravForce.resize(1);
+			EPS.resize(1);
+			SIG.resize(1);
+
+			pgen.extractCuboids(*inputNames.begin());
+			list<Cuboid>::iterator itC = pgen.getCuboidList().begin();
+
+			//==================G + MIXING RULE====================
+			gDirMass[1] = G_CONST*((*itC).getMass());
+			gravForce[0] = utils::Vector<double, 3>(gDirMass);
+			EPS[0] = (*itC).getEpsilon();
+			SIG[0] = (*itC).getSigma();
+
+			pgen.cuboidsToList();
+			particleList = pgen.getParticleList();
+
+			//======================THERMOSTAT=====================
+			thermo = Thermostat(inpInit);
+
+			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
+			LCsimulate();
+			writeOutputFile((lcContainer.getList()));
+		}
+
+		else if (arg1 == "--falling-drop-end"){
+			pgen.getParticleList().clear();
+			double eps1 = 1.0;
+			double sig1 = 1.0;
+			FileReader fileReader;
+			fileReader.readStatus(pgen.getParticleList(),
+					eps1, sig1,	"ParListStatus.txt");
+
+			particleList = pgen.getParticleList();
+
+			//getting information from InputSetting first
+			string inpEnd = "FallingDropEndSetting.xml";
+			pgen.extractSetting(inpEnd, start_time, end_time, delta_t, inputNames,
+					inputTypes, outputMask, freq, domainSize, R_CUTOFF,
+					domainCondition, G_CONST, inputSize);
+
+			//initialize the size of gravForce
+			gravForce.resize(2);
+			EPS.resize(2);
+			SIG.resize(2);
+
+			gDirMass[1] = G_CONST*((*particleList.begin()).getM());
+			gravForce[0] = utils::Vector<double, 3>(gDirMass);
+			EPS[0] = eps1;
+			SIG[0] = sig1;
+
+			pgen.extractSpheres(*inputNames.begin());
+			list<Sphere>::iterator itS = pgen.getSphereList().begin();
+
+			//==================G + MIXING RULE====================
+			gDirMass[1] = G_CONST*((*itS).getM());
+			gravForce[1] = utils::Vector<double, 3>(gDirMass);
+			EPS[1] = (*itS).getEpsilon();
+			SIG[1] = (*itS).getSigma();
+
+			pgen.spheresToList();
+			pgen.mergeWithParticleList(particleList);
+
+			//======================THERMOSTAT=====================
+			thermo = Thermostat(inpEnd);
+
+			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
+			LCsimulate();
+		}
+
+		else if (arg1 == "--rayleigh-taylor-small"){
+			//getting information from InputSetting first
+			string inpCubSmall = "RayleighTaylorSmallSetting.xml";
+			pgen.extractSetting(inpCubSmall, start_time, end_time, delta_t, inputNames,
+					inputTypes, outputMask, freq, domainSize, R_CUTOFF,
+					domainCondition, G_CONST, inputSize);
+			particleList.clear();
+
+			//initialize the size of gravForce
+			gravForce.resize(inputSize);
+			EPS.resize(inputSize);
+			SIG.resize(inputSize);
+
+			pgen.extractCuboids(*inputNames.begin());
+			// For each type
+			for (list<Cuboid>::iterator itCS = pgen.getCuboidList().begin();
+					itCS != pgen.getCuboidList().end(); itCS++) {
+				gDirMass[1] = G_CONST*((*itCS).getMass());
+				gravForce[(*itCS).getType()] = utils::Vector<double, 3>(gDirMass);
+				EPS[(*itCS).getType()] = (*itCS).getEpsilon();
+				SIG[(*itCS).getType()] = (*itCS).getSigma();
+			}
+			pgen.cuboidsToList();
+			particleList = pgen.getParticleList();
+
+			thermo = Thermostat(inpCubSmall);
+
+			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
+			LCsimulate();
+		}
+
+		else if (arg1 == "--rayleigh-taylor-big"){
+			//getting information from InputSetting first
+			string inpCubBig = "RayleighTaylorBigSetting.xml";
+			pgen.extractSetting(inpCubBig, start_time, end_time, delta_t, inputNames,
+					inputTypes, outputMask, freq, domainSize, R_CUTOFF,
+					domainCondition, G_CONST, inputSize);
+			particleList.clear();
+
+			//initialize the size of gravForce
+			gravForce.resize(inputSize);
+			EPS.resize(inputSize);
+			SIG.resize(inputSize);
+
+			pgen.extractCuboids(*inputNames.begin());
+			// For each type
+			for (list<Cuboid>::iterator itCB = pgen.getCuboidList().begin();
+					itCB != pgen.getCuboidList().end(); itCB++) {
+				gDirMass[1] = G_CONST*((*itCB).getMass());
+				gravForce[(*itCB).getType()] = utils::Vector<double, 3>(gDirMass);
+				EPS[(*itCB).getType()] = (*itCB).getEpsilon();
+				SIG[(*itCB).getType()] = (*itCB).getSigma();
+			}
+			pgen.cuboidsToList();
+			particleList = pgen.getParticleList();
+
+			thermo = Thermostat(inpCubBig);
+
+			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
+			LCsimulate();
+
+		}
+
+		else{
+			cout << arg1 << " invalid!" << endl;
+			return -1;
+		}
 	}
-
-	/*
-	 * "Running suite":
-	 * 	reads in options, fills particle container and runs the simulation
-	 */
-
-	else {
+	else{
+		//argc==1
+		//./MolSim
 		LOG4CXX_INFO(molsimlogger, "Arrived @ filedecision.");
 		string str;
 		FileReader fileReader;
@@ -286,7 +436,7 @@ int main(int argc, char* argsv[]) {
 			cout
 					<< "\tInputSetting: contains start_time, end_time, delta_t,\
 					\n\t\t inputfile name, inputfile type, output mask\
-				 	\n\t\t and output frequency."
+					\n\t\t and output frequency."
 					<< endl;
 			cout
 					<< "\tInputParticles: contains all information needed for particles."
@@ -375,8 +525,8 @@ int main(int argc, char* argsv[]) {
 		//for XML input:
 		else if (option1 == 3) {
 			//getting information from InputSetting first
-			int inputSize = 0;
-			pgen.extractSetting(start_time, end_time, delta_t, inputNames,
+			string inp = "InputSetting.xml";
+			pgen.extractSetting(inp, start_time, end_time, delta_t, inputNames,
 					inputTypes, outputMask, freq, domainSize, R_CUTOFF,
 					domainCondition, G_CONST, inputSize);
 			particleList.clear();
@@ -495,64 +645,57 @@ int main(int argc, char* argsv[]) {
 				cout << "Falling drop disabled." << endl;
 			}
 			//======================FALLING DROP=====================
-		}
-
-		cout << "\nReading input file..." << endl;
-
-		//initialize container with particle list
-		LOG4CXX_INFO(molsimlogger, "Arrived @ initialization call.");
-
-		//start simulation
-		LOG4CXX_INFO(molsimlogger, "Arrived @ simulation call.");
-
-		//======================THERMOSTAT=====================
-		int thermoOption;
-		cout
-				<< "Do you want to use Thermostat?\nPress 1 to confirm, 2 to ignore."
-				<< endl;
-		getIntegerInput(str, thermoOption);
-
-		thermo = Thermostat();
-
-		if (thermoOption == 1) {
-			//initialize thermostat to get enabled flag (true --> call, false --> ignore)
-			thermo.getEnabled() = true;
-			cout << "Thermostat enabled." << endl;
-			if (thermo.getDelta_T() != 0)
-				cout << "Target temperature: " << thermo.getT_target() << ".\n"
-						<< endl;
-		} else {
-			thermo.getEnabled() = false;
-			cout << "Thermostat disabled.\n" << endl;
-		}
-		//======================THERMOSTAT=====================
-
-		cout << "Running simulation..." << endl;
-		int wo;
-		if (option1 == 3 && option2 == 1) {
-			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
-			LCsimulate();
-			cout << "\nWrite ParListStatus.txt out?" << endl;
-			cout << "Press 1 to confirm, 2 to ignore." << endl;
-			getIntegerInput(str, wo);
-			if (wo == 1) {
-				writeOutputFile((lcContainer.getList()));
-				cout << "ParListStatus.txt written." << endl;
 			}
-		} else {
-			container.initialize(particleList);
-			simulate();
-			cout << "\nWrite ParListStatus.txt out?" << endl;
-			cout << "Press 1 to confirm, 2 to ignore." << endl;
-			getIntegerInput(str, wo);
-			if (wo == 1) {
-				//writeOutputFile(container.getList());
-				cout << "ParListStatus.txt written." << endl;
-			}
-		}
 
-		LOG4CXX_INFO(molsimlogger, "Arrived @ ending simulation.");
+			cout << "\nReading input file..." << endl;
+
+			//initialize container with particle list
+			LOG4CXX_INFO(molsimlogger, "Arrived @ initialization call.");
+
+			//start simulation
+			LOG4CXX_INFO(molsimlogger, "Arrived @ simulation call.");
+
+			//======================THERMOSTAT=====================
+			int thermoOption;
+			cout
+					<< "Do you want to use Thermostat?\nPress 1 to confirm, 2 to ignore."
+					<< endl;
+			getIntegerInput(str, thermoOption);
+
+			thermo = Thermostat();
+
+			if (thermoOption == 1) {
+				//initialize thermostat to get enabled flag (true --> call, false --> ignore)
+				thermo.getEnabled() = true;
+				cout << "Thermostat enabled." << endl;
+				if (thermo.getDelta_T() != 0)
+					cout << "Target temperature: " << thermo.getT_target() << ".\n"
+							<< endl;
+			} else {
+				thermo.getEnabled() = false;
+				cout << "Thermostat disabled.\n" << endl;
+			}
+			//======================THERMOSTAT=====================
+			cout << "Running simulation..." << endl;
+			int wo;
+			if (option1 == 3 && option2 == 1) {
+				lcContainer.initialize(particleList, domainSize, R_CUTOFF);
+				LCsimulate();
+				cout << "\nWrite ParListStatus.txt out?" << endl;
+				cout << "Press 1 to confirm, 2 to ignore." << endl;
+				getIntegerInput(str, wo);
+				if (wo == 1) {
+					writeOutputFile((lcContainer.getList()));
+					cout << "ParListStatus.txt written." << endl;
+				}
+			} else {
+				container.initialize(particleList);
+				simulate();
+			}
 	}
+
+	LOG4CXX_INFO(molsimlogger, "Arrived @ ending simulation.");
+
 	return 0;
 }
 

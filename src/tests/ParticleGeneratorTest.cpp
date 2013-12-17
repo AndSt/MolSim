@@ -224,7 +224,8 @@ void ParticleGeneratorTest::testExtractSetting(){
 	double gT;
 	int inputSizeT;
 	
-	generator.extractSetting(start_timeT, end_timeT, delta_tT,
+	string inputName = "InputSetting.xml";
+	generator.extractSetting(inputName, start_timeT, end_timeT, delta_tT,
 				inputNamesT, inputTypesT, outputMaskT,
 				outputFreqT, domainSizeT, rcutoffT, cond, gT, inputSize);
 
