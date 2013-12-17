@@ -22,7 +22,7 @@
 
 using namespace std;
 
-log4cxx::LoggerPtr filereaderlogger(log4cxx::Logger::getLogger("filereader"));
+log4cxx::LoggerPtr filereaderlogger(log4cxx::Logger::getLogger("FileReader"));
 
 FileReader::FileReader() {
 	LOG4CXX_TRACE(filereaderlogger,"FileReader constructed.");
