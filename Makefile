@@ -71,7 +71,7 @@ $(MY_TARGETS):
 	@$(MAKE) -C $@
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(OBJECTS) $(LDFLAGS) -o $@ 
+	$(CC) $(OBJECTS) $(LDFLAGS) -o $@ -pg
 	
 clean:
 	rm $(OBJECTS)
@@ -81,4 +81,4 @@ clean:
 	cd $(LIB_SPH); rm -f InputSpheres.o InputSpheres.?xx driver.o driver InputSpheres.xml InputSpheres.xsd
 	
 .cpp.o:
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@ -pg

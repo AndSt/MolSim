@@ -4,7 +4,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 
 	<start_time>0.0</start_time>
-	<t_end>15</t_end>
+	<t_end>0.1</t_end>
 	<delta_t>0.0005</delta_t>
 	<numberOfTypes>2</numberOfTypes>
 	
