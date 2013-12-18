@@ -1,0 +1,19 @@
+# file format:
+# Lines of comment start with '#' and are only allowed at the beginning of the file
+# Empty lines are not allowed.
+# The first line not being a comment has to be # <int: number of particles> <double: epsilon> <double: sigma>
+# molecule data sets.
+#
+# Molecule data consists of
+# * xyz-coordinates (3 double values)
+# * velocities (3 double values)
+# * force (3 double values)
+# * old force (3 double values)
+# * mass (1 double value)
+# * type (1 int value)
+#
+#   xyz-coord			velocity				force					old force				mass	type
+3		1		1
+1.0		2.0		0.0		10.0	20.0	0.0		-1.0	-2.0	0.0		-10.0	-20.0	0.0		11		40
+3.0		4.0		0.0		30.0	40.0	0.0		-3.0	-4.0	0.0		-30.0	-40.0	0.0		22		41
+5.0		6.0		0.0		50.0	60.0	0.0		-5.0	-6.0	0.0		-50.0	-60.0	0.0		33		42

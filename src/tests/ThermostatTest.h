@@ -19,9 +19,9 @@
 #include <cppunit/TestRunner.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-class ThermostatTest : CppUnit::TestCase{
+class ThermostatTest : public CppUnit::TestCase{
 private:
-	std::list<Particle> parList;
+	std::list<Particle* > parList;
 
 	Thermostat thermo;
 

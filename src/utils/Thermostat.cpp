@@ -67,10 +67,10 @@ void Thermostat::setThermo(std::list<Particle *>& parList, int dim, double tempe
 	double beta = sqrt(newEKin/getEKin(parList));
 	if ((beta==1)&&(brownian_flag==false)) return;
 
-	//beta!=1 or brownian_flag==false
+	//beta!=1 or brownian_flag==true
 	for (std::list<Particle *>::iterator it = parList.begin();
 						it != parList.end(); it++){
-			(*it)->getV() = beta*(*it)->getV();
+			(*it)->getV() = beta*((*it)->getV());
 			if (brownian_flag==true)
 				//Hardcode mass=1
 				MaxwellBoltzmannDistribution(*(*it), this->getMeanV(parList, dim, 1), 2);

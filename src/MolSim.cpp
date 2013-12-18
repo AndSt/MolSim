@@ -33,7 +33,8 @@
 #include "tests/LCParticleContainerTest.h"
 #include "tests/LCInnerParticleIteratorTest.h"
 #include "tests/LCOuterParticleIteratorTest.h"
-//#include "tests/ThermostatTest.h"
+#include "tests/ThermostatTest.h"
+#include "tests/FileReaderTest.h"
 
 #include <list>
 #include <cassert>
@@ -207,7 +208,8 @@ int main(int argc, char* argsv[]) {
 					runner.addTest(LCParticleContainerTest::suite());
 					//runner.addTest(LCInnerParticleIteratorTest::suite());
 					runner.addTest(LCOuterParticleIteratorTest::suite());
-					//runner.addTest(ThermostatTest::suite());
+					runner.addTest(ThermostatTest::suite());
+					runner.addTest(FileReaderTest::suite());
 					runner.run();
 
 				} else if (option == 2) {
@@ -217,12 +219,17 @@ int main(int argc, char* argsv[]) {
 							<< endl;
 					cout << "Enter '3', if you want to test the ParticleGenerator."
 							<< endl;
+					cout << "Enter '4', if you want to test the Thermostat."
+							<< endl;
+					cout << "Enter '5', if you want to test the FileReader."
+							<< endl;
 
 					//Check for correct input
-					getIntegerInput(str, option);
+					int opT;
+					getIntegerInput(str, opT);
 
 					CppUnit::TextUi::TestRunner runner;
-					switch (option) {
+					switch (opT) {
 					case 1:
 						runner.addTest(ParticleContainerTest::suite());
 						break;
@@ -231,7 +238,12 @@ int main(int argc, char* argsv[]) {
 						break;
 					case 3:
 						runner.addTest(ParticleGeneratorTest::suite());
-						option = 2;
+						break;
+					case 4:
+						runner.addTest(ThermostatTest::suite());
+						break;
+					case 5:
+						runner.addTest(FileReaderTest::suite());
 						break;
 					}
 					runner.run();
@@ -276,8 +288,11 @@ int main(int argc, char* argsv[]) {
 			double eps1 = 1.0;
 			double sig1 = 1.0;
 			FileReader fileReader;
+			string inTextS = "ParListStatus.txt";
+			char *inText = new char[inTextS.length() + 1];
+			strcpy(inText, inTextS.c_str());
 			fileReader.readStatus(pgen.getParticleList(),
-					eps1, sig1,	"ParListStatus.txt");
+					eps1, sig1,	inText);
 
 			particleList = pgen.getParticleList();
 
@@ -645,8 +660,11 @@ int main(int argc, char* argsv[]) {
 				pgen.getParticleList().clear();
 				double eps1 = 1.0;
 				double sig1 = 1.0;
+				string inTextS = "ParListStatus.txt";
+				char *inText = new char[inTextS.length() + 1];
+				strcpy(inText, inTextS.c_str());
 				fileReader.readStatus(pgen.getParticleList(),
-						eps1, sig1,	"ParListStatus.txt");
+						eps1, sig1,	inText);
 				int typeP = (*pgen.getParticleList().begin()).getType();
 				EPS[typeP][typeP] = eps1;
 				SIG[typeP][typeP] = sig1;

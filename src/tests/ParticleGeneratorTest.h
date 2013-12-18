@@ -58,27 +58,7 @@ public:
 	static Test *suite();
 
 private:
-	/**
-	 * Cuboids, to test the readCuboids() method
-	 */
-	Cuboid cuboid1, cuboid2;
-
-	/**
-	 * Generated particle list
-	 */
-	std::list<Particle> particles;
-	/**
-	 * Generator to test
-	 */
 	utils::ParticleGenerator generator;
-
-	double start_time, end_time, delta_t, g, EPSILON, SIGMA;
-	std::list<string> inputNames, inputTypes;
-	string outputMask;
-	int outputFreq;
-	int inputSize;
-	utils::Vector<double, 3> domainSize;
-	double rcutoff;
 };
 
 #endif /* PARTICLEGENERATORTEST_H_ */
