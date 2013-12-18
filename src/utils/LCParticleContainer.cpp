@@ -286,83 +286,88 @@ void LCParticleContainer::initializeBeginOuter() {
 void LCParticleContainer::initializeEndInner() {
 	for (int i = beginOuter().getCellNumber(); i < endOuter().getCellNumber();
 			i++) {
-		int x;
-		if (depth > 1) {
-			if ((num_of_cells > i + width * height + width + 1
-					&& !cells[i + width * height + width + 1]->empty())
-					&& checkRight(i) && checkBack(i) && checkTop(i)) {
-				x = i + width * height + width + 1;
-			} else if ((num_of_cells > i + width * height + width
-					&& !cells[i + width * height + width]->empty())
-					&& checkBack(i) && checkTop(i)) {
-				x = i + width * height + width;
-			} else if ((num_of_cells > i + width * height + width - 1
-					&& !cells[i + width * height + width - 1]->empty()
-					&& checkLeft(i) && checkBack(i) && checkTop(i))) {
-				x = i + width * height + width - 1;
-			} else if ((num_of_cells > i + width * height + 1
-					&& !cells[i + width * height + 1]->empty()) && checkRight(i)
-					&& checkTop(i)) {
-				x = i + width * height + 1;
-			} else if ((num_of_cells > i + width * height
-					&& !cells[i + width * height]->empty()) && checkTop(i)) {
-				x = i + width * height;
-			} else if ((num_of_cells > i + width * height - 1
-					&& !cells[i + width * height - 1]->empty()) && checkLeft(i)
-					&& checkTop(i)) {
-				x = i + width * height - 1;
-			} else if ((num_of_cells > i + width * height - width + 1
-					&& !cells[i + width * height - width + 1]->empty()
-					&& checkRight(i) && checkFront(i) && checkTop(i))) {
-				x = i + width * height - width + 1;
-			} else if ((num_of_cells > i + width * height - width
-					&& !cells[i + width * height - width]->empty())
-					&& checkFront(i) && checkTop(i)) {
-				x = i + width * height - width;
-			} else if ((num_of_cells > i + width * height - width - 1
-					&& !cells[i + width * height - width - 1]->empty()
-					&& checkLeft(i) && checkFront(i) && checkTop(i))) {
-				x = i + width * height - width - 1;
-			} else if (num_of_cells > i + width + 1
-					&& !cells[i + width + 1]->empty() && checkRight(i)
-					&& checkTop(i)) {
-				x = i + width + 1;
-			} else if (num_of_cells > i + width && !cells[i + width]->empty()
-					&& checkTop(i)) {
-				x = i + width;
-			} else if (num_of_cells > i + width - 1
-					&& !cells[i + width - 1]->empty() && checkLeft(i)
-					&& checkTop(i)) {
-				x = i + width - 1;
-			} else if (num_of_cells > i + 1 && !cells[i + 1]->empty()
-					&& checkRight(i)) {
-				x = i + 1;
+		if (!cells[i]->empty()) {
+			int x;
+			if (depth > 1) {
+				if ((num_of_cells > i + width * height + width + 1
+						&& !cells[i + width * height + width + 1]->empty())
+						&& checkRight(i) && checkBack(i) && checkTop(i)) {
+					x = i + width * height + width + 1;
+				} else if ((num_of_cells > i + width * height + width
+						&& !cells[i + width * height + width]->empty())
+						&& checkBack(i) && checkTop(i)) {
+					x = i + width * height + width;
+				} else if ((num_of_cells > i + width * height + width - 1
+						&& !cells[i + width * height + width - 1]->empty()
+						&& checkLeft(i) && checkBack(i) && checkTop(i))) {
+					x = i + width * height + width - 1;
+				} else if ((num_of_cells > i + width * height + 1
+						&& !cells[i + width * height + 1]->empty())
+						&& checkRight(i) && checkTop(i)) {
+					x = i + width * height + 1;
+				} else if ((num_of_cells > i + width * height
+						&& !cells[i + width * height]->empty())
+						&& checkTop(i)) {
+					x = i + width * height;
+				} else if ((num_of_cells > i + width * height - 1
+						&& !cells[i + width * height - 1]->empty())
+						&& checkLeft(i) && checkTop(i)) {
+					x = i + width * height - 1;
+				} else if ((num_of_cells > i + width * height - width + 1
+						&& !cells[i + width * height - width + 1]->empty()
+						&& checkRight(i) && checkFront(i) && checkTop(i))) {
+					x = i + width * height - width + 1;
+				} else if ((num_of_cells > i + width * height - width
+						&& !cells[i + width * height - width]->empty())
+						&& checkFront(i) && checkTop(i)) {
+					x = i + width * height - width;
+				} else if ((num_of_cells > i + width * height - width - 1
+						&& !cells[i + width * height - width - 1]->empty()
+						&& checkLeft(i) && checkFront(i) && checkTop(i))) {
+					x = i + width * height - width - 1;
+				} else if (num_of_cells > i + width + 1
+						&& !cells[i + width + 1]->empty() && checkRight(i)
+						&& checkTop(i)) {
+					x = i + width + 1;
+				} else if (num_of_cells > i + width
+						&& !cells[i + width]->empty() && checkTop(i)) {
+					x = i + width;
+				} else if (num_of_cells > i + width - 1
+						&& !cells[i + width - 1]->empty() && checkLeft(i)
+						&& checkTop(i)) {
+					x = i + width - 1;
+				} else if (num_of_cells > i + 1 && !cells[i + 1]->empty()
+						&& checkRight(i)) {
+					x = i + 1;
+				} else {
+					x = i;
+				}
 			} else {
-				x = i;
+				if (num_of_cells > i + width + 1
+						&& !cells[i + width + 1]->empty()) {
+					x = i + width + 1;
+				} else if (num_of_cells > i + width
+						&& !cells[i + width]->empty()) {
+					x = i + width;
+				} else if (num_of_cells > i + width
+						&& !cells[i + width - 1]->empty()) {
+					x = i + width - 1;
+				} else if (num_of_cells > i + 1 && !cells[i + 1]->empty()) {
+					x = i + 1;
+				} else {
+					x = i;
+				}
 			}
-		} else {
-			if (num_of_cells > i + width + 1
-					&& !cells[i + width + 1]->empty()) {
-				x = i + width + 1;
-			} else if (num_of_cells > i + width && !cells[i + width]->empty()) {
-				x = i + width;
-			} else if (num_of_cells > i + width
-					&& !cells[i + width - 1]->empty()) {
-				x = i + width - 1;
-			} else if (num_of_cells > i + 1 && !cells[i + 1]->empty()) {
-				x = i + 1;
-			} else {
-				x = i;
-			}
+
+			assert(!cells[x]->empty());
+			assert(cells[x]->size() > 0);
+			assert(cells[i]->size() != 0);
+
+			LCInnerParticleIterator ip(x, x, num_of_cells, width, height, depth,
+					cells[x]->end(), &cells);
+
+			endOfInners[i] = ip;
 		}
-		assert(cells[i]->size() != 0);
-		assert(cells[x]->empty() == false);
-		assert(cells[x]->size() > 0);
-
-		LCInnerParticleIterator ip(x, x, num_of_cells, width, height, depth,
-				cells[x]->end(), &cells);
-
-		endOfInners[i] = ip;
 	}
 }
 
@@ -565,8 +570,6 @@ LCInnerParticleIterator LCParticleContainer::beginInner(
 			it.getIterator(), &cells);
 	return inner;
 }
-
-
 
 LCOuterParticleIterator LCParticleContainer::beginLeftBoundary() {
 	return beginOfLeftBoundary;
