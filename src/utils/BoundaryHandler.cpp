@@ -44,7 +44,7 @@ void BoundaryHandler::applyPeriodicMoving() {
 				(*iterator).getX() = tempX;
 			}
 			assert(((*iterator).getX())[0] >= 0);
-			assert(((*iterator).getX())[0] < domain_size[0]);
+//			assert(((*iterator).getX())[0] < domain_size[0]);
 //			assert(((*iterator).getX())[1] >= 0);
 //			assert(((*iterator).getX())[1] < domain_size[1]);
 
@@ -60,8 +60,8 @@ void BoundaryHandler::applyPeriodicMoving() {
 				(*iterator).getX() = tempX;
 			}
 
-			assert((*iterator).getX()[0] >= 0);
-			assert((*iterator).getX()[0] < domain_size[0]);
+			assert(((*iterator).getX())[0] >= 0);
+			assert(((*iterator).getX())[0] < domain_size[0]);
 //			assert((*iterator).getX()[1] >= 0);
 //			assert((*iterator).getX()[1] < domain_size[1]);
 			++iterator;
@@ -79,7 +79,7 @@ void BoundaryHandler::applyPeriodicMoving() {
 			assert((*iterator).getX()[0] >= 0);
 			assert((*iterator).getX()[0] < domain_size[0]);
 			assert((*iterator).getX()[1] >= 0);
-			assert((*iterator).getX()[1] < domain_size[1]);
+//			assert((*iterator).getX()[1] < domain_size[1]);
 			++iterator;
 		}
 	}
@@ -92,11 +92,13 @@ void BoundaryHandler::applyPeriodicMoving() {
 				(*iterator).getX() = tempX;
 			}
 
-			if((*iterator).getX()[0] < 0){
-				std::cout << iterator.getCellNumber() << " : " << (*iterator).toString() << std::endl;
-				LCOuterParticleIterator iiterator = container.beginLeftBoundary();
-				while(iiterator != container.endLeftBoundary()){
-					if((*iiterator) == (*iterator)){
+			if ((*iterator).getX()[0] < 0) {
+				std::cout << iterator.getCellNumber() << " : "
+						<< (*iterator).toString() << std::endl;
+				LCOuterParticleIterator iiterator =
+						container.beginLeftBoundary();
+				while (iiterator != container.endLeftBoundary()) {
+					if ((*iiterator) == (*iterator)) {
 						break;
 					}
 					++iiterator;
@@ -162,7 +164,7 @@ void BoundaryHandler::applyReflecting() {
 				double x_arg[3] = { domain_size[0], (*iterator).getX()[1],
 						(*iterator).getX()[2] };
 				utils::Vector<double, 3> x(x_arg);
-				Particle p(x, v, 1, 0);
+				Particle p(x, v, (*iterator).getM(), (*iterator).getType());
 				calculate((*iterator), p);
 			}
 			++iterator;
@@ -176,7 +178,7 @@ void BoundaryHandler::applyReflecting() {
 				double x_arg[3] = { (*iterator).getX()[0], 0,
 						(*iterator).getX()[2] };
 				utils::Vector<double, 3> x(x_arg);
-				Particle p(x, v, 1, 0);
+				Particle p(x, v, (*iterator).getM(), (*iterator).getType());
 				calculate((*iterator), p);
 			}
 			++iterator;
@@ -190,7 +192,7 @@ void BoundaryHandler::applyReflecting() {
 				double x_arg[3] = { (*iterator).getX()[0], domain_size[1],
 						(*iterator).getX()[2] };
 				utils::Vector<double, 3> x(x_arg);
-				Particle p(x, v, 1, 0);
+				Particle p(x, v, (*iterator).getM(), (*iterator).getType());
 				calculate((*iterator), p);
 			}
 			++iterator;
@@ -206,7 +208,7 @@ void BoundaryHandler::applyReflecting() {
 					double x_arg[3] = { (*iterator).getX()[0],
 							(*iterator).getX()[1], domain_size[2] };
 					utils::Vector<double, 3> x(x_arg);
-					Particle p(x, v, 1, 0);
+					Particle p(x, v, (*iterator).getM(), (*iterator).getType());
 					calculate((*iterator), p);
 				}
 				++iterator;
@@ -220,7 +222,7 @@ void BoundaryHandler::applyReflecting() {
 					double x_arg[3] = { (*iterator).getX()[0],
 							(*iterator).getX()[1], 0 };
 					utils::Vector<double, 3> x(x_arg);
-					Particle p(x, v, 1, 0);
+					Particle p(x, v, (*iterator).getM(), (*iterator).getType());
 					calculate((*iterator), p);
 				}
 				++iterator;
@@ -324,22 +326,38 @@ void BoundaryHandler::applyPeriodic() {
 		} else {
 			while (iterator != container.endLeftBoundary()) {
 				i = iterator.getCellNumber();
-				z = i - 1;
-				for (j = 0; j < 2; j++) {
-					if (z >= 0 && z < height
-							&& !(container.getLeftHaloCells())[z]->empty()) {
+				;
+				for (z = i - 1; z < i + 2; z++) {
+					if (z >= 0 && z < container.getLeftBoundaryCells().size()
+							&& !((container.getRightBoundaryCells())[z]->empty())) {
+
 						std::list<Particle *>::iterator it2 =
-								(container.getLeftHaloCells())[z]->begin();
-						while (it2 != (container.getLeftHaloCells())[z]->end()) {
-							(*it2)->getX()[0] = (*it2)->getX()[0]
-									- domain_size[0];
-							calculate(*iterator, (*(*it2)));
-							(*it2)->getX()[0] = (*it2)->getX()[0]
-									+ domain_size[0];
+								(container.getRightBoundaryCells())[z]->begin();
+						while (it2
+								!= ((container.getRightBoundaryCells())[z])->end()) {
+//
+//							((*it2)->getX())[0] = ((*it2)->getX())[0]
+//									- domain_size[0];
+
+							utils::Vector<double, 3> tempX = (*it2)->getX();
+							tempX[0] = tempX[0] - ((double) domain_size[0]);
+							(*it2)->getX() = tempX;
+
+//							assert(tempX[0] >= 0);
+//							assert(tempX[0] < domain_size[0]);
+
+//							assert((tempX[0] - (*iterator).getX()[0]) > 0.5 );
+							calculate((*(*it2)), *iterator);
+
+							tempX[0] = tempX[0] + ((double) domain_size[0]);
+							(*it2)->getX() = tempX;
+
+//							((*it2)->getX())[0] = ((*it2)->getX())[0]
+//									+ domain_size[0];
+
 							++it2;
 						}
 					}
-					++z;
 				}
 				++iterator;
 			}
