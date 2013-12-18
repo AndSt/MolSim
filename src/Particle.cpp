@@ -13,7 +13,7 @@
 #include <log4cxx/propertyconfigurator.h>
 #include <log4cxx/xml/domconfigurator.h>
 
-log4cxx::LoggerPtr particlelogger(log4cxx::Logger::getLogger("Particle"));
+log4cxx::LoggerPtr particlelogger(log4cxx::Logger::getLogger("particle"));
 
 Particle::Particle(int type_arg) {
 	type = type_arg;

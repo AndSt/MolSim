@@ -134,7 +134,7 @@ void ParticleGenerator::extractCuboids(const string filename)
   	}
   	catch (const xml_schema::exception& e)
   	{
-	    	cerr << e << endl;
+	    	cerr << e;
 	    	exit(-1);
   	}
 }
@@ -168,7 +168,7 @@ void ParticleGenerator::extractSpheres(const string filename){
   	}
   	catch (const xml_schema::exception& e)
   	{
-	    cerr << e << endl;
+	    cerr << e;
 	    exit(-1);
   	}
 }
@@ -195,7 +195,7 @@ void ParticleGenerator::extractParticles(const string filename)
   	}
   	catch (const xml_schema::exception& e)
   	{
-	    	cerr << e << endl;
+	    	cerr << e;
 	    	exit(-1);
   	}
 }
@@ -226,7 +226,7 @@ void ParticleGenerator::extractSetting(string filename, double& start_time, doub
 		domainBoundCond.resize(6, 1);
 		lc_t::condition_const_iterator ct;
 		int i = 0;
-		// 0 left, 1 right, 2 upper, 3 ground, 4 front, 5 behind
+		// 0 left, 1 right, 2 ground, 3 upper, 4 front, 5 behind
 		for (ct = h->lc().condition().begin(); ct != h->lc().condition().end(); ct++){
 			domainBoundCond[i] = *ct;
 			i++;
@@ -242,7 +242,7 @@ void ParticleGenerator::extractSetting(string filename, double& start_time, doub
   	}
   	catch (const xml_schema::exception& e)
   	{
-		cerr << e << endl;
+		cerr << e;
 		exit(-1);
   	}
 }
