@@ -47,12 +47,6 @@ public:
 	LCOuterParticleIterator endOuter();
 
 	/**
-	 * @return the last element of the neighboring partciles
-	 * @param the index of the outer particle
-	 */
-	LCInnerParticleIterator endInner(int i);
-
-	/**
 	 * updates the list of cells (also used to initialize)
 	 */
 	void updateCells();
@@ -237,7 +231,7 @@ public:
 	 */
 	LCOuterParticleIterator endBackHalo();
 
-	LCInnerParticleIterator& endOfInner(int i);
+	LCInnerParticleIterator& endInner(int i);
 
 	/**
 	 * @return the leftBoundaryCells
