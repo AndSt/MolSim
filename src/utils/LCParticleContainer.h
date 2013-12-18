@@ -237,6 +237,8 @@ public:
 	 */
 	LCOuterParticleIterator endBackHalo();
 
+	LCInnerParticleIterator& endOfInner(int i);
+
 	/**
 	 * @return the leftBoundaryCells
 	 */
@@ -528,7 +530,7 @@ private:
 	 */
 	std::vector<std::list<Particle *> *> backBoundaryCells;
 
-	std::vector<LCInnerParticleIterator> endOfInner;
+	std::vector<LCInnerParticleIterator> endOfInners;
 
 	bool checkRight(int i);
 

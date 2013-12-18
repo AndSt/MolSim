@@ -51,7 +51,7 @@ void LCParticleContainer::initialize(std::list<Particle>& particles_arg,
 		num_of_cells = width * height;
 	}
 	cells.resize(num_of_cells);
-
+	endOfInners.resize(num_of_cells);
 	for (int i = 0; i < num_of_cells; i++) {
 		cells[i] = new std::list<Particle *>();
 	}
@@ -66,6 +66,8 @@ void LCParticleContainer::initialize(std::list<Particle>& particles_arg,
 
 	initializeEndOuter();
 
+	initializeEndInner();
+
 }
 
 void LCParticleContainer::updateCells() {
@@ -75,6 +77,8 @@ void LCParticleContainer::updateCells() {
 	initializeBeginOuter();
 
 	initializeEndOuter();
+
+	initializeEndInner();
 
 }
 
@@ -98,7 +102,7 @@ void LCParticleContainer::initializeCells() {
 			cells[i]->push_back(*iterator);
 		}
 		else {
-			assert(true == false);
+//			assert(true == false);
 		}
 		++iterator;
 	}
@@ -275,6 +279,14 @@ void LCParticleContainer::initializeBeginOuter() {
 	if (depth > 2) {
 		beginOfFrontHalo = beginOfBackBoundary;
 		beginOfBackHalo = beginOfTopBoundary;
+	}
+}
+
+void LCParticleContainer::initializeEndInner() {
+	for (int i = beginOuter().getCellNumber(); i < endOuter().getCellNumber(); i++) {
+		if(!cells[i] ->empty()) {
+			endOfInners[i] = endInner(i);
+		}
 	}
 }
 
@@ -464,6 +476,10 @@ LCOuterParticleIterator LCParticleContainer::endOuter() {
 	return endDomain;
 }
 
+LCInnerParticleIterator& LCParticleContainer::endOfInner(int i) {
+	return endOfInners[i];
+}
+
 LCInnerParticleIterator LCParticleContainer::beginInner(
 		LCOuterParticleIterator it) {
 	int i = it.getCellNumber();
@@ -526,13 +542,6 @@ LCInnerParticleIterator LCParticleContainer::endInner(int i) {
 			cells[x]->end(), &cells);
 }
 
-void LCParticleContainer::initializeEndInner() {
-	for (int i = 0; i < num_of_cells; i++) {
-		if(!cells[i] ->empty()) {
-			endOfInner[i] = endInner(i);
-		}
-	}
-}
 
 
 LCOuterParticleIterator LCParticleContainer::beginLeftBoundary(){

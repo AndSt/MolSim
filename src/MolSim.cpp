@@ -1029,10 +1029,10 @@ void LCcalculateFLJ() {
 		sumF = zero;
 		utils::LCInnerParticleIterator innerIterator = lcContainer.beginInner(
 				iterator);
-		while (innerIterator != lcContainer.endInner(i)) {
-			assert(innerIterator != lcContainer.endInner(i));
+		while (innerIterator != lcContainer.endOfInner(i)) {
+			assert(innerIterator != lcContainer.endOfInner(i));
 			if (innerIterator.getCellNumber()
-					> lcContainer.endInner(i).getCellNumber()
+					> lcContainer.endOfInner(i).getCellNumber()
 					|| innerIterator.getCellNumber()
 							> lcContainer.endOuter().getCellNumber()) {
 				break;
@@ -1129,7 +1129,7 @@ void LCplotVTK(int iteration) {
 
 	outputWriter::VTKWriter writer;
 	utils::LCOuterParticleIterator iterator = lcContainer.beginOuter();
-	writer.initializeOutput((lcContainer.getList()).size());
+	writer.initializeOutput(lcContainer.size());
 	while (iterator != lcContainer.endOuter()) {
 		Particle& p = *iterator;
 		writer.plotParticle(p);

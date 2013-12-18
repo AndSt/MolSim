@@ -18,6 +18,8 @@ namespace utils {
 
 class LCInnerParticleIterator {
 public:
+	LCInnerParticleIterator();
+
 	LCInnerParticleIterator(int index_arg,
 			int original_index_arg, int cell_size_arg,
 			int width_arg, int height_arg, int depth_arg,
