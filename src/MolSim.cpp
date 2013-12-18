@@ -1029,10 +1029,10 @@ void LCcalculateFLJ() {
 		sumF = zero;
 		utils::LCInnerParticleIterator innerIterator = lcContainer.beginInner(
 				iterator);
-		while (innerIterator != lcContainer.endOfInner(i)) {
-			assert(innerIterator != lcContainer.endOfInner(i));
+		while (innerIterator != lcContainer.endInner(i)) {
+			assert(innerIterator != lcContainer.endInner(i));
 			if (innerIterator.getCellNumber()
-					> lcContainer.endOfInner(i).getCellNumber()
+					> lcContainer.endInner(i).getCellNumber()
 					|| innerIterator.getCellNumber()
 							> lcContainer.endOuter().getCellNumber()) {
 				break;
