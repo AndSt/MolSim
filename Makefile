@@ -4,12 +4,14 @@
 # Compiler
 # --------
 CC=g++
-#CC=icpc
+##CC=icpc
 
 include files.mk
 
 # Compiler flags
 # -------------------------------------------------------------------------
+
+
 CFLAGS=-g -O3 -DNDEBUG
 #CFLAGS= -O3 -ip -ipo -fast
 

@@ -5,8 +5,8 @@
 	git clone https://github.com/AndSt/MolSim
 4. Make sure you are NOT in the MolSim folder but in its parent
 5. wget http://www5.in.tum.de/lehre/praktika/pse/ws12/linux_cluster_software.tar.gz
-6. tar -xvf linux-cluster-software.tar.gz
-7. mv linux-cluster-software software
+6. tar -xvf linux_cluster_software.tar.gz
+7. mv linux_cluster_software software
 8. cd software
 9. . ./envMolSim.sh (make sure to type the space between the first 2 dots)
 10. cd ..
