@@ -5,7 +5,6 @@
  *      Author: andal
  */
 
-
 #ifndef LCOuterPARTICLEITERATOR_H_
 #define LCOuterPARTICLEITERATOR_H_
 
@@ -22,8 +21,8 @@ public:
 	LCOuterParticleIterator();
 
 	LCOuterParticleIterator(int cell_size_arg,
-			std::vector<std::list<Particle *> *>* cells_arg, std::list<Particle *>::iterator iterator_arg,
-			int index_arg);
+			std::vector<std::list<Particle *> *>* cells_arg,
+			std::list<Particle *>::iterator iterator_arg, int index_arg);
 
 	virtual ~LCOuterParticleIterator();
 
@@ -37,8 +36,14 @@ public:
 	 */
 	void operator++();
 
+	/**
+	 * @return the cell number of the outer iterator
+	 */
 	int getCellNumber();
 
+	/**
+	 * @return the iterator
+	 */
 	std::list<Particle *>::iterator getIterator();
 
 	/**
@@ -48,15 +53,27 @@ public:
 	 */
 	bool operator!=(const LCOuterParticleIterator b);
 
+	/**
+	 * @return assigns an outer iterator with the attributes of cpy
+	 */
 	LCOuterParticleIterator& operator=(const LCOuterParticleIterator& cpy);
 
 private:
 	/**
-	 * the element of the iterator
+	 * the cells of the domain
 	 */
 	std::vector<std::list<Particle *> *>* cells;
+	/**
+	 * the total number of cells
+	 */
 	int cell_size;
+	/**
+	 * the cell number of the outer iterator
+	 */
 	int index;
+	/**
+	 * the iterator
+	 */
 	std::list<Particle *>::iterator iterator;
 };
 } /* namespace utils */

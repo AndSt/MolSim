@@ -25,7 +25,7 @@ public:
 
 	/**
 	 * fills the particles list
-	 * @param the list, TODO remaining params
+	 * @param the list
 	 */
 	void initialize(std::list<Particle>& particles_arg,
 			Vector<double, 3> domain_size_arg, double cutoff_radius_arg);
@@ -231,6 +231,10 @@ public:
 	 */
 	LCOuterParticleIterator endBackHalo();
 
+	/**
+	 * @return the endOfInners[i]
+	 * @param the index of the outer iterator
+	 */
 	LCInnerParticleIterator& endInner(int i);
 
 	/**
@@ -263,8 +267,6 @@ public:
 	 */
 	std::vector<std::list<Particle *> *>& getBackBoundaryCells();
 
-	// TODO void initializeEndOfOuterIterators();
-
 	/**
 	 * @return the domain sizes
 	 */
@@ -290,6 +292,9 @@ public:
 	 */
 	int size();
 
+	/**
+	 * initalizes the ends for the inner iterators
+	 */
 	void initializeEndInner();
 
 private:
@@ -337,203 +342,226 @@ private:
 	int num_of_cells;
 
 	/**
-	 * @return the first particle of the domain
+	 * the first particle of the domain
 	 */
 	LCOuterParticleIterator beginDomain;
 	/**
-	 * @return the last particle of the domain
+	 * the last particle of the domain
 	 */
 	LCOuterParticleIterator endDomain;
 
 	/**
-	 * @return the first particle of the right boundary cells
+	 * the first particle of the right boundary cells
 	 */
 	LCOuterParticleIterator beginOfLeftBoundary;
 
 	/**
-	 * @return the first particle of the right boundary cells
+	 * the first particle of the right boundary cells
 	 */
 	LCOuterParticleIterator beginOfRightBoundary;
 
 	/**
-	 * @return the first particle of the bottom boundary cells
+	 * the first particle of the bottom boundary cells
 	 */
 	LCOuterParticleIterator beginOfBottomBoundary;
 
 	/**
-	 * @return the first particle of the top boundary cells
+	 * the first particle of the top boundary cells
 	 */
 	LCOuterParticleIterator beginOfTopBoundary;
 
 	/**
-	 * @return the first particle of the front boundary cells
+	 * the first particle of the front boundary cells
 	 */
 	LCOuterParticleIterator beginOfFrontBoundary;
 	/**
-	 * @return the first particle of the rear boundary cells
+	 * the first particle of the rear boundary cells
 	 */
 	LCOuterParticleIterator beginOfBackBoundary;
 
 	/**
-	 * @return the first particle of the left halo cells
+	 * the first particle of the left halo cells
 	 */
 	LCOuterParticleIterator beginOfLeftHalo;
 
 	/**
-	 * @return the first particle of the right halo cells
+	 * the first particle of the right halo cells
 	 */
 	LCOuterParticleIterator beginOfRightHalo;
 
 	/**
-	 * @return the first particle of the bottom halo cells
+	 * the first particle of the bottom halo cells
 	 */
 	LCOuterParticleIterator beginOfBottomHalo;
 
 	/**
-	 * @return the first particle of the top halo cells
+	 * the first particle of the top halo cells
 	 */
 	LCOuterParticleIterator beginOfTopHalo;
 
 	/**
-	 * @return the first particle of the front halo cells
+	 *  the first particle of the front halo cells
 	 */
 	LCOuterParticleIterator beginOfFrontHalo;
 
 	/**
-	 * @return the first particle of the rear halo cells
+	 *  the first particle of the rear halo cells
 	 */
 	LCOuterParticleIterator beginOfBackHalo;
 
 	/**
-	 * @return the last particle of the left boundary cells
+	 * the last particle of the left boundary cells
 	 */
 	LCOuterParticleIterator endOfLeftBoundary;
 
 	/**
-	 * @return the lasi particle of the right boundary cells
+	 * the last particle of the right boundary cells
 	 */
 	LCOuterParticleIterator endOfRightBoundary;
 
 	/**
-	 * @return the last particle of the bottom boundary cells
+	 * the last particle of the bottom boundary cells
 	 */
 	LCOuterParticleIterator endOfBottomBoundary;
 
 	/**
-	 * @return the last particle of the top boundary cells
+	 * the last particle of the top boundary cells
 	 */
 	LCOuterParticleIterator endOfTopBoundary;
 
 	/**
-	 * @return the last particle of the front boundary cells
+	 * the last particle of the front boundary cells
 	 */
 	LCOuterParticleIterator endOfFrontBoundary;
 
 	/**
-	 * @return the last particle of the rear boundary cells
+	 * the last particle of the rear boundary cells
 	 */
 	LCOuterParticleIterator endOfBackBoundary;
 
 	/**
-	 * @return the last particle of the left halo cells
+	 * the last particle of the left halo cells
 	 */
 	LCOuterParticleIterator endOfLeftHalo;
 
 	/**
-	 * @return the last particle of the right halo cells
+	 * the last particle of the right halo cells
 	 */
 	LCOuterParticleIterator endOfRightHalo;
 
 	/**
-	 * @return the last particle of the bottom halo cells
+	 * the last particle of the bottom halo cells
 	 */
 	LCOuterParticleIterator endOfBottomHalo;
 
 	/**
-	 * @return the last particle of the top halo cells
+	 * the last particle of the top halo cells
 	 */
 	LCOuterParticleIterator endOfTopHalo;
 
 	/**
-	 * @return the last particle of the front halo cells
+	 * the last particle of the front halo cells
 	 */
 	LCOuterParticleIterator endOfFrontHalo;
 
 	/**
-	 * @return the last particle of the back halo cells
+	 * the last particle of the back halo cells
 	 */
 	LCOuterParticleIterator endOfBackHalo;
 
 	/**
-	 * @return the particles from the left halo cells
+	 * the particles from the left halo cells
 	 */
 	std::vector<std::list<Particle *> *> leftHaloCells;
 
 	/**
-	 * @return the particles from the right halo cells
+	 * the particles from the right halo cells
 	 */
 	std::vector<std::list<Particle *> *> rightHaloCells;
 
 	/**
-	 * @return the particles from the bottom halo cells
+	 * the particles from the bottom halo cells
 	 */
 	std::vector<std::list<Particle *> *> bottomHaloCells;
 
 	/**
-	 * @return the particles from the top halo cells
+	 * the particles from the top halo cells
 	 */
 	std::vector<std::list<Particle *> *> topHaloCells;
 
 	/**
-	 * @return the particles from the front halo cells
+	 * the particles from the front halo cells
 	 */
 	std::vector<std::list<Particle *> *> frontHaloCells;
 
 	/**
-	 * @return the particles from the rear halo cells
+	 * the particles from the rear halo cells
 	 */
 	std::vector<std::list<Particle *> *> backHaloCells;
 
 	/**
-	 * @return the particles in the left boundary cells
+	 * the particles in the left boundary cells
 	 */
 	std::vector<std::list<Particle *> *> leftBoundaryCells;
 
 	/**
-	 * @return the particles in the right boundary cells
+	 * the particles in the right boundary cells
 	 */
 	std::vector<std::list<Particle *> *> rightBoundaryCells;
 
 	/**
-	 * @return the particles in the bottom boundary cells
+	 * the particles in the bottom boundary cells
 	 */
 	std::vector<std::list<Particle *> *> bottomBoundaryCells;
 
 	/**
-	 * @return the particles in the top boundary cells
+	 * the particles in the top boundary cells
 	 */
 	std::vector<std::list<Particle *> *> topBoundaryCells;
 
 	/**
-	 * @return the particles in the front boundary cells
+	 * the particles in the front boundary cells
 	 */
 	std::vector<std::list<Particle *> *> frontBoundaryCells;
 
 	/**
-	 * @return the particles in the rear boundary cells
+	 * the particles in the rear boundary cells
 	 */
 	std::vector<std::list<Particle *> *> backBoundaryCells;
 
+	/**
+	 * the ends of the inner iterators
+	 */
 	std::vector<LCInnerParticleIterator> endOfInners;
 
+	/**
+	 * checks whether the iterator is in the right boundary
+	 * @param the index
+	 */
 	bool checkRight(int i);
 
+	/**
+	 * checks whether the iterator is in the left boundary
+	 * @param the index
+	 */
 	bool checkLeft(int i);
 
+	/**
+	 * checks whether the iterator is in the top boundary
+	 * @param the index
+	 */
 	bool checkTop(int i);
 
+	/**
+	 * checks whether the iterator is in the rear boundary
+	 * @param the index
+	 */
 	bool checkBack(int i);
 
+	/**
+	 * checks whether the iterator is in the front boundary
+	 * @param the index
+	 */
 	bool checkFront(int i);
 };
 

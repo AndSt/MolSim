@@ -47,6 +47,9 @@ public:
 	 */
 	bool operator!=(const LCInnerParticleIterator b);
 
+	/**
+	 * @return assignes an inner iterator with the attributes of cpy
+	 */
 	LCInnerParticleIterator& operator=(const LCInnerParticleIterator& cpy);
 
 	/**
@@ -77,13 +80,29 @@ public:
 
 private:
 	/**
-	 * the members of the iterator
+	 * the pointers to the cells with the particles inside
 	 */
 	std::vector<std::list<Particle *> *>* cells;
+
+	/**
+	 * the total number of cells
+	 */
 	int cell_size;
+	/**
+	 * the number of cells in x, y and z direction
+	 */
 	int width, height, depth;
+	/**
+	 * the cell number of the inner iterator
+	 */
 	int index;
+	/**
+	 * the cell number of the outer iterator where the inneriterator was called from
+	 */
 	int original_index;
+	/**
+	 * the iterator
+	 */
 	std::list<Particle *>::iterator iterator;
 };
 } /* namespace utils */
