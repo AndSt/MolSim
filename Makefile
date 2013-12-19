@@ -26,7 +26,10 @@ INP_SPH_XSD = "InputSpheres.xsd"
 
 # Compiler flags
 # -------------------------------------------------------------------------
-CFLAGS=-g -O3
+CFLAGS_KERNEL := -g
+
+CFLAGS := -g -O3
+#CFLAGS := -O3 -ip -ipo -fast -DNDEBUG
 
 # Linker flags
 # ------------
