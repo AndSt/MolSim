@@ -147,10 +147,10 @@ void BoundaryHandler::applyReflecting() {
 		iterator = container.beginLeftBoundary();
 		while (iterator != container.endLeftBoundary()) {
 			if ((*iterator).getX()[0] <= h) {
-				double x_arg[3] = { 0, (*iterator).getX()[1],
-						(*iterator).getX()[2] };
+				double x_arg[3] = { 0, ((*iterator).getX())[1],
+						((*iterator).getX())[2] };
 				utils::Vector<double, 3> x(x_arg);
-				Particle p(x, v, 1, 0);
+				Particle p(x, v, 0, (*iterator).getType());
 				calculate((*iterator), p);
 			}
 			++iterator;
@@ -161,10 +161,10 @@ void BoundaryHandler::applyReflecting() {
 		iterator = container.beginRightBoundary();
 		while (iterator != container.endRightBoundary()) {
 			if ((*iterator).getX()[0] >= domain_size[0] - h) {
-				double x_arg[3] = { domain_size[0], (*iterator).getX()[1],
-						(*iterator).getX()[2] };
+				double x_arg[3] = { domain_size[0], ((*iterator).getX())[1],
+						((*iterator).getX())[2] };
 				utils::Vector<double, 3> x(x_arg);
-				Particle p(x, v, (*iterator).getM(), (*iterator).getType());
+				Particle p(x, v, 0, (*iterator).getType());
 				calculate((*iterator), p);
 			}
 			++iterator;
@@ -175,10 +175,10 @@ void BoundaryHandler::applyReflecting() {
 		iterator = container.beginBottomBoundary();
 		while (iterator != container.endBottomBoundary()) {
 			if ((*iterator).getX()[1] <= h) {
-				double x_arg[3] = { (*iterator).getX()[0], 0,
-						(*iterator).getX()[2] };
+				double x_arg[3] = { ((*iterator).getX())[0], 0,
+						((*iterator).getX())[2] };
 				utils::Vector<double, 3> x(x_arg);
-				Particle p(x, v, (*iterator).getM(), (*iterator).getType());
+				Particle p(x, v, 0, (*iterator).getType());
 				calculate((*iterator), p);
 			}
 			++iterator;
@@ -189,10 +189,10 @@ void BoundaryHandler::applyReflecting() {
 		iterator = container.beginTopBoundary();
 		while (iterator != container.endTopBoundary()) {
 			if ((*iterator).getX()[1] >= domain_size[1] - h) {
-				double x_arg[3] = { (*iterator).getX()[0], domain_size[1],
-						(*iterator).getX()[2] };
+				double x_arg[3] = { ((*iterator).getX())[0], domain_size[1],
+						((*iterator).getX())[2] };
 				utils::Vector<double, 3> x(x_arg);
-				Particle p(x, v, (*iterator).getM(), (*iterator).getType());
+				Particle p(x, v, 0, (*iterator).getType());
 				calculate((*iterator), p);
 			}
 			++iterator;
@@ -309,11 +309,16 @@ void BoundaryHandler::applyPeriodic() {
 									(container.getLeftHaloCells())[z]->begin();
 							while (it2
 									!= (container.getLeftHaloCells())[z]->end()) {
-								(*it2)->getX()[0] = (*it2)->getX()[0]
-										- domain_size[0];
-								calculate(*iterator, (*(*it2)));
-								(*it2)->getX()[0] = (*it2)->getX()[0]
-										+ domain_size[0];
+
+								utils::Vector<double, 3> tempX = (*it2)->getX();
+								tempX[0] = tempX[0] - ((double) domain_size[0]);
+								(*it2)->getX() = tempX;
+
+								calculate((*(*it2)), *iterator);
+
+								tempX[0] = tempX[0] + ((double) domain_size[0]);
+								(*it2)->getX() = tempX;
+
 								++it2;
 							}
 						}
@@ -329,31 +334,20 @@ void BoundaryHandler::applyPeriodic() {
 				;
 				for (z = i - 1; z < i + 2; z++) {
 					if (z >= 0 && z < container.getLeftBoundaryCells().size()
-							&& !((container.getRightBoundaryCells())[z]->empty())) {
+							&& !((container.getLeftHaloCells())[z]->empty())) {
 
 						std::list<Particle *>::iterator it2 =
-								(container.getRightBoundaryCells())[z]->begin();
-						while (it2
-								!= ((container.getRightBoundaryCells())[z])->end()) {
-//
-//							((*it2)->getX())[0] = ((*it2)->getX())[0]
-//									- domain_size[0];
+								(container.getLeftHaloCells())[z]->begin();
+						while (it2 != ((container.getLeftHaloCells())[z])->end()) {
 
 							utils::Vector<double, 3> tempX = (*it2)->getX();
 							tempX[0] = tempX[0] - ((double) domain_size[0]);
 							(*it2)->getX() = tempX;
 
-//							assert(tempX[0] >= 0);
-//							assert(tempX[0] < domain_size[0]);
-
-//							assert((tempX[0] - (*iterator).getX()[0]) > 0.5 );
 							calculate((*(*it2)), *iterator);
 
 							tempX[0] = tempX[0] + ((double) domain_size[0]);
 							(*it2)->getX() = tempX;
-
-//							((*it2)->getX())[0] = ((*it2)->getX())[0]
-//									+ domain_size[0];
 
 							++it2;
 						}
@@ -379,11 +373,15 @@ void BoundaryHandler::applyPeriodic() {
 									(container.getBottomHaloCells())[z]->begin();
 							while (it2
 									!= (container.getBottomHaloCells())[z]->end()) {
-								(*it2)->getX()[1] = (*it2)->getX()[1]
-										- domain_size[1];
-								calculate(*iterator, (*(*it2)));
-								(*it2)->getX()[1] = (*it2)->getX()[1]
-										+ domain_size[1];
+								utils::Vector<double, 3> tempX = (*it2)->getX();
+								tempX[1] = tempX[1] - ((double) domain_size[1]);
+								(*it2)->getX() = tempX;
+
+								calculate((*(*it2)), *iterator);
+
+								tempX[1] = tempX[1] + ((double) domain_size[1]);
+								(*it2)->getX() = tempX;
+
 								++it2;
 							}
 						}
@@ -403,11 +401,16 @@ void BoundaryHandler::applyPeriodic() {
 						std::list<Particle *>::iterator it2 =
 								(container.getBottomHaloCells())[z]->begin();
 						while (it2 != (container.getBottomHaloCells())[z]->end()) {
-							(*it2)->getX()[1] = (*it2)->getX()[1]
-									- domain_size[1];
-							calculate(*iterator, (*(*it2)));
-							(*it2)->getX()[1] = (*it2)->getX()[1]
-									+ domain_size[1];
+
+							utils::Vector<double, 3> tempX = (*it2)->getX();
+							tempX[1] = tempX[1] - ((double) domain_size[1]);
+							(*it2)->getX() = tempX;
+
+							calculate((*(*it2)), *iterator);
+
+							tempX[1] = tempX[1] + ((double) domain_size[1]);
+							(*it2)->getX() = tempX;
+
 							++it2;
 						}
 					}
@@ -432,11 +435,16 @@ void BoundaryHandler::applyPeriodic() {
 									(container.getFrontHaloCells())[z]->begin();
 							while (it2
 									!= (container.getFrontHaloCells())[z]->end()) {
-								(*it2)->getX()[2] = (*it2)->getX()[2]
-										- domain_size[2];
-								calculate(*iterator, (*(*it2)));
-								(*it2)->getX()[2] = (*it2)->getX()[2]
-										+ domain_size[2];
+
+								utils::Vector<double, 3> tempX = (*it2)->getX();
+								tempX[2] = tempX[2] - ((double) domain_size[1]);
+								(*it2)->getX() = tempX;
+
+								calculate((*(*it2)), *iterator);
+
+								tempX[2] = tempX[2] + ((double) domain_size[1]);
+								(*it2)->getX() = tempX;
+
 								++it2;
 							}
 						}

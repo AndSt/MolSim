@@ -48,7 +48,7 @@ Thermostat::Thermostat(double T_init, double T_target, double delta_T,
 	this->brownian_flag = brownian_flag;
 }
 
-double Thermostat::getEKin(std::list<Particle *> parList){
+double Thermostat::getEKin(std::list<Particle *>& parList){
 	double eKinTimes2 = 0;
 	double v = 0;
 	for (std::list<Particle *>::iterator it = parList.begin(); it != parList.end(); it++){
@@ -58,7 +58,7 @@ double Thermostat::getEKin(std::list<Particle *> parList){
 	return eKinTimes2/2;
 }
 
-double Thermostat::getMeanV(std::list<Particle *> parList, int dim, double mass){
+double Thermostat::getMeanV(std::list<Particle *>& parList, int dim, double mass){
 	return sqrt(2*getEKin(parList)/(dim*parList.size()*mass));
 }
 

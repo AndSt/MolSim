@@ -84,7 +84,7 @@ public:
 	 *
 	 * @param[in] parList a list of pointers of particles
 	 */
-	double getEKin(std::list<Particle *> parList);
+	double getEKin(std::list<Particle *>& parList);
 
 	/**
 	 * \return mean velocity of the system for Brownian Motion.
@@ -93,7 +93,7 @@ public:
 	 * @param[in] dim number of dimensions (2 or 3)
 	 * @param[in] mass mass of each particle in the system
 	 */
-	double getMeanV(std::list<Particle *> parList, int dim, double mass);
+	double getMeanV(std::list<Particle *>& parList, int dim, double mass);
 
 	/**
 	 * Setter.
