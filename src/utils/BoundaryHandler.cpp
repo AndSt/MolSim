@@ -24,13 +24,6 @@ BoundaryHandler::~BoundaryHandler() {
 	// TODO Auto-generated destructor stub
 }
 
-void BoundaryHandler::applyBoundaries() {
-	applyOutflow();
-	applyPeriodicMoving();
-	applyReflecting();
-	applyPeriodic();
-}
-
 void BoundaryHandler::applyPeriodicMoving() {
 	LCOuterParticleIterator iterator;
 	//links, unten, vorne sind inklusiv Grenze,
