@@ -1024,7 +1024,7 @@ void LCsimulate() {
 		}
 
 		if (iteration % freq == 0) {
-//			LCplotVTK(iteration);
+			LCplotVTK(iteration);
 		}
 
 		LOG4CXX_TRACE(molsimlogger, "Iteration " << iteration << " finished.");
