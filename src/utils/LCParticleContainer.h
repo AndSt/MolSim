@@ -25,7 +25,9 @@ public:
 
 	/**
 	 * fills the particles list
-	 * @param the list
+	 * @param particles_arg the list containing the particles
+	 * @param domain_size_arg the domain size
+	 * @param cutoff_radius_arg the cutoff_radius
 	 */
 	void initialize(std::list<Particle>& particles_arg,
 			Vector<double, 3> domain_size_arg, double cutoff_radius_arg);
