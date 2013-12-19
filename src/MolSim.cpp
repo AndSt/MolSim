@@ -1029,11 +1029,11 @@ void LCsimulate() {
 
 		LOG4CXX_TRACE(molsimlogger, "Iteration " << iteration << " finished.");
 
-		if(iteration == 1000){
-			gettimeofday(&tim, NULL);
-			double t2=tim.tv_sec+(tim.tv_usec/1000000.0);
-			cout << (t2-t1) << endl;
-		}
+//		if(iteration == 1000){
+//			gettimeofday(&tim, NULL);
+//			double t2=tim.tv_sec+(tim.tv_usec/1000000.0);
+//			cout << (t2-t1) << endl;
+//		}
 		current_time += delta_t;
 
 		//cout << float( clock () - beginTime ) /  CLOCKS_PER_SEC;
