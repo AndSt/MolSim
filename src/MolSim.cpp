@@ -139,6 +139,12 @@ vector<int> domainCondition;
 
 string fileName;
 
+
+//used to check the length of the simulation
+struct timeval tim;
+double t1;
+
+
 // Thermostat option: only called when thermo.getEnabled() == true
 Thermostat thermo;
 
@@ -170,6 +176,9 @@ int main(int argc, char* argsv[]) {
 	 */
 
 	//bool test = false;
+
+	gettimeofday(&tim, NULL);
+	t1 = tim.tv_sec + (tim.tv_usec / 1000000.0);
 	if (argc > 2) {
 		cout << "Maximal 2 arguments." << endl;
 		return -1;
@@ -957,9 +966,6 @@ void plotVTK(int iteration) {
 void LCsimulate() {
 // the forces are needed to calculate x, but are not given in the input file.
 //calculateF();
-	struct timeval tim;
-	gettimeofday(&tim, NULL);
-	double t1 = tim.tv_sec + (tim.tv_usec / 1000000.0);
 
 	LOG4CXX_INFO(molsimlogger, "lcContainer.size: " << lcContainer.size());
 	LOG4CXX_INFO(molsimlogger, "particleList.size: " << particleList.size());
@@ -1018,7 +1024,7 @@ void LCsimulate() {
 		}
 
 		if (iteration % freq == 0) {
-			LCplotVTK(iteration);
+//			LCplotVTK(iteration);
 		}
 
 		LOG4CXX_TRACE(molsimlogger, "Iteration " << iteration << " finished.");
@@ -1127,6 +1133,7 @@ void computeForce(Particle& p1, Particle& p2) {
 	double tempDNorm = tempD.L2Norm();
 
 	if (tempDNorm < R_CUTOFF) {
+
 		double tempDSigDivNorm = pow(
 				SIG[p1.getType()][p2.getType()] / tempDNorm, 6);
 		utils::Vector<double, 3> tempF = 24 * EPS[p1.getType()][p2.getType()]
