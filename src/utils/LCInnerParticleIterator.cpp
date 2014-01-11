@@ -192,20 +192,26 @@ int LCInnerParticleIterator::getCellNumber() {
 	return index;
 }
 
+
 bool LCInnerParticleIterator::checkLeft() {
-	return ((original_index % width) != 0);
+        return ((original_index % width) > 0);
 }
 bool LCInnerParticleIterator::checkRight() {
-	return ((index % width) != 0);
+        return ((index % width) != (width - 1));
 }
 bool LCInnerParticleIterator::checkBottom() {
-	return (width <= original_index % (width * height));
+        return (width <= (original_index % (width * height)));
 }
 bool LCInnerParticleIterator::checkBack() {
-	return (index < cell_size);
+	if(depth == 0){
+		return false;
+	}
+	else {
+		return (original_index / (width * height) < (depth - 1));
+	}
 }
 bool LCInnerParticleIterator::checkTop() {
-	return (width * height - width > (original_index % (width * height)));
+        return (width * height - width > (original_index % (width * height)));
 }
 
 }

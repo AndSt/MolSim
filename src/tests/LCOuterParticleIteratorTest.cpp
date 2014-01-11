@@ -53,7 +53,6 @@ void LCOuterParticleIteratorTest::testAssignment() {
 	CPPUNIT_ASSERT((iterator1 != iterator3));
 	CPPUNIT_ASSERT(iterator1.getCellNumber() != iterator3.getCellNumber());
 
-	std::cout << "testAssignment" << std::endl;
 }
 
 void LCOuterParticleIteratorTest::testInequality() {
@@ -71,11 +70,10 @@ void LCOuterParticleIteratorTest::testInequality() {
 
 	//2. check if the function returns false, if the cell number of first
 	// 	 element is bigger than the cell number of the second element
-	//	 (otherwise we will go further than last element of the outerIterator..)
+	//	 (otherwise we will go further than the last element of the outerIterator..)
 
 	CPPUNIT_ASSERT(!(iterator2 != iterator1));
 
-	std::cout << "testInequality" << std::endl;
 }
 
 void LCOuterParticleIteratorTest::testParticleReference() {
@@ -87,8 +85,6 @@ void LCOuterParticleIteratorTest::testParticleReference() {
 
 	CPPUNIT_ASSERT((*iterator1) == (*iterator2));
 	CPPUNIT_ASSERT(!((*iterator1) == (*iterator3)));
-
-	std::cout << "testParticleReference" << std::endl;
 }
 
 void LCOuterParticleIteratorTest::testIteration() {
@@ -126,8 +122,6 @@ void LCOuterParticleIteratorTest::testIteration() {
 	for(int i = 0; i < num_of_cells; i++){
 		CPPUNIT_ASSERT(size[i] == 0);
 	}
-
-	std::cout << "testIteration" << std::endl;
 }
 
 void LCOuterParticleIteratorTest::testGetCellNumber() {
@@ -140,8 +134,6 @@ void LCOuterParticleIteratorTest::testGetCellNumber() {
 		CPPUNIT_ASSERT(i == iterator.getCellNumber());
 		++iterator;
 	}
-
-	std::cout << "testGetCellNumber" << std::cout;
 }
 
 void LCOuterParticleIteratorTest::testGetIterator() {
@@ -157,7 +149,6 @@ void LCOuterParticleIteratorTest::testGetIterator() {
 	CPPUNIT_ASSERT((*iterator1) == *(*iiterator1));
 	CPPUNIT_ASSERT((*iterator1) == *(*iiterator2));
 	CPPUNIT_ASSERT(((*iterator1) == *(*iiterator3)));
-	std::cout << "testGetIterator" << std::endl;
 }
 
 CppUnit::Test *LCOuterParticleIteratorTest::suite() {

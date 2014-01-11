@@ -28,7 +28,7 @@ void LCInnerParticleIteratorTest::setUp() {
 	//initialize container
 	CPPUNIT_ASSERT(particles.empty() == false);
 	cutoff_radius = 3.0;
-	double domain_size_arg[3] = { 50, 20, 0 };
+	double domain_size_arg[3] = { 51, 24, 0 };
 	domain_size = utils::Vector<double, 3>(domain_size_arg);
 
 	width = domain_size[0] / cutoff_radius;
@@ -49,12 +49,12 @@ void LCInnerParticleIteratorTest::testParticleReference() {
 	utils::LCOuterParticleIterator iterator = container.beginOuter();
 	utils::LCInnerParticleIterator iterator1 = container.beginInner(iterator);
 	utils::LCInnerParticleIterator iterator2 = container.beginInner(iterator);
+
 	++iterator;
 	utils::LCInnerParticleIterator iterator3 = container.beginInner(iterator);
 
 	CPPUNIT_ASSERT((*iterator1) == (*iterator2));
 	CPPUNIT_ASSERT(!((*iterator1) == (*iterator3)));
-	std::cout << "testParticleReference" << std::endl;
 }
 
 void LCInnerParticleIteratorTest::testAssignment() {
@@ -67,21 +67,18 @@ void LCInnerParticleIteratorTest::testAssignment() {
 
 	CPPUNIT_ASSERT((*iterator1) == (*iterator2));
 	CPPUNIT_ASSERT(!((*iterator1) == (*iterator3)));
-
-	std::cout << "testAssignment" << std::endl;
 }
 
 void LCInnerParticleIteratorTest::testInequality() {
 	utils::LCOuterParticleIterator iterator = container.beginOuter();
 	utils::LCInnerParticleIterator iterator1 = container.beginInner(iterator);
 	utils::LCInnerParticleIterator iterator2 = container.beginInner(iterator);
+
 	++iterator;
 	utils::LCInnerParticleIterator iterator3 = container.beginInner(iterator);
 
 	CPPUNIT_ASSERT(!(iterator1 != iterator2));
 	CPPUNIT_ASSERT(iterator1 != iterator3);
-
-	std::cout << "testInequality" << std::endl;
 }
 
 void LCInnerParticleIteratorTest::testGetCellNumber() {
@@ -103,8 +100,6 @@ void LCInnerParticleIteratorTest::testGetCellNumber() {
 		}
 		++outerIterator;
 	}
-
-	std::cout << "testGetCellNumber" << std::endl;
 }
 
 void LCInnerParticleIteratorTest::testCheckLeft() {
@@ -113,27 +108,27 @@ void LCInnerParticleIteratorTest::testCheckLeft() {
 	utils::LCOuterParticleIterator iterator = container.beginOuter();
 	utils::LCInnerParticleIterator testIterator1 = container.beginInner(
 			iterator);
+
 	CPPUNIT_ASSERT(testIterator1.checkLeft() == false);
 
 	//the input is a cuboid, so (*iterator) should a left side
 	int i = iterator.getCellNumber();
-	while(iterator.getCellNumber() <= i){
-		++iterator;
-	}
+	++iterator;
 	utils::LCInnerParticleIterator testIterator2 = container.beginInner(
-				iterator);
+			iterator);
+
 	CPPUNIT_ASSERT(testIterator2.checkLeft() == true);
 
 	//in (i+width), which is the first cell in the next line, should be no
 	//left side
+	while (iterator.getCellNumber() < (i + width)) {
+		++iterator;
+	}
 	utils::LCInnerParticleIterator testIterator3 = container.beginInner(
-					iterator);
-	while(iterator.getCellNumber() < (i+width)){
-			++iterator;
-		}
+			iterator);
+
 	CPPUNIT_ASSERT(i + width == testIterator3.getCellNumber());
 	CPPUNIT_ASSERT(testIterator3.checkLeft() == false);
-	std::cout << "testCheckLeft" << std::endl;
 }
 
 void LCInnerParticleIteratorTest::testCheckRight() {
@@ -145,54 +140,43 @@ void LCInnerParticleIteratorTest::testCheckRight() {
 	CPPUNIT_ASSERT(testIterator1.checkRight() == true);
 
 	//the input is a cuboid, so (*iterator) should have a right side
-	int i = iterator.getCellNumber();
-	while(iterator.getCellNumber() <= i){
-		++iterator;
-	}
+	++iterator;
 	utils::LCInnerParticleIterator testIterator2 = container.beginInner(
-				iterator);
+			iterator);
 	CPPUNIT_ASSERT(testIterator2.checkRight() == true);
 
-	//in (i+width-1), which is the last cell in the first line, should be no
+	//in (width-1), which is the last cell in the first line, should be no
 	//right side
+	while(iterator.getCellNumber() < (width - 1)) {
+		++iterator;
+	}
 	utils::LCInnerParticleIterator testIterator3 = container.beginInner(
-					iterator);
-	while(iterator.getCellNumber() < (i+width-1)){
-			++iterator;
-		}
-
+			iterator);
 	CPPUNIT_ASSERT(testIterator3.checkRight() == false);
-	std::cout << "testCheckRight" << std::endl;
 }
 
 void LCInnerParticleIteratorTest::testCheckBottom() {
 
 	//the input is a cuboid who has particles in all cells, so there
-	//should be bottom cell
+	//should be no bottom cell
 	utils::LCOuterParticleIterator iterator = container.beginOuter();
 	utils::LCInnerParticleIterator testIterator1 = container.beginInner(
 			iterator);
 	CPPUNIT_ASSERT(testIterator1.checkBottom() == false);
 
-	//the input is a cuboid, so (*iterator) should have a right side
-	int i = iterator.getCellNumber();
-	while(iterator.getCellNumber() <= i){
-		++iterator;
-	}
+	//the input is a cuboid, so (*iterator) should have no bottom side
+	++iterator;
 	utils::LCInnerParticleIterator testIterator2 = container.beginInner(
-				iterator);
+			iterator);
 	CPPUNIT_ASSERT(testIterator2.checkBottom() == false);
 
-	//in (i+width-1), which is the last cell in the first line, should be no
-	//right side
+	//at cell (width+2) should be a bottom cell
+	while(iterator.getCellNumber() < width) {
+		++iterator;
+	}
 	utils::LCInnerParticleIterator testIterator3 = container.beginInner(
-					iterator);
-	while(iterator.getCellNumber() < (i+width-1)){
-			++iterator;
-		}
-
+			iterator);
 	CPPUNIT_ASSERT(testIterator3.checkBottom() == true);
-	std::cout << "testCheckBottom" << std::endl;
 }
 
 void LCInnerParticleIteratorTest::testCheckTop() {
@@ -206,23 +190,21 @@ void LCInnerParticleIteratorTest::testCheckTop() {
 
 	//it should have a cell above it
 	int i = iterator.getCellNumber();
-	while(iterator.getCellNumber() <= i){
+	while (iterator.getCellNumber() <= i) {
 		++iterator;
 	}
 	utils::LCInnerParticleIterator testIterator2 = container.beginInner(
-				iterator);
+			iterator);
 	CPPUNIT_ASSERT(testIterator2.checkTop() == true);
 
-	//in (i+(width*(height-1))), which is the last line of cells on the front
+	//in (width*(height-1)), which is the last line of cells on the front
 	//layer
+	while (iterator.getCellNumber() < (i + (width * (height - 1)))) {
+		++iterator;
+	}
 	utils::LCInnerParticleIterator testIterator3 = container.beginInner(
-					iterator);
-	while(iterator.getCellNumber() < (i+(width*(height-1)))){
-			++iterator;
-		}
-
+			iterator);
 	CPPUNIT_ASSERT(testIterator3.checkTop() == false);
-	std::cout << "testCheckTop" << std::endl;
 }
 
 void LCInnerParticleIteratorTest::testCheckBack() {
@@ -234,25 +216,21 @@ void LCInnerParticleIteratorTest::testCheckBack() {
 	CPPUNIT_ASSERT(testIterator1.checkBack() == false);
 
 	int i = iterator.getCellNumber();
-	while(iterator.getCellNumber() <= i){
+	++iterator;
+	utils::LCInnerParticleIterator testIterator2 = container.beginInner(
+			iterator);
+	CPPUNIT_ASSERT(testIterator2.checkBack() == false);
+
+	while (iterator.getCellNumber() < (i + (width * (height - 1)))) {
 		++iterator;
 	}
-	utils::LCInnerParticleIterator testIterator2 = container.beginInner(
-				iterator);
-	CPPUNIT_ASSERT(testIterator2.checkTop() == false);
-
-
 	utils::LCInnerParticleIterator testIterator3 = container.beginInner(
-					iterator);
-	while(iterator.getCellNumber() < (i+(width*(height-1)))){
-			++iterator;
-		}
+			iterator);
 
-	CPPUNIT_ASSERT(testIterator3.checkTop() == false);
-	std::cout << "testCheckBack" << std::endl;
+	CPPUNIT_ASSERT(testIterator3.checkBack() == false);
 }
 
-void LCInnerParticleIteratorTest::testIteration(){
+void LCInnerParticleIteratorTest::testIteration() {
 
 	utils::LCOuterParticleIterator firstOuter = container.beginOuter();
 	utils::LCInnerParticleIterator iterator = container.beginInner(firstOuter);
@@ -287,30 +265,28 @@ CppUnit::Test *LCInnerParticleIteratorTest::suite() {
 					"testGetCellNumber",
 					&LCInnerParticleIteratorTest::testGetCellNumber));
 	testSuite->addTest(
-				new CppUnit::TestCaller<LCInnerParticleIteratorTest>(
-						"testCheckLeft",
-						&LCInnerParticleIteratorTest::testCheckLeft));
+			new CppUnit::TestCaller<LCInnerParticleIteratorTest>(
+					"testCheckLeft",
+					&LCInnerParticleIteratorTest::testCheckLeft));
 	testSuite->addTest(
-				new CppUnit::TestCaller<LCInnerParticleIteratorTest>(
-						"testCheckRight",
-						&LCInnerParticleIteratorTest::testCheckRight));
+			new CppUnit::TestCaller<LCInnerParticleIteratorTest>(
+					"testCheckRight",
+					&LCInnerParticleIteratorTest::testCheckRight));
 	testSuite->addTest(
-				new CppUnit::TestCaller<LCInnerParticleIteratorTest>(
-						"testCheckBottom",
-						&LCInnerParticleIteratorTest::testCheckBottom));
+			new CppUnit::TestCaller<LCInnerParticleIteratorTest>(
+					"testCheckBottom",
+					&LCInnerParticleIteratorTest::testCheckBottom));
 	testSuite->addTest(
-				new CppUnit::TestCaller<LCInnerParticleIteratorTest>(
-						"testCheckTop",
-						&LCInnerParticleIteratorTest::testCheckTop));
+			new CppUnit::TestCaller<LCInnerParticleIteratorTest>("testCheckTop",
+					&LCInnerParticleIteratorTest::testCheckTop));
 	testSuite->addTest(
-				new CppUnit::TestCaller<LCInnerParticleIteratorTest>(
-						"testCheckTop",
-						&LCInnerParticleIteratorTest::testCheckBack));
+			new CppUnit::TestCaller<LCInnerParticleIteratorTest>(
+					"testCheckBack",
+					&LCInnerParticleIteratorTest::testCheckBack));
 	testSuite->addTest(
-				new CppUnit::TestCaller<LCInnerParticleIteratorTest>(
-						"testIteration",
-						&LCInnerParticleIteratorTest::testIteration));
-
+			new CppUnit::TestCaller<LCInnerParticleIteratorTest>(
+					"testIteration",
+					&LCInnerParticleIteratorTest::testIteration));
 
 	return testSuite;
 }

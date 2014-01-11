@@ -53,8 +53,6 @@ void LCParticleContainerTest::tearDown() {
 }
 
 void LCParticleContainerTest::testInitializeCells() {
-
-	std::cout << "testinitializeCells" << std::endl;
 	// iterate over the original particles
 	//		- test if they are in the right cell
 	//		- or test if they are in the halo region
@@ -200,34 +198,21 @@ void LCParticleContainerTest::testEndOuter() {
 
 void LCParticleContainerTest::testBeginInner() {
 
-	// go threw all cells (in the tests before we checked that they are in
-	// the old particle list)
-	//		check for all beginning elements of these cells if there is an
-	//		element before them in this cell
+	// go threw all cells and check if the beginnings are in the right cell
 
 	utils::LCOuterParticleIterator outerIterator = container.beginOuter();
 	int i = 0;
 	while (outerIterator != container.endOuter()) {
 		i = outerIterator.getCellNumber();
-		utils::LCInnerParticleIterator begin = container.beginInner(
-				outerIterator);
-		utils::LCOuterParticleIterator innerIterator1 = container.beginOuter();
-		while (innerIterator1 != container.endOuter()) {
-			if (innerIterator1.getCellNumber() == i) {
-				utils::LCOuterParticleIterator innerIterator2 = innerIterator1;
-				while (innerIterator2 != container.endOuter()) {
-					if ((*innerIterator2) == (*begin)) {
-						break;
-					}
-					++innerIterator2;
-				}
-				if (innerIterator2 != container.endOuter()) {
-					CPPUNIT_ASSERT((*innerIterator2) == (*begin));
-				}
 
-			}
-			++innerIterator1;
-		}
+		utils::LCInnerParticleIterator innerIterator = container.beginInner(outerIterator);
+		Particle& p = *innerIterator;
+		int j = (int) (p.getX()[0] / cutoff_radius)
+							+ ((int) (p.getX()[1] / cutoff_radius)) * width
+							+ ((int) (p.getX()[2] / cutoff_radius)) * width * height;
+
+		CPPUNIT_ASSERT(i == j);
+
 		++outerIterator;
 	}
 }
@@ -241,10 +226,11 @@ void LCParticleContainerTest::testEndInner() {
 
 	utils::LCOuterParticleIterator outerIterator = container.beginOuter();
 	int i = 0;
+	int size = 0;
 	while (outerIterator != container.endOuter()) {
 		i = outerIterator.getCellNumber();
 		std::list<Particle>::iterator sizeIterator = particles.begin();
-		int size = 0;
+		size = 0;
 		while (sizeIterator != particles.end()) {
 			Particle &p = *sizeIterator;
 			if (p.getX()[0] <= domain_size[0] && p.getX()[1] <= domain_size[1]
@@ -259,15 +245,13 @@ void LCParticleContainerTest::testEndInner() {
 			}
 			++sizeIterator;
 		}
-		std::cout << size << std::endl;
 
 		utils::LCInnerParticleIterator innerIterator = container.beginInner(
 				outerIterator);
 		for (int j = 0; j < size; j++) {
-			++innerIterator;
+			CPPUNIT_ASSERT(innerIterator != container.endInner(i));
 		}
-		++innerIterator;
-		CPPUNIT_ASSERT((*innerIterator) == (*(container.endInner(i))));
+		++outerIterator;
 	}
 }
 

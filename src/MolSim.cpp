@@ -31,9 +31,9 @@
 #include "tests/ParticleContainerTest.h"
 #include "tests/ParticleGeneratorTest.h"
 #include "tests/LCParticleContainerTest.h"
-//#include "tests/LCInnerParticleIteratorTest.h"
+#include "tests/LCInnerParticleIteratorTest.h"
 #include "tests/LCOuterParticleIteratorTest.h"
-//#include "tests/ThermostatTest.h"
+#include "tests/ThermostatTest.h"
 #include "tests/FileReaderTest.h"
 
 #include <list>
@@ -139,11 +139,9 @@ vector<int> domainCondition;
 
 string fileName;
 
-
 //used to check the length of the simulation
 struct timeval tim;
 double t1;
-
 
 // Thermostat option: only called when thermo.getEnabled() == true
 Thermostat thermo;
@@ -176,7 +174,6 @@ int main(int argc, char* argsv[]) {
 	 */
 
 	//bool test = false;
-
 	gettimeofday(&tim, NULL);
 	t1 = tim.tv_sec + (tim.tv_usec / 1000000.0);
 	if (argc > 2) {
@@ -218,9 +215,9 @@ int main(int argc, char* argsv[]) {
 					runner.addTest(ParticleContainerTest::suite());
 					runner.addTest(ParticleGeneratorTest::suite());
 					runner.addTest(LCParticleContainerTest::suite());
-					//runner.addTest(LCInnerParticleIteratorTest::suite());
+					runner.addTest(LCInnerParticleIteratorTest::suite());
 					runner.addTest(LCOuterParticleIteratorTest::suite());
-//					runner.addTest(ThermostatTest::suite());
+					runner.addTest(ThermostatTest::suite());
 					runner.addTest(FileReaderTest::suite());
 					runner.run();
 
@@ -255,7 +252,7 @@ int main(int argc, char* argsv[]) {
 						runner.addTest(ParticleGeneratorTest::suite());
 						break;
 					case 4:
-//						runner.addTest(ThermostatTest::suite());
+						runner.addTest(ThermostatTest::suite());
 						break;
 					case 5:
 						runner.addTest(FileReaderTest::suite());

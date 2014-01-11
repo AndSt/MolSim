@@ -24,8 +24,6 @@ void ThermostatTest::setUp(){
 	strcpy(cstr, fileName.c_str());
 	fileReader.readFile(pList, cstr);
 
-	parList.clear();
-
 	for(std::list<Particle>::iterator it = pList.begin(); it!= pList.end(); it++){
 		parList.push_back(&(*it));
 	}
@@ -41,7 +39,7 @@ void ThermostatTest::setUp(){
 void ThermostatTest::tearDown(){}
 
 void ThermostatTest::testGetEKin(){
-	CPPUNIT_ASSERT(thermo.getEKin(parList)==eKin);
+	CPPUNIT_ASSERT(thermo.getEKin(parList) == eKin);
 }
 
 void ThermostatTest::testMeanV(){
