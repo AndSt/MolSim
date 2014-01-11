@@ -3,8 +3,8 @@
 
 # Compiler
 # --------
-#CC=g++
-CC=icpc
+CC=g++
+#CC=icpc
 
 include files.mk
 
@@ -28,8 +28,8 @@ INP_SPH_XSD = "InputSpheres.xsd"
 # -------------------------------------------------------------------------
 CFLAGS_KERNEL := -g
 
-#CFLAGS := -g -O3 -DNDEBUG
-CFLAGS := -O3 -ip -ipo -fast -DNDEBUG
+CFLAGS := -g -O3 -DNDEBUG
+#CFLAGS := -O3 -ip -ipo -fast -DNDEBUG
 
 # Linker flags
 # ------------

@@ -8,6 +8,8 @@
 #ifndef PARTICLE_H_
 #define PARTICLE_H_
 
+#include <list>
+
 #include "utils/Vector.h"
 
 class Particle {
@@ -36,6 +38,23 @@ private:
 	 * molecules belonging to different bodies, matters, and so on)
 	 */
 	int type;
+
+	/**
+	 * list of direct neighbors (needed for membranes)
+	 */
+	std::list<Particle> directNeighbors;
+
+	/**
+	 * list of diagonal neighbors (needed for membranes)
+	 */
+	std::list<Particle> diagNeighbors;
+
+	/**
+	 * the particles in a body have the same type
+	 * but each particle has its own ID.
+	 * The IDs should be done within the initialization of the body.
+	 */
+	int ID;
 
 public:
 	Particle(int type = 0);
@@ -73,6 +92,14 @@ public:
 	void deleteTempF();
 
 	void updateTempF(utils::Vector<double, 3> newF);
+
+	std::list<Particle>& getDirectNeighbors();
+
+	std::list<Particle>& getDiagNeighbors();
+
+	int& getID();
+
+	bool isNeighborTo(Particle p);
 };
 
 std::ostream& operator<<(std::ostream& stream, Particle& p);

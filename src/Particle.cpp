@@ -112,3 +112,32 @@ std::ostream& operator<<(std::ostream& stream, Particle& p) {
 	stream << p.toString();
 	return stream;
 }
+
+std::list<Particle>& Particle::getDirectNeighbors(){
+	return directNeighbors;
+}
+
+std::list<Particle>& Particle::getDiagNeighbors(){
+	return diagNeighbors;
+}
+
+int& Particle::getID(){
+	return ID;
+}
+
+bool Particle::isNeighborTo(Particle p){
+	//ID is unique for each particle
+	for (std::list<Particle>::iterator it = this->getDirectNeighbors().begin();
+			it != this->getDirectNeighbors().end(); it++){
+		if ((*it).getID() == p.getID())
+			return true;
+	}
+
+	for (std::list<Particle>::iterator it = this->getDiagNeighbors().begin();
+			it != this->getDiagNeighbors().end(); it++){
+		if ((*it).getID() == p.getID())
+			return true;
+	}
+
+	return false;
+}

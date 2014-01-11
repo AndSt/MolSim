@@ -9,8 +9,9 @@
 #define CUBOID_H_
 #include <vector>
 #include <Particle.h>
-#include "utils/Vector.h"
 #include <list>
+
+#include "utils/Vector.h"
 
 /** \class Cuboid
  *  \brief This is a class representing a 3D cuboid of particles.
@@ -20,24 +21,37 @@
  */
 class Cuboid {
 private:
+	/*!< A 3D vector indicating the location of the lower left corner of a cuboid. */
+	utils::Vector<double, 3> origin;
 
-	utils::Vector<double, 3> origin; 		/*!< A 3D vector indicating the location of the lower left corner of a cuboid. */
+	/*!< The particles of a cuboid are saved in one single list. */
+	std::list<Particle> cub;
 
-	std::list<Particle> cub;			/*!< The particles of a cuboid are saved in one single list. */
+	/*!< Cuboid's height (measured in particles). */
+	int cHeight;
 
-	int cHeight;					/*!< Cuboid's height (measured in particles). */
-	int cWidth;					/*!< Cuboid's width (measured in particles). */
-	int cDepth;					/*!< Cuboid's depth (measured in particles). */
+	/*!< Cuboid's width (measured in particles). */
+	int cWidth;
 
-	double h;					/*!< The mesh width between every 2 particles. */
+	/*!< Cuboid's depth (measured in particles). */
+	int cDepth;
 
-	double m;					/*!< The mass of each particle in cuboid. */
+	/*!< The mesh width between every 2 particles. */
+	double h;
 
-	utils::Vector<double, 3> startV;		/*!< The velocity at the beginning of each particle. */
+	/*!< The mass of each particle in cuboid. */
+	double m;
 
-	double meanV;					/*!< The mean velocity (aka. brownian factor) of each particle. */
+	/*!< The velocity at the beginning of each particle. */
+	utils::Vector<double, 3> startV;
 
-	int parType;				/*< Type of particles. */
+	/*!< The mean velocity (aka. brownian factor) of each particle. */
+	double meanV;
+
+	/**
+	 * Type of particles.
+	 */
+	int parType;
 
 	/**
 	 * For Lennard Jones Force.
@@ -156,6 +170,16 @@ public:
 	/** \returns Cuboid's sigma for Lennard Jones Force.
 	 */
 	double& getSigma();
+
+	/**
+	 * initializes the neighbor lists of particles.
+	 */
+	void initNeighbors();
+
+	/**
+	 * \returns particle at index id.
+	 */
+	Particle& getParticleAtID(int id);
 
 	virtual ~Cuboid();
 };

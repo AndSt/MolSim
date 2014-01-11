@@ -65,15 +65,15 @@ double Thermostat::getMeanV(std::list<Particle *>& parList, int dim, double mass
 void Thermostat::setThermo(std::list<Particle *>& parList, int dim, double temperature){
 	double newEKin = dim*parList.size()*temperature/2;
 	double beta = sqrt(newEKin/getEKin(parList));
-	if ((beta==1)&&(brownian_flag==false)) return;
+	if ((beta==1)/*&&(brownian_flag==false)*/) return;
 
 	//beta!=1 or brownian_flag==true
 	for (std::list<Particle *>::iterator it = parList.begin();
 						it != parList.end(); it++){
 			(*it)->getV() = beta*((*it)->getV());
-			if (brownian_flag==true)
+			//if (brownian_flag==true)
 				//Hardcode mass=1
-				MaxwellBoltzmannDistribution(*(*it), this->getMeanV(parList, dim, 1), 2);
+				//MaxwellBoltzmannDistribution(*(*it), this->getMeanV(parList, dim, 1), 2);
 	}
 }
 
