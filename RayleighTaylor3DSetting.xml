@@ -4,7 +4,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 
 	<start_time>0.0</start_time>
-	<t_end>50</t_end>
+	<t_end>100</t_end>
 	<delta_t>0.0005</delta_t>
 	<numberOfTypes>2</numberOfTypes>
 	
@@ -13,9 +13,9 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 	<!-- Short range, linked cell algorithm -->
 	<lc>
 		<domainsize>
-			<domainX>300.0</domainX>
-			<domainY>54.0</domainY>
-			<domainZ>0.0</domainZ>
+			<domainX>60.0</domainX>
+			<domainY>24.0</domainY>
+			<domainZ>51.0</domainZ>
 		</domainsize>
 		<rcutoff>3.0</rcutoff>
 	
@@ -33,10 +33,10 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 		<condition>2</condition>
 
 		<!-- front -->
-		<condition>2</condition>
+		<condition>3</condition>
 
 		<!-- behind -->
-		<condition>2</condition>
+		<condition>3</condition>
 	</lc>	
 	
 	<!-- Thermostats -->
@@ -47,17 +47,17 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 		<targetT>80</targetT>
 		<deltaT>0</deltaT>
 		<nThermo>1000</nThermo>
-		<nDelta>40000</nDelta>
+		<nDelta>200001</nDelta>
 	</thermo>
 
 	<inputfile>
-		<name>RayleighTaylorBigCuboids.xml</name>
+		<name>RayleighTaylor3DCuboids.xml</name>
 		<!-- particles/cuboids/spheres -->
 		<type>cuboids</type>
 	</inputfile>
 		
 	<outputfile>
-		<name>RayleighTaylorBig</name>
+		<name>RayTay3DVTK</name>
 		<freq>10</freq>
 	</outputfile>
 </pse>
