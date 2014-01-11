@@ -9,6 +9,7 @@ src/tests/LCParticleContainerTest.cpp\
 src/tests/ParticleContainerTest.cpp\
 src/tests/ParticleIteratorTest.cpp\
 src/tests/LCOuterParticleIteratorTest.cpp\
+src/tests/ThermostatTest.cpp\
 src/tests/FileReaderTest.cpp\
 src/tests/ParticleGeneratorTest.cpp\
 src/FileReader.cpp\
