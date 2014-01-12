@@ -21,22 +21,22 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 	
 		<!-- 1=outflow, 2=reflecting, 3=periodic for 6 boundaries -->
 		<!-- left side -->
-		<condition>1</condition>
+		<condition>3</condition>
 
 		<!-- right -->
-		<condition>1</condition>
+		<condition>3</condition>
 
 		<!-- ground -->
-		<condition>2</condition>
+		<condition>3</condition>
 
 		<!-- upper -->
-		<condition>1</condition>
+		<condition>3</condition>
 
 		<!-- front -->
-		<condition>1</condition>
+		<condition>3</condition>
 
 		<!-- behind -->
-		<condition>1</condition>
+		<condition>2</condition>
 	</lc>	
 	
 	<!-- Thermostats -->
