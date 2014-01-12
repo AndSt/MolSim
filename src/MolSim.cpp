@@ -1226,10 +1226,10 @@ void membraneComputeForce(Particle& p1, Particle& p2) {
 		utils::Vector<double, 3> tempF((double) 0);
 
 		if (p1.isDirectNeighborTo(p2)){
-			tempF = k*(tempDNorm - rDirect)*tempD;
+			tempF = k*(1 - rDirect/tempDNorm)*tempD;
 		}
 		else if (p1.isDiagNeighborTo(p2)){
-			tempF = k*(tempDNorm - rDiag)*tempD;
+			tempF = k*(1 - rDiag/tempDNorm)*tempD;
 		}
 		else if (tempDNorm <= rFLJ){
 			double tempDSigDivNorm = pow(
