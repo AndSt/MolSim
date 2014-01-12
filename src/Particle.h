@@ -99,7 +99,9 @@ public:
 
 	int& getID();
 
-	bool isNeighborTo(Particle p);
+	bool isDirectNeighborTo(Particle p);
+
+	bool isDiagNeighborTo(Particle p);
 };
 
 std::ostream& operator<<(std::ostream& stream, Particle& p);

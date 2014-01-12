@@ -125,7 +125,7 @@ int& Particle::getID(){
 	return ID;
 }
 
-bool Particle::isNeighborTo(Particle p){
+bool Particle::isDirectNeighborTo(Particle p){
 	//ID is unique for each particle
 	for (std::list<Particle>::iterator it = this->getDirectNeighbors().begin();
 			it != this->getDirectNeighbors().end(); it++){
@@ -133,6 +133,11 @@ bool Particle::isNeighborTo(Particle p){
 			return true;
 	}
 
+	return false;
+}
+
+bool Particle::isDiagNeighborTo(Particle p){
+	//ID is unique for each particle
 	for (std::list<Particle>::iterator it = this->getDiagNeighbors().begin();
 			it != this->getDiagNeighbors().end(); it++){
 		if ((*it).getID() == p.getID())

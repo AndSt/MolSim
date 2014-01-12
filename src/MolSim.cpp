@@ -78,6 +78,7 @@ void calculateV();
 void LCcalculateV();
 
 void computeForce(Particle& p1, Particle& p2);
+void membraneComputeForce(Particle& p1, Particle& p2);
 
 void getIntegerInput(string &str, int &input);
 
@@ -123,6 +124,17 @@ double gDirMass[] = { 0.0, 1.0, 0.0 }; //will store mass (without G_CONST*)
 vector<utils::Vector<double, 3> > gravForce;
 vector<vector<double> > EPS;
 vector<vector<double> > SIG;
+
+// For membrane
+double current_time = 0.0;
+double k = 300;
+double rDirect = 2.2;
+double rDiag = 2.2*sqrt(2);
+double rFLJ = pow(2, 1.0/6.0);
+double FZUpArr[] = {0.0, 0.0, 0.8};
+utils::Vector<double, 3> FZUp(FZUpArr);
+int id1, id2, id3, id4;
+bool isMembrane = false;
 
 int inputSize = 0;
 list<Particle> particleList;
@@ -413,6 +425,45 @@ int main(int argc, char* argsv[]) {
 			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
 			LCsimulate();
 
+		}
+
+		else if (arg1 == "--membrane"){
+			isMembrane = true;
+			//getting information from MembraneSetting first
+			string inpMem = "MembraneSetting.xml";
+			pgen.extractSetting(inpMem, start_time, end_time, delta_t,
+					inputNames, inputTypes, outputMask, freq, domainSize,
+					R_CUTOFF, domainCondition, G_CONST, inputSize);
+			particleList.clear();
+
+			//initialize the size of gravForce
+			gravForce.resize(1);
+			resizeEpsSig(1);
+
+			pgen.extractCuboids(*inputNames.begin());
+			list<Cuboid>::iterator itC = pgen.getCuboidList().begin();
+			(*itC).initNeighbors();
+
+			//==================G + MIXING RULE====================
+			gDirMass[1] = G_CONST * ((*itC).getMass());
+			gravForce[0] = utils::Vector<double, 3>(gDirMass);
+			EPS[0][0] = (*itC).getEpsilon();
+			SIG[0][0] = (*itC).getSigma();
+			//fillEpsSig(1);
+
+			//set the IDs of 4 special particles
+			id1 = 24*((*itC).getWidth()) + 17;	//(17, 24)
+			id2 = 25*((*itC).getWidth()) + 17;	//(17, 25)
+			id3 = 24*((*itC).getWidth()) + 18;	//(18, 24)
+			id4 = 25*((*itC).getWidth()) + 18;	//(18, 25)
+
+			pgen.cuboidsToList();
+			particleList = pgen.getParticleList();
+
+			thermo = Thermostat(inpMem);
+
+			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
+			LCsimulate();
 		}
 
 		else {
@@ -760,7 +811,7 @@ void simulate() {
 	calculateFLJ();
 	//addGravity(container.getList());
 
-	double current_time = start_time;
+	current_time = start_time;
 
 	int iteration = 0;
 
@@ -974,7 +1025,7 @@ void LCsimulate() {
 	LCcalculateFLJ();
 	//addGravity(lcContainer.getList());
 
-	double current_time = start_time;
+	current_time = start_time;
 
 	double temperature = thermo.getT_init();
 	bool target_temp_reached = false;
@@ -1044,44 +1095,65 @@ void LCcalculateFLJ() {
 
 	utils::Vector<double, 3> zero((double) 0);
 	utils::Vector<double, 3> sumF((double) 0);
+	utils::Vector<double, 3> FZ((double) 0);
 	utils::LCOuterParticleIterator iterator = lcContainer.beginOuter();
 	int i = 0;
 	while (iterator != lcContainer.endOuter()) {
 		i = iterator.getCellNumber();
 		sumF = zero;
-		utils::LCInnerParticleIterator innerIterator = lcContainer.beginInner(
-				iterator);
+		utils::LCInnerParticleIterator innerIterator
+					= lcContainer.beginInner(iterator);
 		while (innerIterator != lcContainer.endInner(i)) {
 			assert(innerIterator != lcContainer.endInner(i));
 			if (innerIterator.getCellNumber()
-					> lcContainer.endInner(i).getCellNumber()
-					|| innerIterator.getCellNumber()
-							> lcContainer.endOuter().getCellNumber()) {
-				break;
+					   > lcContainer.endInner(i).getCellNumber()
+					   || innerIterator.getCellNumber()
+					   > lcContainer.endOuter().getCellNumber()) {
+			   break;
 			}
 			Particle& p1 = *iterator;
 			Particle& p2 = *innerIterator;
-			/*			cout << "Element: " << innerIterator.getCellNumber() << " "
-			 //					<< p2.toString() << endl;
-			 //			cout << "EndInner: " << ((*(lcContainer.endInner(i))).toString())
-			 //					<< endl;*/
+			//cout << p1 << endl;
+			//cout << p2 << endl;
+				/*cout << "Element: " << innerIterator.getCellNumber() << " "
+								<< p2.toString() << endl;
+				cout << "EndInner: " << ((*(lcContainer.endInner(i))).toString())
+								<< endl;
+								*/
 			if (p1 == p2) {
+				//cout << "ok" << endl;
 				++innerIterator;
 				continue;
 			} else {
 				assert(!(p1 == p2));
 
-				computeForce(p1, p2);
+				if (isMembrane)
+					membraneComputeForce(p1, p2);
+				else
+					computeForce(p1, p2);
 
 				++innerIterator;
 			}
 		}
 
-		// GRAVITY (G_CONST = 0 when gravity is disabled)
-		(*iterator).setF(
-				gravForce[(*iterator).getType()] + (*iterator).getTempF());
-		(*iterator).deleteTempF();
-		++iterator;
+	   //FZUp
+	   if (isMembrane){
+		   if (current_time <= 150){
+			   if (	((*iterator).getID() == id1) ||
+					((*iterator).getID() == id2) ||
+					((*iterator).getID() == id3) ||
+					((*iterator).getID() == id4)){
+				   FZ[3] = FZUp[3];
+			   }
+		   }
+	   }
+
+
+	   // GRAVITY (G_CONST = 0 when gravity is disabled)
+	   (*iterator).setF(
+			   FZ + gravForce[(*iterator).getType()] + (*iterator).getTempF());
+	   (*iterator).deleteTempF();
+	   ++iterator;
 	}
 }
 
@@ -1139,6 +1211,39 @@ void computeForce(Particle& p1, Particle& p2) {
 		p2.updateTempF((-1) * tempF);
 		p1.updateTempF(tempF);
 	}
+}
+
+/**
+ *
+ * @param p1 the particle of the outer iterator
+ * @param p2 the particle of the inner iterator
+ */
+void membraneComputeForce(Particle& p1, Particle& p2) {
+	utils::Vector<double, 3> tempD = p2.getX() - p1.getX();
+	double tempDNorm = tempD.L2Norm();
+
+	if (tempDNorm < R_CUTOFF) {
+		utils::Vector<double, 3> tempF((double) 0);
+
+		if (p1.isDirectNeighborTo(p2)){
+			tempF = k*(tempDNorm - rDirect)*tempD;
+		}
+		else if (p1.isDiagNeighborTo(p2)){
+			tempF = k*(tempDNorm - rDiag)*tempD;
+		}
+		else if (tempDNorm <= rFLJ){
+			double tempDSigDivNorm = pow(
+					SIG[p1.getType()][p2.getType()] / tempDNorm, 6);
+			tempF = 24 * EPS[p1.getType()][p2.getType()]
+					* pow(1 / tempDNorm, 2)
+					* (tempDSigDivNorm - 2 * pow(tempDSigDivNorm, 2)) * tempD;
+		}
+
+		p2.updateTempF((-1) * tempF);
+		p1.updateTempF(tempF);
+	}
+
+
 }
 
 void LCplotVTK(int iteration) {
@@ -1217,4 +1322,3 @@ void fillEpsSig(int inSize) {
 		}
 	}
 }
-

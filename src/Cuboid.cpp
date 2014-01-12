@@ -104,10 +104,7 @@ Cuboid::Cuboid(int height, int width, int depth, double distance, double mass,
  }
  */
 
-Particle& Cuboid::getParticleAtID(int id){
-	Particle pNull;
-	pNull.getID() = -1;
-
+Particle& Cuboid::getParticleAtID(Particle& pNull, int id){
 	//id starts from 0
 	if ((id < 0) || (id >= cub.size()))
 		return pNull;
@@ -132,28 +129,33 @@ void Cuboid::initNeighbors(){
 		p.getDirectNeighbors().clear();
 		p.getDiagNeighbors().clear();
 
+		utils::Vector<double, 3> xi((double) 0);
+		utils::Vector<double, 3> vi((double) 0);
+		Particle pNull(xi, vi, 0.0, 0);
+		pNull.getID() = -1;
+
 		//direct left
-		p.getDirectNeighbors().push_back(this->getParticleAtID(
+		p.getDirectNeighbors().push_back(this->getParticleAtID(pNull,
 				isFirst ? (-1) : (id - 1))); //cares for the first of each line
 		//direct right
-		p.getDirectNeighbors().push_back(this->getParticleAtID(
+		p.getDirectNeighbors().push_back(this->getParticleAtID(pNull,
 				isLast ? (-1) : (id + 1))); //cares for the last of each line
 		//direct under
-		p.getDirectNeighbors().push_back(this->getParticleAtID(id - cWidth));
+		p.getDirectNeighbors().push_back(this->getParticleAtID(pNull, id - cWidth));
 		//direct above
-		p.getDirectNeighbors().push_back(this->getParticleAtID(id + cWidth));
+		p.getDirectNeighbors().push_back(this->getParticleAtID(pNull, id + cWidth));
 
 		//diagonal lower left
-		p.getDiagNeighbors().push_back(this->getParticleAtID(
+		p.getDiagNeighbors().push_back(this->getParticleAtID(pNull,
 				isFirst ? (-1) : (id - 1 - cWidth))); //cares for the first of each line
 		//diagonal lower right
-		p.getDiagNeighbors().push_back(this->getParticleAtID(
+		p.getDiagNeighbors().push_back(this->getParticleAtID(pNull,
 				isLast ? (-1) : (id + 1 - cWidth))); //cares for the last of each line
 		//diagonal upper left
-		p.getDiagNeighbors().push_back(this->getParticleAtID(
+		p.getDiagNeighbors().push_back(this->getParticleAtID(pNull,
 				isFirst ? (-1) : (id - 1 + cWidth))); //cares for the first of each line
 		//diagonal upper right
-		p.getDiagNeighbors().push_back(this->getParticleAtID(
+		p.getDiagNeighbors().push_back(this->getParticleAtID(pNull,
 				isLast ? (-1) : (id + 1 + cWidth))); //cares for the last of each line
 	}
 }

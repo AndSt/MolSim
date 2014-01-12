@@ -178,8 +178,11 @@ public:
 
 	/**
 	 * \returns particle at index id.
+	 *
+	 * @param[in] pNull a dummy particle to return in case id is invalid.
+	 * @param[in] id ID of the particle we are looking for.
 	 */
-	Particle& getParticleAtID(int id);
+	Particle& getParticleAtID(Particle& pNull, int id);
 
 	virtual ~Cuboid();
 };

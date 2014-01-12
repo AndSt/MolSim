@@ -6,7 +6,7 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 	<start_time>0.0</start_time>
 	<t_end>500</t_end>
 	<delta_t>0.01</delta_t>
-	<numberOfTypes>2</numberOfTypes>
+	<numberOfTypes>1</numberOfTypes>
 	
 	<gconst>-0.001</gconst>
 	
