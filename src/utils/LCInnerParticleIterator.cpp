@@ -197,7 +197,7 @@ bool LCInnerParticleIterator::checkLeft() {
         return ((original_index % width) > 0);
 }
 bool LCInnerParticleIterator::checkRight() {
-        return ((index % width) != (width - 1));
+	return ((original_index % width) != (width - 1));
 }
 bool LCInnerParticleIterator::checkBottom() {
         return (width <= (original_index % (width * height)));
