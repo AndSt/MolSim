@@ -62,7 +62,7 @@ Particle::Particle(	utils::Vector<double, 3> x_arg,
     f = 0.0;
     old_f = 0.0;
     ID = id;
-    LOG4CXX_TRACE(particlelogger,"Particle generated!");
+    LOG4CXX_TRACE(particlelogger,"Particle generated with ID!");
 }
 
 Particle::~Particle() {
