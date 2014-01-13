@@ -12,6 +12,7 @@ src/tests/LCOuterParticleIteratorTest.cpp\
 src/tests/ThermostatTest.cpp\
 src/tests/FileReaderTest.cpp\
 src/tests/ParticleGeneratorTest.cpp\
+src/tests/MembraneTest.cpp\
 src/FileReader.cpp\
 src/Sphere.cpp\
 src/MaxwellBoltzmannDistribution.cpp\

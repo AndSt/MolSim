@@ -89,6 +89,9 @@ public:
 			utils::Vector<double, 3> ori, utils::Vector<double, 3> startVelocity,
 			double meanVelocity, int parType, double EPSILON, double SIGMA);
 
+	Cuboid(int height, int width, int depth, double distance, double mass,
+			utils::Vector<double, 3> ori, utils::Vector<double, 3> startVelocity,
+			double meanVelocity, int parType, double EPSILON, double SIGMA, int first_id);
 	/** \returns Cuboid's lower left corner's location.
 	 */
 	utils::Vector<double, 3>& getOrigin();
@@ -182,7 +185,7 @@ public:
 	 * @param[in] pNull a dummy particle to return in case id is invalid.
 	 * @param[in] id ID of the particle we are looking for.
 	 */
-	Particle& getParticleAtID(Particle& pNull, int id);
+	Particle* getParticleAtID(Particle* pNull, int id);
 
 	virtual ~Cuboid();
 };

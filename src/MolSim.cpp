@@ -35,6 +35,7 @@
 #include "tests/LCOuterParticleIteratorTest.h"
 #include "tests/ThermostatTest.h"
 #include "tests/FileReaderTest.h"
+#include "tests/MembraneTest.h"
 
 #include <list>
 #include <cassert>
@@ -167,6 +168,33 @@ log4cxx::LoggerPtr molsimlogger(log4cxx::Logger::getLogger("molsim"));
  */
 int main(int argc, char* argsv[]) {
 
+
+	/*
+	//for membrane test
+	std::string fileName = "src/tests/testFiles/TestMembrane.xml";
+	char *cstr = new char[fileName.length() + 1];
+	strcpy(cstr, fileName.c_str());
+
+	pgen.extractCuboids(cstr);
+	Cuboid cub = *pgen.getCuboidList().begin();
+
+	Particle p1(utils::Vector<double, 3>(0.0), utils::Vector<double, 3>(0.0), 0.1, 0, 100);
+	Particle p2(utils::Vector<double, 3>(0.0), utils::Vector<double, 3>(0.0), 0.1, 0, 200);
+	cout << p1.getID() << endl;
+	cout << p2.getID() << endl;
+	cin.ignore();
+	Cuboid cub(5, 5, 1, 1.0, 1.0,
+			utils::Vector<double, 3>((double) 0), utils::Vector<double, 3>((double) 0),
+			0.1, 0, 1.0, 5.0);
+	cub.initNeighbors();
+	std::list<Particle> parList = cub.getCuboid();
+	for (std::list<Particle>::iterator it = parList.begin();
+			it != parList.end(); it++){
+		cout << (*it).getID() << endl;
+	}
+	return 0;
+	*/
+
 	PropertyConfigurator::configure("Log4cxxConfig.cfg");
 	LOG4CXX_INFO(molsimlogger, "Arrived @ main.");
 
@@ -231,6 +259,7 @@ int main(int argc, char* argsv[]) {
 					runner.addTest(LCOuterParticleIteratorTest::suite());
 					runner.addTest(ThermostatTest::suite());
 					runner.addTest(FileReaderTest::suite());
+					runner.addTest(MembraneTest::suite());
 					runner.run();
 
 				} else if (option == 2) {
@@ -246,6 +275,8 @@ int main(int argc, char* argsv[]) {
 					cout << "Enter '4', if you want to test the Thermostat."
 							<< endl;
 					cout << "Enter '5', if you want to test the FileReader."
+							<< endl;
+					cout << "Enter '6', if you want to test the Membrane functions."
 							<< endl;
 
 					//Check for correct input
@@ -268,6 +299,9 @@ int main(int argc, char* argsv[]) {
 						break;
 					case 5:
 						runner.addTest(FileReaderTest::suite());
+						break;
+					case 6:
+						runner.addTest(MembraneTest::suite());
 						break;
 					}
 					runner.run();
@@ -1225,10 +1259,10 @@ void membraneComputeForce(Particle& p1, Particle& p2) {
 	if (tempDNorm < R_CUTOFF) {
 		utils::Vector<double, 3> tempF((double) 0);
 
-		if (p1.isDirectNeighborTo(p2)){
+		if (p1.isDirectNeighborTo(&p2)){
 			tempF = k*(1 - rDirect/tempDNorm)*tempD;
 		}
-		else if (p1.isDiagNeighborTo(p2)){
+		else if (p1.isDiagNeighborTo(&p2)){
 			tempF = k*(1 - rDiag/tempDNorm)*tempD;
 		}
 		else if (tempDNorm <= rFLJ){

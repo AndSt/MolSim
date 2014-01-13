@@ -35,8 +35,6 @@ Cuboid::Cuboid(int height, int width, int depth, double distance, double mass,
 	// Initialize cub
 	cub.clear();
 
-	int id = 0;
-
 	// Initialize particles in cub
 	// Fills along Oz first, then Ox and Oy
 	for (int hei = 0; hei < height; hei++) {
@@ -48,9 +46,7 @@ Cuboid::Cuboid(int height, int width, int depth, double distance, double mass,
 				utils::Vector<double, 3> addVector(addTemp);
 				utils::Vector<double, 3> vel(ori + addVector);
 
-				Particle p(vel, startVelocity, mass, parType);
-				p.getID() = id;
-				id++;
+				Particle p(vel, startVelocity, mass, parType, w + hei*width);
 
 				// Movement of each particle superposed by Brownian Motion
 				MaxwellBoltzmannDistribution(p, meanVelocity, 2);
@@ -104,7 +100,7 @@ Cuboid::Cuboid(int height, int width, int depth, double distance, double mass,
  }
  */
 
-Particle& Cuboid::getParticleAtID(Particle& pNull, int id){
+Particle* Cuboid::getParticleAtID(Particle* pNull, int id){
 	//id starts from 0
 	if ((id < 0) || (id >= cub.size()))
 		return pNull;
@@ -112,7 +108,7 @@ Particle& Cuboid::getParticleAtID(Particle& pNull, int id){
 	for (std::list<Particle>::iterator it = cub.begin();
 			it != cub.end(); it++){
 		if ((*it).getID() == id)
-			return *it;
+			return &(*it);
 	}
 
 	return pNull;
@@ -132,31 +128,37 @@ void Cuboid::initNeighbors(){
 		utils::Vector<double, 3> xi((double) 0);
 		utils::Vector<double, 3> vi((double) 0);
 		Particle pNull(xi, vi, 0.0, 0);
-		pNull.getID() = -1;
+		pNull.setID(-1);
 
 		//direct left
-		p.getDirectNeighbors().push_back(this->getParticleAtID(pNull,
+		p.getDirectNeighbors().push_back(this->getParticleAtID(&pNull,
 				isFirst ? (-1) : (id - 1))); //cares for the first of each line
 		//direct right
-		p.getDirectNeighbors().push_back(this->getParticleAtID(pNull,
+		p.getDirectNeighbors().push_back(this->getParticleAtID(&pNull,
 				isLast ? (-1) : (id + 1))); //cares for the last of each line
 		//direct under
-		p.getDirectNeighbors().push_back(this->getParticleAtID(pNull, id - cWidth));
+		p.getDirectNeighbors().push_back(this->getParticleAtID(&pNull, id - cWidth));
 		//direct above
-		p.getDirectNeighbors().push_back(this->getParticleAtID(pNull, id + cWidth));
+		p.getDirectNeighbors().push_back(this->getParticleAtID(&pNull, id + cWidth));
+
+		//delete all the pNulls
+		p.getDirectNeighbors().remove(&pNull);
 
 		//diagonal lower left
-		p.getDiagNeighbors().push_back(this->getParticleAtID(pNull,
+		p.getDiagNeighbors().push_back(this->getParticleAtID(&pNull,
 				isFirst ? (-1) : (id - 1 - cWidth))); //cares for the first of each line
 		//diagonal lower right
-		p.getDiagNeighbors().push_back(this->getParticleAtID(pNull,
+		p.getDiagNeighbors().push_back(this->getParticleAtID(&pNull,
 				isLast ? (-1) : (id + 1 - cWidth))); //cares for the last of each line
 		//diagonal upper left
-		p.getDiagNeighbors().push_back(this->getParticleAtID(pNull,
+		p.getDiagNeighbors().push_back(this->getParticleAtID(&pNull,
 				isFirst ? (-1) : (id - 1 + cWidth))); //cares for the first of each line
 		//diagonal upper right
-		p.getDiagNeighbors().push_back(this->getParticleAtID(pNull,
+		p.getDiagNeighbors().push_back(this->getParticleAtID(&pNull,
 				isLast ? (-1) : (id + 1 + cWidth))); //cares for the last of each line
+
+		//delete all the pNulls
+		p.getDiagNeighbors().remove(&pNull);
 	}
 }
 

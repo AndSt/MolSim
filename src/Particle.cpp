@@ -20,6 +20,7 @@ Particle::Particle(int type_arg) {
 	LOG4CXX_INFO(particlelogger,"Arrived @ Type Constructor.");
 	f = 0.0;
 	old_f = 0.0;
+	m = 1.0;
 }
 
 Particle::Particle(const Particle& other) {
@@ -38,13 +39,29 @@ Particle::Particle(	utils::Vector<double, 3> x_arg,
 	        utils::Vector<double, 3> v_arg,
 	        double m_arg,
 	        int type_arg
-) {
+){
     x = x_arg;
     v = v_arg;
     m = m_arg;
     type = type_arg;
     f = 0.0;
     old_f = 0.0;
+    LOG4CXX_TRACE(particlelogger,"Particle generated!");
+}
+
+Particle::Particle(	utils::Vector<double, 3> x_arg,
+	        utils::Vector<double, 3> v_arg,
+	        double m_arg,
+	        int type_arg,
+	        int id
+){
+    x = x_arg;
+    v = v_arg;
+    m = m_arg;
+    type = type_arg;
+    f = 0.0;
+    old_f = 0.0;
+    ID = id;
     LOG4CXX_TRACE(particlelogger,"Particle generated!");
 }
 
@@ -113,11 +130,11 @@ std::ostream& operator<<(std::ostream& stream, Particle& p) {
 	return stream;
 }
 
-std::list<Particle>& Particle::getDirectNeighbors(){
+std::list<Particle*>& Particle::getDirectNeighbors(){
 	return directNeighbors;
 }
 
-std::list<Particle>& Particle::getDiagNeighbors(){
+std::list<Particle*>& Particle::getDiagNeighbors(){
 	return diagNeighbors;
 }
 
@@ -125,22 +142,26 @@ int& Particle::getID(){
 	return ID;
 }
 
-bool Particle::isDirectNeighborTo(Particle p){
+void Particle::setID(int id){
+	ID = id;
+}
+
+bool Particle::isDirectNeighborTo(Particle* p){
 	//ID is unique for each particle
-	for (std::list<Particle>::iterator it = this->getDirectNeighbors().begin();
+	for (std::list<Particle*>::iterator it = this->getDirectNeighbors().begin();
 			it != this->getDirectNeighbors().end(); it++){
-		if ((*it).getID() == p.getID())
+		if ((*(*it)).getID() == (*p).getID())
 			return true;
 	}
 
 	return false;
 }
 
-bool Particle::isDiagNeighborTo(Particle p){
+bool Particle::isDiagNeighborTo(Particle* p){
 	//ID is unique for each particle
-	for (std::list<Particle>::iterator it = this->getDiagNeighbors().begin();
+	for (std::list<Particle*>::iterator it = this->getDiagNeighbors().begin();
 			it != this->getDiagNeighbors().end(); it++){
-		if ((*it).getID() == p.getID())
+		if ((*(*it)).getID() == (*p).getID())
 			return true;
 	}
 
