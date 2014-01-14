@@ -63,9 +63,9 @@ void FileReaderTest::setUp(){
 	p3.getOldF() = ofp3;
 
 	testL.clear();
-	testL.push_back(p1);
-	testL.push_back(p2);
-	testL.push_back(p3);
+	testL.push_back(&p1);
+	testL.push_back(&p2);
+	testL.push_back(&p3);
 }
 
 void FileReaderTest::tearDown(){
@@ -74,7 +74,7 @@ void FileReaderTest::tearDown(){
 
 void FileReaderTest::testReadStatus(){
 	FileReader fileReader;
-	std::list<Particle> parList;
+	std::list<Particle*> parList;
 	parList.clear();
 	double eps = 10;
 	double sig = 10;
@@ -87,15 +87,15 @@ void FileReaderTest::testReadStatus(){
 	CPPUNIT_ASSERT(sig==1);
 	CPPUNIT_ASSERT(parList.size()==3);
 
-	std::list<Particle>::iterator itT = testL.begin();
-	for (std::list<Particle>::iterator it = parList.begin();
+	std::list<Particle*>::iterator itT = testL.begin();
+	for (std::list<Particle*>::iterator it = parList.begin();
 			it != parList.end(); it++){
-		CPPUNIT_ASSERT((*it).getX()==(*itT).getX());
-		CPPUNIT_ASSERT((*it).getV()==(*itT).getV());
-		CPPUNIT_ASSERT((*it).getF()==(*itT).getF());
-		CPPUNIT_ASSERT((*it).getOldF()==(*itT).getOldF());
-		CPPUNIT_ASSERT((*it).getM()==(*itT).getM());
-		CPPUNIT_ASSERT((*it).getType()==(*itT).getType());
+		CPPUNIT_ASSERT((*(*it)).getX()==(*(*itT)).getX());
+		CPPUNIT_ASSERT((*(*it)).getV()==(*(*itT)).getV());
+		CPPUNIT_ASSERT((*(*it)).getF()==(*(*itT)).getF());
+		CPPUNIT_ASSERT((*(*it)).getOldF()==(*(*itT)).getOldF());
+		CPPUNIT_ASSERT((*(*it)).getM()==(*(*itT)).getM());
+		CPPUNIT_ASSERT((*(*it)).getType()==(*(*itT)).getType());
 		itT++;
 	}
 

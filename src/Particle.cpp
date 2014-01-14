@@ -38,20 +38,6 @@ Particle::Particle(const Particle& other) {
 Particle::Particle(	utils::Vector<double, 3> x_arg,
 	        utils::Vector<double, 3> v_arg,
 	        double m_arg,
-	        int type_arg
-){
-    x = x_arg;
-    v = v_arg;
-    m = m_arg;
-    type = type_arg;
-    f = 0.0;
-    old_f = 0.0;
-    LOG4CXX_TRACE(particlelogger,"Particle generated!");
-}
-
-Particle::Particle(	utils::Vector<double, 3> x_arg,
-	        utils::Vector<double, 3> v_arg,
-	        double m_arg,
 	        int type_arg,
 	        int id
 ){
@@ -61,8 +47,8 @@ Particle::Particle(	utils::Vector<double, 3> x_arg,
     type = type_arg;
     f = 0.0;
     old_f = 0.0;
-    ID = id;
-    LOG4CXX_TRACE(particlelogger,"Particle generated with ID!");
+    parID = id;
+    LOG4CXX_TRACE(particlelogger,"Particle generated!");
 }
 
 Particle::~Particle() {
@@ -112,7 +98,12 @@ void Particle::deleteTempF(){
 
 std::string Particle::toString() {
 	std::stringstream stream;
-	stream << "Particle: X:" << x <<  " v: " << v << " f: " << f << " old_f: " << old_f << " type: " << type;
+	stream << "Particle: X:" << x
+					<<  " v: " << v
+					<< " f: " << f
+					<< " old_f: " << old_f
+					<< " type: " << type
+					<< " ID: " << parID;
 	return stream.str();
 }
 
@@ -139,11 +130,7 @@ std::list<Particle*>& Particle::getDiagNeighbors(){
 }
 
 int& Particle::getID(){
-	return ID;
-}
-
-void Particle::setID(int id){
-	ID = id;
+	return parID;
 }
 
 bool Particle::isDirectNeighborTo(Particle* p){

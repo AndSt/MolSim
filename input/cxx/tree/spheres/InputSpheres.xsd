@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<xs:schema 
+xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!-- definition of small complex types -->
+	<xs:complexType name="centerPos_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The ori_t type consists of a set of 3 coordinates of the origin vector.
+				The origin vector points at the lower left corner of the cuboid.
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:sequence>
+			<xs:element name="x" type="xs:decimal"/>
+			<xs:element name="y" type="xs:decimal"/>
+			<xs:element name="z" type="xs:decimal"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="startVel_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The startVel_t type consists of a set of 3 coordinates of start velocity.
+				Each particle in the cuboid has the same start velocity (before adding the brownian factor).
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:sequence>
+			<xs:element name="vX" type="xs:decimal"/>
+			<xs:element name="vY" type="xs:decimal"/>
+			<xs:element name="vZ" type="xs:decimal"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="sphere_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The sphere_t type consists of all properties of a sphere.
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:sequence>
+			<xs:element name="meshWidthS" type="xs:decimal"/>
+			<xs:element name="massS" type="xs:decimal"/>
+			<xs:element name="meanVS" type="xs:decimal"/>
+			<xs:element name="parTypeS" type="xs:int"/>
+			<xs:element name="radiussph" type="xs:int"/>
+			<xs:element name="epsilon" type="xs:decimal"/>
+			<xs:element name="sigma" type="xs:decimal"/>
+			<xs:element name="centerPos" type="centerPos_t"/>
+			<xs:element name="startVel" type="startVel_t"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- type of the biggest complex element -->
+	<xs:complexType name="spheres_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The spheres_t type consists of a list of spheres.
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:sequence>
+			<xs:element name="sphere" type="sphere_t" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<!-- definition of the biggest complex element -->
+	<xs:element name="spheres" type="spheres_t"/>
+
+</xs:schema> 

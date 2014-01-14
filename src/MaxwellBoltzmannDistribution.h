@@ -18,7 +18,7 @@
  * @meanVelocity the mean velocity of the brownian motion for the particle
  * @dimensions the number of dimensions to initialize (2 or 3)
  */
-void MaxwellBoltzmannDistribution(Particle& p, double meanVelocity, int dimensions);
+void MaxwellBoltzmannDistribution(Particle* p, double meanVelocity, int dimensions);
 
 
 #endif /* MAXWELLBOLTZMANNDISTRIBUTION_H_ */

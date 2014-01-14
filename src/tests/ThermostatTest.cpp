@@ -17,15 +17,15 @@ ThermostatTest::~ThermostatTest() {}
 
 void ThermostatTest::setUp(){
 	FileReader fileReader;
-	std::list<Particle> pList;
+	std::list<Particle*> pList;
 	pList.clear();
 	std::string fileName = "src/tests/testFiles/container+iterator.txt";
 	char *cstr = new char[fileName.length() + 1];
 	strcpy(cstr, fileName.c_str());
 	fileReader.readFile(pList, cstr);
 
-	for(std::list<Particle>::iterator it = pList.begin(); it!= pList.end(); it++){
-		parList.push_back(&(*it));
+	for(std::list<Particle*>::iterator it = pList.begin(); it!= pList.end(); it++){
+		parList.push_back(*it);
 	}
 
 	std::string inp = "src/tests/testFiles/TestInputSetting.xml";

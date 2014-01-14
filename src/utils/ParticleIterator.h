@@ -22,7 +22,7 @@ public:
 	/**
 	 * assigns the iterator to an iterator
 	 */
-	ParticleIterator(std::list<Particle>::iterator iterator_arg);
+	ParticleIterator(std::list<Particle*>::iterator iterator_arg);
 
 	virtual ~ParticleIterator();
 
@@ -48,7 +48,7 @@ private:
 	/**
 	 * the element of the iterator
 	 */
-	std::list<Particle>::iterator iterator;
+	std::list<Particle*>::iterator iterator;
 
 };
 

@@ -48,7 +48,7 @@ void ParticleGeneratorTest::testReadCuboids() {
 	generator.readCuboids(cstr);
 
 	//Check first cuboid
-	Cuboid testCuboid = *generator.getCuboidList().begin();
+	Cuboid testCuboid = **generator.getCuboidList().begin();
 	CPPUNIT_ASSERT(cuboid1.getDepth() == testCuboid.getDepth());
 	CPPUNIT_ASSERT(cuboid1.getHeight() == testCuboid.getHeight());
 	CPPUNIT_ASSERT(cuboid1.getWidth() == testCuboid.getWidth());
@@ -62,7 +62,7 @@ void ParticleGeneratorTest::testReadCuboids() {
 	CPPUNIT_ASSERT(cuboid1.getSigma() == testCuboid.getSigma());
 
 	//Check second cuboid
-	testCuboid = *(++generator.getCuboidList().begin());
+	testCuboid = **(++generator.getCuboidList().begin());
 	CPPUNIT_ASSERT(cuboid2.getDepth() == testCuboid.getDepth());
 	CPPUNIT_ASSERT(cuboid2.getHeight() == testCuboid.getHeight());
 	CPPUNIT_ASSERT(cuboid2.getWidth() == testCuboid.getWidth());
@@ -83,7 +83,7 @@ void ParticleGeneratorTest::testExtractCuboids(){
 	strcpy(cstr, fileName.c_str());
 	generator.extractCuboids(cstr);
 
-	Cuboid testCuboid = *generator.getCuboidList().begin();
+	Cuboid testCuboid = **generator.getCuboidList().begin();
 	CPPUNIT_ASSERT(testCuboid.getDepth()==1);
 	CPPUNIT_ASSERT(testCuboid.getHeight()==20);
 	CPPUNIT_ASSERT(testCuboid.getWidth()==40);
@@ -101,7 +101,7 @@ void ParticleGeneratorTest::testExtractCuboids(){
 	CPPUNIT_ASSERT(testCuboid.getSigma()==1.0);
 
 	//Check second cuboid
-	testCuboid = *(++generator.getCuboidList().begin());
+	testCuboid = **(++generator.getCuboidList().begin());
 	CPPUNIT_ASSERT(testCuboid.getDepth()==1);
 	CPPUNIT_ASSERT(testCuboid.getHeight()==10);
 	CPPUNIT_ASSERT(testCuboid.getWidth()==50);
@@ -127,28 +127,28 @@ void ParticleGeneratorTest::testExtractSpheres(){
 	strcpy(cstr, fileName.c_str());
 	generator.extractSpheres(cstr);
 	
-	Sphere sp = *generator.getSphereList().begin();
-	double rDouble = sp.getRadius() * sp.getMeshWidth();
-	utils::Vector<double, 3> cen = sp.getCenter();
+	Sphere* sp = *generator.getSphereList().begin();
+	double rDouble = (*sp).getRadius() * (*sp).getMeshWidth();
+	utils::Vector<double, 3> cen = (*sp).getCenter();
 	generator.spheresToList();
-	std::list<Particle> parList = generator.getParticleList();
+	std::list<Particle*> parList = generator.getParticleList();
 
-	for (std::list<Particle>::iterator it = parList.begin(); it != parList.end(); it++){
-		Particle p = *it;
-		utils::Vector<double, 3> temp = p.getX() - cen;
-		CPPUNIT_ASSERT(temp.L2Norm() - rDouble <= sp.getMeshWidth());
+	for (std::list<Particle*>::iterator it = parList.begin(); it != parList.end(); it++){
+		Particle* p = *it;
+		utils::Vector<double, 3> temp = (*p).getX() - cen;
+		CPPUNIT_ASSERT(temp.L2Norm() - rDouble <= (*sp).getMeshWidth());
 	}
 	
-	CPPUNIT_ASSERT(sp.getCenter()[0]==30.0);
-	CPPUNIT_ASSERT(sp.getCenter()[1]==150.0);
-	CPPUNIT_ASSERT(sp.getCenter()[2]==0);
-	CPPUNIT_ASSERT(sp.getRadius()==5);
-	CPPUNIT_ASSERT(sp.getStartV()[0]==0.0);
-	CPPUNIT_ASSERT(sp.getStartV()[1]==0.0);
-	CPPUNIT_ASSERT(sp.getStartV()[2]==0.0);
-	CPPUNIT_ASSERT(sp.getType()==1);
-	CPPUNIT_ASSERT(sp.getEpsilon() == 1.0);
-	CPPUNIT_ASSERT(sp.getSigma() == 1.0);
+	CPPUNIT_ASSERT((*sp).getCenter()[0]==30.0);
+	CPPUNIT_ASSERT((*sp).getCenter()[1]==150.0);
+	CPPUNIT_ASSERT((*sp).getCenter()[2]==0);
+	CPPUNIT_ASSERT((*sp).getRadius()==5);
+	CPPUNIT_ASSERT((*sp).getStartV()[0]==0.0);
+	CPPUNIT_ASSERT((*sp).getStartV()[1]==0.0);
+	CPPUNIT_ASSERT((*sp).getStartV()[2]==0.0);
+	CPPUNIT_ASSERT((*sp).getType()==1);
+	CPPUNIT_ASSERT((*sp).getEpsilon() == 1.0);
+	CPPUNIT_ASSERT((*sp).getSigma() == 1.0);
 }
 	
 void ParticleGeneratorTest::testExtractParticles(){
@@ -187,19 +187,20 @@ void ParticleGeneratorTest::testExtractParticles(){
 	Particle par4(x4, v4, 1.0e-14, 0);
 
 	//Set up particles
-	std::list<Particle> particles;
+	std::list<Particle*> particles;
 	particles.clear();
-	particles.push_back(par1);
-	particles.push_back(par2);
-	particles.push_back(par3);
-	particles.push_back(par4);
+	particles.push_back(&par1);
+	particles.push_back(&par2);
+	particles.push_back(&par3);
+	particles.push_back(&par4);
 
 
-	std::list<Particle>::iterator iterator = particles.begin();
-	std::list<Particle>::iterator testIterator;
-	for (testIterator = generator.getParticleList().begin(); testIterator != generator.getParticleList().end(); ++testIterator){
-		Particle par = *iterator;		
-		Particle testPar = *testIterator;
+	std::list<Particle*>::iterator iterator = particles.begin();
+	std::list<Particle*>::iterator testIterator;
+	for (testIterator = generator.getParticleList().begin();
+			testIterator != generator.getParticleList().end(); ++testIterator){
+		Particle par = **iterator;
+		Particle testPar = **testIterator;
 		CPPUNIT_ASSERT(par.getX()==testPar.getX());
 		CPPUNIT_ASSERT(par.getV()==testPar.getV());
 		CPPUNIT_ASSERT(par.getM()==testPar.getM());

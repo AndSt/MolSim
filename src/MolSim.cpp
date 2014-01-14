@@ -78,8 +78,7 @@ void LCcalculateX();
 void calculateV();
 void LCcalculateV();
 
-void computeForce(Particle& p1, Particle& p2);
-void membraneComputeForce(Particle& p1, Particle& p2);
+void computeForce(Particle* p1, Particle* p2);
 
 void getIntegerInput(string &str, int &input);
 
@@ -138,7 +137,7 @@ int id1, id2, id3, id4;
 bool isMembrane = false;
 
 int inputSize = 0;
-list<Particle> particleList;
+list<Particle*> particleList;
 utils::ParticleContainer container;
 utils::ParticleGenerator pgen;
 utils::LCParticleContainer lcContainer;
@@ -168,32 +167,48 @@ log4cxx::LoggerPtr molsimlogger(log4cxx::Logger::getLogger("molsim"));
  */
 int main(int argc, char* argsv[]) {
 
-
-	/*
 	//for membrane test
+	/*
 	std::string fileName = "src/tests/testFiles/TestMembrane.xml";
 	char *cstr = new char[fileName.length() + 1];
 	strcpy(cstr, fileName.c_str());
 
 	pgen.extractCuboids(cstr);
 	Cuboid cub = *pgen.getCuboidList().begin();
+	*/
 
 	Particle p1(utils::Vector<double, 3>(0.0), utils::Vector<double, 3>(0.0), 0.1, 0, 100);
 	Particle p2(utils::Vector<double, 3>(0.0), utils::Vector<double, 3>(0.0), 0.1, 0, 200);
-	cout << p1.getID() << endl;
-	cout << p2.getID() << endl;
+	cout << p1 << endl;
+	cout << p2 << endl;
+	std::list<Particle *> pp;
+	pp.push_back(&p1);
+	pp.push_back(&p2);
+	std::list<Particle *>::iterator i0 = pp.begin();
+	cout << "list:\n" << **i0 << endl;
+	i0++;
+	cout << **i0 << endl << endl;
+
 	cin.ignore();
-	Cuboid cub(5, 5, 1, 1.0, 1.0,
+	Cuboid cub1(5, 5, 1, 1.0, 1.0,
 			utils::Vector<double, 3>((double) 0), utils::Vector<double, 3>((double) 0),
 			0.1, 0, 1.0, 5.0);
-	cub.initNeighbors();
-	std::list<Particle> parList = cub.getCuboid();
-	for (std::list<Particle>::iterator it = parList.begin();
-			it != parList.end(); it++){
-		cout << (*it).getID() << endl;
+	//cub.initNeighbors();
+	std::list<Particle *> li = cub1.getCuboid();
+	li.push_back(&p1);
+	std::list<Particle *>::iterator it = li.begin();
+	cout << "now:\n" << *it << endl;
+	it++;
+	cout << *it << endl;
+	it++;
+	cout << *it << endl;
+
+	for (std::list<Particle *>::iterator it = li.begin();
+			it != li.end(); it++){
+		cout << **it << endl;
 	}
 	return 0;
-	*/
+	//end of test membrane
 
 	PropertyConfigurator::configure("Log4cxxConfig.cfg");
 	LOG4CXX_INFO(molsimlogger, "Arrived @ main.");
@@ -320,13 +335,13 @@ int main(int argc, char* argsv[]) {
 			resizeEpsSig(1);
 
 			pgen.extractCuboids(*inputNames.begin());
-			list<Cuboid>::iterator itC = pgen.getCuboidList().begin();
+			list<Cuboid*>::iterator itC = pgen.getCuboidList().begin();
 
 			//==================G + MIXING RULE====================
-			gDirMass[1] = G_CONST * ((*itC).getMass());
+			gDirMass[1] = G_CONST * ((*(*itC)).getMass());
 			gravForce[0] = utils::Vector<double, 3>(gDirMass);
-			EPS[0][0] = (*itC).getEpsilon();
-			SIG[0][0] = (*itC).getSigma();
+			EPS[0][0] = (*(*itC)).getEpsilon();
+			SIG[0][0] = (*(*itC)).getSigma();
 			fillEpsSig(1);
 
 			pgen.cuboidsToList();
@@ -362,19 +377,19 @@ int main(int argc, char* argsv[]) {
 			gravForce.resize(2);
 			resizeEpsSig(2);
 
-			gDirMass[1] = G_CONST * ((*particleList.begin()).getM());
+			gDirMass[1] = G_CONST * ((*(*particleList.begin())).getM());
 			gravForce[0] = utils::Vector<double, 3>(gDirMass);
 			EPS[0][0] = eps1;
 			SIG[0][0] = sig1;
 
 			pgen.extractSpheres(*inputNames.begin());
-			list<Sphere>::iterator itS = pgen.getSphereList().begin();
+			list<Sphere*>::iterator itS = pgen.getSphereList().begin();
 
 			//==================G + MIXING RULE====================
-			gDirMass[1] = G_CONST * ((*itS).getM());
+			gDirMass[1] = G_CONST * ((*(*itS)).getM());
 			gravForce[1] = utils::Vector<double, 3>(gDirMass);
-			EPS[1][1] = (*itS).getEpsilon();
-			SIG[1][1] = (*itS).getSigma();
+			EPS[1][1] = (*(*itS)).getEpsilon();
+			SIG[1][1] = (*(*itS)).getSigma();
 
 			fillEpsSig(2);
 
@@ -402,15 +417,15 @@ int main(int argc, char* argsv[]) {
 
 			pgen.extractCuboids(*inputNames.begin());
 			// For each type
-			for (list<Cuboid>::iterator itCS = pgen.getCuboidList().begin();
+			for (list<Cuboid*>::iterator itCS = pgen.getCuboidList().begin();
 					itCS != pgen.getCuboidList().end(); itCS++) {
-				gDirMass[1] = G_CONST * ((*itCS).getMass());
-				gravForce[(*itCS).getType()] = utils::Vector<double, 3>(
+				gDirMass[1] = G_CONST * ((*(*itCS)).getMass());
+				gravForce[(*(*itCS)).getType()] = utils::Vector<double, 3>(
 						gDirMass);
 				// fill the diagonal first
-				EPS[(*itCS).getType()][(*itCS).getType()] =
-						(*itCS).getEpsilon();
-				SIG[(*itCS).getType()][(*itCS).getType()] = (*itCS).getSigma();
+				EPS[(*(*itCS)).getType()][(*(*itCS)).getType()] =
+						(*(*itCS)).getEpsilon();
+				SIG[(*(*itCS)).getType()][(*(*itCS)).getType()] = (*(*itCS)).getSigma();
 			}
 
 			fillEpsSig(inputSize);
@@ -438,15 +453,15 @@ int main(int argc, char* argsv[]) {
 
 			pgen.extractCuboids(*inputNames.begin());
 			// For each type
-			for (list<Cuboid>::iterator itCB = pgen.getCuboidList().begin();
+			for (list<Cuboid*>::iterator itCB = pgen.getCuboidList().begin();
 					itCB != pgen.getCuboidList().end(); itCB++) {
-				gDirMass[1] = G_CONST * ((*itCB).getMass());
-				gravForce[(*itCB).getType()] = utils::Vector<double, 3>(
+				gDirMass[1] = G_CONST * ((*(*itCB)).getMass());
+				gravForce[(*(*itCB)).getType()] = utils::Vector<double, 3>(
 						gDirMass);
 				// fill the diagonal first
-				EPS[(*itCB).getType()][(*itCB).getType()] =
-						(*itCB).getEpsilon();
-				SIG[(*itCB).getType()][(*itCB).getType()] = (*itCB).getSigma();
+				EPS[(*(*itCB)).getType()][(*(*itCB)).getType()] =
+						(*(*itCB)).getEpsilon();
+				SIG[(*(*itCB)).getType()][(*(*itCB)).getType()] = (*(*itCB)).getSigma();
 			}
 
 			fillEpsSig(inputSize);
@@ -475,21 +490,21 @@ int main(int argc, char* argsv[]) {
 			resizeEpsSig(1);
 
 			pgen.extractCuboids(*inputNames.begin());
-			list<Cuboid>::iterator itC = pgen.getCuboidList().begin();
-			(*itC).initNeighbors();
+			list<Cuboid*>::iterator itC = pgen.getCuboidList().begin();
+			(*(*itC)).initNeighbors();
 
 			//==================G + MIXING RULE====================
-			gDirMass[1] = G_CONST * ((*itC).getMass());
+			gDirMass[1] = G_CONST * ((*(*itC)).getMass());
 			gravForce[0] = utils::Vector<double, 3>(gDirMass);
-			EPS[0][0] = (*itC).getEpsilon();
-			SIG[0][0] = (*itC).getSigma();
+			EPS[0][0] = (*(*itC)).getEpsilon();
+			SIG[0][0] = (*(*itC)).getSigma();
 			//fillEpsSig(1);
 
 			//set the IDs of 4 special particles
-			id1 = 24*((*itC).getWidth()) + 17;	//(17, 24)
-			id2 = 25*((*itC).getWidth()) + 17;	//(17, 25)
-			id3 = 24*((*itC).getWidth()) + 18;	//(18, 24)
-			id4 = 25*((*itC).getWidth()) + 18;	//(18, 25)
+			id1 = 24*((*(*itC)).getWidth()) + 17;	//(17, 24)
+			id2 = 25*((*(*itC)).getWidth()) + 17;	//(17, 25)
+			id3 = 24*((*(*itC)).getWidth()) + 18;	//(18, 24)
+			id4 = 25*((*(*itC)).getWidth()) + 18;	//(18, 25)
 
 			pgen.cuboidsToList();
 			particleList = pgen.getParticleList();
@@ -503,330 +518,6 @@ int main(int argc, char* argsv[]) {
 		else {
 			cout << arg1 << " invalid!" << endl;
 			return -1;
-		}
-	} else {
-		//argc==1
-		//./MolSim
-		LOG4CXX_INFO(molsimlogger, "Arrived @ filedecision.");
-		string str;
-		FileReader fileReader;
-		cout << "Hello from Andreas, Matthias and Son!" << endl;
-		cout << endl;
-		//variable for Level 1 Options:
-		int option1;
-		//Level 1 Options:
-		//[1] - run from particle file
-		//[2] - run from cuboid file
-		//[3] - run from XML input files
-		cout
-				<< "Enter '1', if you want to run the program with a particle file."
-				<< endl;
-		cout << "Enter '2', if you want to run program with a cuboid file."
-				<< endl;
-		cout << "Enter '3', if you want to run program with xml input files."
-				<< endl;
-
-		getIntegerInput(str, option1);
-
-		switch (option1) {
-		case 1:
-			cout << "Enter '1', if you want the default configuration: "
-					<< endl;
-			cout << "         file -'eingabe-sonne.txt'" << endl;
-			cout << "         end time - 1000" << endl;
-			cout << "         delta t - 0.014" << endl;
-			cout
-					<< "Enter '2', if you 'eingabe-sonne.txt' with different options"
-					<< endl;
-			cout << "Enter '3', if you want completely different options"
-					<< endl;
-
-			break;
-		case 2:
-			cout << "Enter '1', if you want the default configuration: "
-					<< endl;
-			cout << "         file -'eingabe-brownian.txt'" << endl;
-			cout << "         end time - 5" << endl;
-			cout << "         delta t - 0.0002" << endl;
-			cout
-					<< "Enter '2', if you 'eingabe-brownian.txt' with different options"
-					<< endl;
-			cout << "Enter '3', if you want completely different options"
-					<< endl;
-			break;
-		case 3:
-			cout << "XML input files are stored in MolSim." << endl;
-			cout << "There are 3 sources of input files:" << endl;
-			cout
-					<< "\tInputSetting: contains start_time, end_time, delta_t,\
-					\n\t\t inputfile name, inputfile type, output mask\
-					\n\t\t and output frequency."
-					<< endl;
-			cout
-					<< "\tInputParticles: contains all information needed for particles."
-					<< endl;
-			cout
-					<< "\tInputCuboids: contains all information needed for cuboids."
-					<< endl;
-			cout
-					<< "\tInputSpheres: contains all information needed for spheres."
-					<< endl;
-			cout << "\nPress 1 to use Linked Cell Algorithm." << endl;
-			cout << "Press 2 to simulate without Linked Cell Algorithm."
-					<< endl;
-			break;
-		}
-
-		//variable for Level 2 Options:
-		int option2;
-
-		//level 2 Options:
-		//[1] - default configuration
-		//[2] - define delta_t, end_time by yourself
-		//[3] - define fileName, delta_t and end_time by yourself
-		getIntegerInput(str, option2);
-
-		//for particle file:
-		if (option1 == 1) {
-			switch (option2) {
-			case 1:
-				fileName = "eingabe-sonne.txt";
-				delta_t = 0.014;
-				end_time = 1000;
-				break;
-			case 2:
-				fileName = "eingabe-sonne.txt";
-				cout << "Please enter the value of delta_t:" << endl;
-				getDoubleInput(str, delta_t);
-				cout << "Please enter the value of end_time:" << endl;
-				getDoubleInput(str, end_time);
-				break;
-			case 3:
-				cout << "Please enter the name of your file:" << endl;
-				getline(cin, fileName);
-				cout << "Please enter the value of delta_end:" << endl;
-				getDoubleInput(str, delta_t);
-				cout << "Please enter the value of end_time:" << endl;
-				getDoubleInput(str, end_time);
-				break;
-			}
-			char *cstr = new char[fileName.length() + 1];
-			strcpy(cstr, fileName.c_str());
-			fileReader.readFile(particleList, cstr);
-		}
-		//for cuboid list:
-		else if (option1 == 2) {
-			switch (option2) {
-			case 1:
-				fileName = "eingabe-brownian.txt";
-				delta_t = 0.0002;
-				end_time = 5;
-				break;
-			case 2:
-				fileName = "eingabe-brownian.txt";
-				cout << "Please enter the value of delta_t:" << endl;
-				getDoubleInput(str, delta_t);
-				cout << "Please enter the value of end_time:" << endl;
-				getDoubleInput(str, end_time);
-				break;
-			case 3:
-				cout << "Please enter the name of your file:" << endl;
-				getline(cin, fileName);
-				cout << "Please enter the value of delta_t:" << endl;
-				getDoubleInput(str, delta_t);
-				cout << "Please enter the value of end_time:" << endl;
-				getDoubleInput(str, end_time);
-				break;
-			}
-
-			char *cstr = new char[fileName.length() + 1];
-			strcpy(cstr, fileName.c_str());
-			pgen.readCuboids(cstr);
-			pgen.cuboidsToList();
-			particleList = pgen.getParticleList();
-		}
-
-		//for XML input:
-		else if (option1 == 3) {
-			//getting information from InputSetting first
-			string inp = "InputSetting.xml";
-			pgen.extractSetting(inp, start_time, end_time, delta_t, inputNames,
-					inputTypes, outputMask, freq, domainSize, R_CUTOFF,
-					domainCondition, G_CONST, inputSize);
-			particleList.clear();
-			list<string>::iterator itT = inputTypes.begin();
-			int i = 1;
-
-			/*// calculate the number of cuboids + spheres in input file
-			 for (list<string>::iterator itN = inputNames.begin();
-			 itN != inputNames.end(); itN++) {
-			 if (*itT == "cuboids") {
-			 pgen.extractCuboids(*itN);
-			 inputSize += pgen.getCuboidList().size();
-			 } else if (*itT == "spheres") {
-			 pgen.extractSpheres(*itN);
-			 inputSize += pgen.getSphereList().size();
-			 }
-			 itT++;
-			 i++;
-			 }*/
-
-			//initialize the size of gravForce
-			gravForce.resize(inputSize);
-			resizeEpsSig(inputSize);
-
-			for (list<string>::iterator itN = inputNames.begin();
-					itN != inputNames.end(); itN++) {
-				if (*itT == "particles") {
-					cout << i << ". input file: " << "[particles]." << endl;
-					pgen.extractParticles(*itN);
-					for (list<Particle>::iterator it =
-							pgen.getParticleList().begin();
-							it != pgen.getParticleList().end(); it++) {
-						gDirMass[1] = (*it).getM();
-						gravForce[(*it).getType()] = utils::Vector<double, 3>(
-								gDirMass);
-					}
-					pgen.mergeWithParticleList(particleList);
-				} else if (*itT == "cuboids") {
-					cout << i << ". input file: " << "[cuboids]" << endl;
-					pgen.extractCuboids(*itN);
-					// For each type
-					for (list<Cuboid>::iterator it =
-							pgen.getCuboidList().begin();
-							it != pgen.getCuboidList().end(); it++) {
-						gDirMass[1] = (*it).getMass();
-						gravForce[(*it).getType()] = utils::Vector<double, 3>(
-								gDirMass);
-						// fille the diagonal first
-						EPS[(*it).getType()][(*it).getType()] =
-								(*it).getEpsilon();
-						SIG[(*it).getType()][(*it).getType()] =
-								(*it).getSigma();
-					}
-
-					pgen.cuboidsToList();
-					pgen.mergeWithParticleList(particleList);
-
-				} else {
-					cout << i << ". input file: " << "[spheres]" << endl;
-					pgen.extractSpheres(*itN);
-					// For each type
-					for (list<Sphere>::iterator it =
-							pgen.getSphereList().begin();
-							it != pgen.getSphereList().end(); it++) {
-						gDirMass[1] = (*it).getM();
-						gravForce[(*it).getType()] = utils::Vector<double, 3>(
-								gDirMass);
-						// fill the diagonal first
-						EPS[(*it).getType()][(*it).getType()] =
-								(*it).getEpsilon();
-						SIG[(*it).getType()][(*it).getType()] =
-								(*it).getSigma();
-					}
-					pgen.spheresToList();
-					pgen.mergeWithParticleList(particleList);
-				}
-				itT++;
-				i++;
-			}
-
-			cout << "Press enter to continue..." << endl;
-			cin.ignore();
-
-			//======================GRAVITY=====================
-			int ag;
-			cout
-					<< "Do you want to add gravity?\nPress 1 to confirm, 2 to ignore."
-					<< endl;
-			getIntegerInput(str, ag);
-			if (ag == 1) {
-				cout << "Gravity enabled.\n" << "G = " << G_CONST << "."
-						<< endl;
-			} else {
-				cout << "Gravity disabled." << endl;
-				G_CONST = 0;
-			}
-			//multiply with G_CONST
-			for (int indexGrav = 0; indexGrav < gravForce.size(); indexGrav++) {
-				gravForce[indexGrav] = G_CONST * gravForce[indexGrav];
-			}
-			//======================GRAVITY=====================
-
-			//======================FALLING DROP=====================
-			int fd;
-			cout << "\nDo you want to simulate the falling drop?\n"
-					<< "Note: ParListStatus.txt must exist!\n"
-					<< "Press 1 to confirm, 2 to ignore." << endl;
-			getIntegerInput(str, fd);
-			if (fd == 1) {
-				cout << "Falling drop chosen." << endl;
-				pgen.getParticleList().clear();
-				double eps1 = 1.0;
-				double sig1 = 1.0;
-				string inTextS = "ParListStatus.txt";
-				char *inText = new char[inTextS.length() + 1];
-				strcpy(inText, inTextS.c_str());
-				fileReader.readStatus(pgen.getParticleList(), eps1, sig1,
-						inText);
-				int typeP = (*pgen.getParticleList().begin()).getType();
-				EPS[typeP][typeP] = eps1;
-				SIG[typeP][typeP] = sig1;
-
-				pgen.mergeWithParticleList(particleList);
-				cout << "Input data from ParListStatus imported." << endl;
-			} else {
-				cout << "Falling drop disabled." << endl;
-			}
-			//======================FALLING DROP=====================
-
-			fillEpsSig(inputSize);
-		}
-
-		cout << "\nReading input file..." << endl;
-
-		//initialize container with particle list
-		LOG4CXX_INFO(molsimlogger, "Arrived @ initialization call.");
-
-		//start simulation
-		LOG4CXX_INFO(molsimlogger, "Arrived @ simulation call.");
-
-		//======================THERMOSTAT=====================
-		int thermoOption;
-		cout
-				<< "Do you want to use Thermostat?\nPress 1 to confirm, 2 to ignore."
-				<< endl;
-		getIntegerInput(str, thermoOption);
-
-		thermo = Thermostat();
-
-		if (thermoOption == 1) {
-			//initialize thermostat to get enabled flag (true --> call, false --> ignore)
-			thermo.getEnabled() = true;
-			cout << "Thermostat enabled." << endl;
-			if (thermo.getDelta_T() != 0)
-				cout << "Target temperature: " << thermo.getT_target() << ".\n"
-						<< endl;
-		} else {
-			thermo.getEnabled() = false;
-			cout << "Thermostat disabled.\n" << endl;
-		}
-		//======================THERMOSTAT=====================
-		cout << "Running simulation..." << endl;
-		int wo;
-		if (option1 == 3 && option2 == 1) {
-			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
-			LCsimulate();
-			cout << "\nWrite ParListStatus.txt out?" << endl;
-			cout << "Press 1 to confirm, 2 to ignore." << endl;
-			getIntegerInput(str, wo);
-			if (wo == 1) {
-				writeOutputFile((lcContainer.getList()));
-				cout << "ParListStatus.txt written." << endl;
-			}
-		} else {
-			container.initialize(particleList);
-			simulate();
 		}
 	}
 
@@ -1145,26 +836,23 @@ void LCcalculateFLJ() {
 					   > lcContainer.endOuter().getCellNumber()) {
 			   break;
 			}
-			Particle& p1 = *iterator;
-			Particle& p2 = *innerIterator;
-			//cout << p1 << endl;
-			//cout << p2 << endl;
+			Particle* p1 = &(*iterator);
+			Particle* p2 = &(*innerIterator);
+			//cout << *p1 << endl;
+			//cout << *p2 << endl;
 				/*cout << "Element: " << innerIterator.getCellNumber() << " "
-								<< p2.toString() << endl;
+								<< (*p2).toString() << endl;
 				cout << "EndInner: " << ((*(lcContainer.endInner(i))).toString())
 								<< endl;
 								*/
-			if (p1 == p2) {
+			if (*p1 == *p2) {
 				//cout << "ok" << endl;
 				++innerIterator;
 				continue;
 			} else {
-				assert(!(p1 == p2));
+				assert(!(*p1 == *p2));
 
-				if (isMembrane)
-					membraneComputeForce(p1, p2);
-				else
-					computeForce(p1, p2);
+				computeForce(p1, p2);
 
 				++innerIterator;
 			}
@@ -1231,53 +919,35 @@ void LCcalculateV() {
  * @param p1 the particle of the outer iterator
  * @param p2 the particle of the inner iterator
  */
-void computeForce(Particle& p1, Particle& p2) {
-	utils::Vector<double, 3> tempD = p2.getX() - p1.getX();
+void computeForce(Particle* p1, Particle* p2) {
+	utils::Vector<double, 3> tempD = (*p2).getX() - (*p1).getX();
 	double tempDNorm = tempD.L2Norm();
 
 	if (tempDNorm < R_CUTOFF) {
-
 		double tempDSigDivNorm = pow(
-				SIG[p1.getType()][p2.getType()] / tempDNorm, 6);
-		utils::Vector<double, 3> tempF = 24 * EPS[p1.getType()][p2.getType()]
+				SIG[(*p1).getType()][(*p2).getType()] / tempDNorm, 6);
+		utils::Vector<double, 3> tempF = 24 * EPS[(*p1).getType()][(*p2).getType()]
 				* pow(1 / tempDNorm, 2)
 				* (tempDSigDivNorm - 2 * pow(tempDSigDivNorm, 2)) * tempD;
-		p2.updateTempF((-1) * tempF);
-		p1.updateTempF(tempF);
+
+		if (isMembrane){
+
+			if ((*p1).isDirectNeighborTo(p2)){
+				tempF = k*(1 - rDirect/tempDNorm)*tempD;
+			}
+			else if ((*p1).isDiagNeighborTo(p2)){
+				tempF = k*(1 - rDiag/tempDNorm)*tempD;
+			}
+			else if (tempDNorm > rFLJ){
+				tempF = utils::Vector<double, 3> ((double) 0);
+			}
+		}
+
+		(*p2).updateTempF((-1) * tempF);
+		(*p1).updateTempF(tempF);
+
+
 	}
-}
-
-/**
- *
- * @param p1 the particle of the outer iterator
- * @param p2 the particle of the inner iterator
- */
-void membraneComputeForce(Particle& p1, Particle& p2) {
-	utils::Vector<double, 3> tempD = p2.getX() - p1.getX();
-	double tempDNorm = tempD.L2Norm();
-
-	if (tempDNorm < R_CUTOFF) {
-		utils::Vector<double, 3> tempF((double) 0);
-
-		if (p1.isDirectNeighborTo(&p2)){
-			tempF = k*(1 - rDirect/tempDNorm)*tempD;
-		}
-		else if (p1.isDiagNeighborTo(&p2)){
-			tempF = k*(1 - rDiag/tempDNorm)*tempD;
-		}
-		else if (tempDNorm <= rFLJ){
-			double tempDSigDivNorm = pow(
-					SIG[p1.getType()][p2.getType()] / tempDNorm, 6);
-			tempF = 24 * EPS[p1.getType()][p2.getType()]
-					* pow(1 / tempDNorm, 2)
-					* (tempDSigDivNorm - 2 * pow(tempDSigDivNorm, 2)) * tempD;
-		}
-
-		p2.updateTempF((-1) * tempF);
-		p1.updateTempF(tempF);
-	}
-
-
 }
 
 void LCplotVTK(int iteration) {
@@ -1286,8 +956,8 @@ void LCplotVTK(int iteration) {
 	utils::LCOuterParticleIterator iterator = lcContainer.beginOuter();
 	writer.initializeOutput(lcContainer.size());
 	while (iterator != lcContainer.endOuter()) {
-		Particle& p = *iterator;
-		writer.plotParticle(p);
+		Particle* p = &(*iterator);
+		writer.plotParticle(*p);
 		++iterator;
 	}
 	string out_name(outputMask);

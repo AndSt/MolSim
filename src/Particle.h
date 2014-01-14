@@ -44,7 +44,7 @@ private:
 	 * but each particle has its own ID.
 	 * The IDs should be done within the initialization of the body.
 	 */
-	int ID;
+	int parID;
 
 	/**
 	 * list of direct neighbors (needed for membranes)
@@ -67,11 +67,7 @@ public:
 			// for visualization, we need always 3 coordinates
 			// -> in case of 2d, we use only the first and the second
 			utils::Vector<double, 3> x_arg, utils::Vector<double, 3> v_arg,
-	        double m_arg, int type);
-
-	Particle(
-			utils::Vector<double, 3> x_arg, utils::Vector<double, 3> v_arg,
-			double m_arg, int type, int id);
+	        double m_arg, int type, int id = 0);
 
 	virtual ~Particle();
 
@@ -104,8 +100,6 @@ public:
 	std::list<Particle*>& getDiagNeighbors();
 
 	int& getID();
-
-	void setID(int id);
 
 	bool isDirectNeighborTo(Particle* p);
 

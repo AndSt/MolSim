@@ -17,7 +17,7 @@ ParticleContainer::~ParticleContainer() {
 	// TODO Auto-generated destructor stub
 }
 
-void ParticleContainer::initialize(std::list<Particle>& particles_arg) {
+void ParticleContainer::initialize(std::list<Particle*>& particles_arg) {
 	particles = particles_arg;
 }
 
@@ -29,7 +29,7 @@ ParticleIterator ParticleContainer::end() {
 	return ParticleIterator(particles.end());
 }
 
-std::list<Particle>& ParticleContainer::getList() {
+std::list<Particle*>& ParticleContainer::getList() {
 	return particles;
 }
 

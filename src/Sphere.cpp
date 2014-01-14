@@ -88,8 +88,8 @@ void Sphere::plot(utils::Vector<double, 3> tempCenter, int x, int y){
 	// Being used in the beginning --> v = startV
 	Particle p(pos, startV, m, parType);
 	// BROWNIAN as well!
-	MaxwellBoltzmannDistribution(p, meanV, 2);
-	sph.push_back(p);
+	MaxwellBoltzmannDistribution(&p, meanV, 2);
+	sph.push_back(&p);
 }
 
 void Sphere::drawVerticalLine(utils::Vector<double, 3> tempCenter, int upperHeight){
@@ -194,7 +194,7 @@ void Sphere::drawCircleArea(utils::Vector<double, 3> tempCenter, int rad){
 }
 
 
-std::list<Particle>& Sphere::getSphere(){
+std::list<Particle*>& Sphere::getSphere(){
 	return sph;
 }
 

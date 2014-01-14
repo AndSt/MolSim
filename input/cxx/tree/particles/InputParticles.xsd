@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<xs:schema 
+xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!-- definition of small complex types -->
+	<xs:complexType name="position_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The position_t type consists of a set of 3 coordinates x, y and z of position.
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:sequence>
+			<xs:element name="x" type="xs:decimal"/>
+			<xs:element name="y" type="xs:decimal"/>
+			<xs:element name="z" type="xs:decimal"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="velocity_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The velocity_t type consists of a set of 3 coordinates x, y and z of velocity.
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:sequence>
+			<xs:element name="x" type="xs:decimal"/>
+			<xs:element name="y" type="xs:decimal"/>
+			<xs:element name="z" type="xs:decimal"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="particle_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The particle_t type consists of a set of 3 variables of a particle.
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:sequence>
+			<xs:element name="parTypeP" type="xs:int"/>
+			<xs:element name="position" type="position_t"/>
+			<xs:element name="velocity" type="velocity_t"/>
+			<xs:element name="mass" type="xs:decimal"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- type of the biggest complex element -->
+	<xs:complexType name="particles_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The particles_t type consists of a list of particles.
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:sequence>
+			<xs:element name="particle" type="particle_t" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<!-- definition of the biggest complex element -->
+	<xs:element name="particles" type="particles_t"/>
+
+</xs:schema> 

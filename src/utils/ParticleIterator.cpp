@@ -13,7 +13,7 @@ ParticleIterator::ParticleIterator(){
 
 }
 
-ParticleIterator::ParticleIterator(std::list<Particle>::iterator iterator_arg) {
+ParticleIterator::ParticleIterator(std::list<Particle*>::iterator iterator_arg) {
 	// TODO Auto-generated constructor stub
 	iterator = iterator_arg;
 }
@@ -23,7 +23,7 @@ ParticleIterator::~ParticleIterator() {
 }
 
 Particle& ParticleIterator::operator*() const {
-	return *iterator;
+	return **iterator;
 }
 
 void ParticleIterator::operator++(){

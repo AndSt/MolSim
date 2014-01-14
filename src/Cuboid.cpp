@@ -6,7 +6,6 @@
  */
 
 #include <vector>
-#include <Particle.h>
 
 #include "Cuboid.h"
 #include "utils/Vector.h"
@@ -49,12 +48,23 @@ Cuboid::Cuboid(int height, int width, int depth, double distance, double mass,
 				Particle p(vel, startVelocity, mass, parType, w + hei*width);
 
 				// Movement of each particle superposed by Brownian Motion
-				MaxwellBoltzmannDistribution(p, meanVelocity, 2);
+				MaxwellBoltzmannDistribution(&p, meanVelocity, 2);
 
-				cub.push_back(p);
+				cub.push_back(&p);
+				//std::cout << "added: " << p << std::endl;
 			}
 		}
 	}
+	/*
+	std::cout <<"finish"<< std::endl;
+	std::list<Particle*>::iterator it = cub.begin();
+
+	while (it != cub.end()){
+		std::cout << (*it)->toString() << std::endl;
+		it++;
+	}
+	std::cout << "size " << cub.size() << std::endl;
+	*/
 }
 
 /*
@@ -105,10 +115,10 @@ Particle* Cuboid::getParticleAtID(Particle* pNull, int id){
 	if ((id < 0) || (id >= cub.size()))
 		return pNull;
 
-	for (std::list<Particle>::iterator it = cub.begin();
+	for (std::list<Particle*>::iterator it = cub.begin();
 			it != cub.end(); it++){
-		if ((*it).getID() == id)
-			return &(*it);
+		if ((*(*it)).getID() == id)
+			return *it;
 	}
 
 	return pNull;
@@ -116,49 +126,48 @@ Particle* Cuboid::getParticleAtID(Particle* pNull, int id){
 
 void Cuboid::initNeighbors(){
 	//works for 2D membranes
-	for (std::list<Particle>::iterator it = cub.begin();
+	for (std::list<Particle*>::iterator it = cub.begin();
 			it != cub.end(); it++){
-		Particle& p = *it;
-		int id = p.getID();
+		Particle* p = *it;
+		int id = (*p).getID();
 		bool isFirst = ((id % cWidth) == 0);
 		bool isLast = (((id + 1) % cWidth) == 0);
-		p.getDirectNeighbors().clear();
-		p.getDiagNeighbors().clear();
+		(*p).getDirectNeighbors().clear();
+		(*p).getDiagNeighbors().clear();
 
 		utils::Vector<double, 3> xi((double) 0);
 		utils::Vector<double, 3> vi((double) 0);
-		Particle pNull(xi, vi, 0.0, 0);
-		pNull.setID(-1);
+		Particle pNull(xi, vi, 0.0, 0, -1);
 
 		//direct left
-		p.getDirectNeighbors().push_back(this->getParticleAtID(&pNull,
+		(*p).getDirectNeighbors().push_back(this->getParticleAtID(&pNull,
 				isFirst ? (-1) : (id - 1))); //cares for the first of each line
 		//direct right
-		p.getDirectNeighbors().push_back(this->getParticleAtID(&pNull,
+		(*p).getDirectNeighbors().push_back(this->getParticleAtID(&pNull,
 				isLast ? (-1) : (id + 1))); //cares for the last of each line
 		//direct under
-		p.getDirectNeighbors().push_back(this->getParticleAtID(&pNull, id - cWidth));
+		(*p).getDirectNeighbors().push_back(this->getParticleAtID(&pNull, id - cWidth));
 		//direct above
-		p.getDirectNeighbors().push_back(this->getParticleAtID(&pNull, id + cWidth));
+		(*p).getDirectNeighbors().push_back(this->getParticleAtID(&pNull, id + cWidth));
 
 		//delete all the pNulls
-		p.getDirectNeighbors().remove(&pNull);
+		(*p).getDirectNeighbors().remove(&pNull);
 
 		//diagonal lower left
-		p.getDiagNeighbors().push_back(this->getParticleAtID(&pNull,
+		(*p).getDiagNeighbors().push_back(this->getParticleAtID(&pNull,
 				isFirst ? (-1) : (id - 1 - cWidth))); //cares for the first of each line
 		//diagonal lower right
-		p.getDiagNeighbors().push_back(this->getParticleAtID(&pNull,
+		(*p).getDiagNeighbors().push_back(this->getParticleAtID(&pNull,
 				isLast ? (-1) : (id + 1 - cWidth))); //cares for the last of each line
 		//diagonal upper left
-		p.getDiagNeighbors().push_back(this->getParticleAtID(&pNull,
+		(*p).getDiagNeighbors().push_back(this->getParticleAtID(&pNull,
 				isFirst ? (-1) : (id - 1 + cWidth))); //cares for the first of each line
 		//diagonal upper right
-		p.getDiagNeighbors().push_back(this->getParticleAtID(&pNull,
+		(*p).getDiagNeighbors().push_back(this->getParticleAtID(&pNull,
 				isLast ? (-1) : (id + 1 + cWidth))); //cares for the last of each line
 
 		//delete all the pNulls
-		p.getDiagNeighbors().remove(&pNull);
+		(*p).getDiagNeighbors().remove(&pNull);
 	}
 }
 
@@ -170,7 +179,7 @@ utils::Vector<double, 3>& Cuboid::getStartV() {
 	return startV;
 }
 
-std::list<Particle>& Cuboid::getCuboid() {
+std::list<Particle*>& Cuboid::getCuboid() {
 	return cub;
 }
 
