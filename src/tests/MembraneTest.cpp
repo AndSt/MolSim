@@ -30,6 +30,7 @@ void MembraneTest::setUp(){
 	pgen.extractCuboids(cstr);
 	cub = *pgen.getCuboidList().begin();
 	cub.initNeighbors();
+	std::list<Particle> parList = cub.getCuboid();
 }
 
 void MembraneTest::tearDown(){
@@ -48,7 +49,7 @@ void MembraneTest::testGetParticleAtID(){
 			1.0, 1, -1);
 
 	for (int i = 0; i<100; i++){
-		Particle& p = cub.getParticleAtID(pNull, i);
+		Particle p = cub.getParticleAtID(pNull, i);
 		//CPPUNIT_ASSERT(p->getID() != -1);
 		CPPUNIT_ASSERT(p.getID() == i);
 	}
@@ -70,7 +71,6 @@ void MembraneTest::testGetParticleAtID(){
 }
 
 void MembraneTest::testGetDirectNeighbors(){
-	std::list<Particle>& parList = cub.getCuboid();
 	for (std::list<Particle>::iterator it = parList.begin();
 			it != parList.end(); it++){
 		CPPUNIT_ASSERT((*it).getDirectNeighbors().size() >= 2
@@ -87,7 +87,6 @@ void MembraneTest::testGetDirectNeighbors(){
 }
 
 void MembraneTest::testGetDiagNeighbors(){
-	std::list<Particle>& parList = cub.getCuboid();
 	for (std::list<Particle>::iterator it = parList.begin();
 			it != parList.end(); it++){
 		CPPUNIT_ASSERT((*it).getDiagNeighbors().size() >= 1
@@ -104,7 +103,6 @@ void MembraneTest::testGetDiagNeighbors(){
 }
 
 void MembraneTest::testGetID(){
-	std::list<Particle>& parList = cub.getCuboid();
 	std::list<int> idList;
 	idList.clear();
 	for (std::list<Particle>::iterator it = parList.begin();
@@ -137,7 +135,6 @@ void MembraneTest::testGetID(){
 }
 
 void MembraneTest::testIsDirectNeighborTo(){
-	std::list<Particle>& parList = cub.getCuboid();
 	/*
 	for (std::list<Particle>::iterator it1 = parList.begin();
 			it1 != parList.end(); it1++){
@@ -176,8 +173,6 @@ void MembraneTest::testIsDirectNeighborTo(){
 }
 
 void MembraneTest::testIsDiagNeighborTo(){
-	std::list<Particle>& parList = cub.getCuboid();
-
 	/*
 	for (std::list<Particle>::iterator it1 = parList.begin();
 			it1 != parList.end(); it1++){

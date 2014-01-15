@@ -158,10 +158,6 @@ double t1;
 // Thermostat option: only called when thermo.getEnabled() == true
 Thermostat thermo;
 
-/*void aus(list<Particle>& listp){
-	cout << listp.size() << endl;
-}*/
-
 log4cxx::LoggerPtr molsimlogger(log4cxx::Logger::getLogger("molsim"));
 
 /**
@@ -181,12 +177,12 @@ int main(int argc, char* argsv[]) {
 	pgen.extractCuboids(cstr);
 	Cuboid cub = *pgen.getCuboidList().begin();
 */
-	/*
+/*
 	Cuboid cub(5, 5, 1, 1.0, 1.0,
 			utils::Vector<double, 3>((double) 0), utils::Vector<double, 3>((double) 0),
 			0.1, 0, 1.0, 5.0);
 	cub.initNeighbors();
-	list<Particle>& particleList = cub.getCuboid();
+	list<Particle> particleList = cub.getCuboid();
 	for (std::list<Particle>::iterator it = particleList.begin();
 			it != particleList.end(); it++){
 		cout << "Particle " << (*it).getID() << ": (size=" << (*it).getDirectNeighbors().size() <<") ";
@@ -207,10 +203,8 @@ int main(int argc, char* argsv[]) {
 		cout << endl;
 	}
 
-	aus(particleList);
 	return 0;
-	*/
-
+*/
 	PropertyConfigurator::configure("Log4cxxConfig.cfg");
 	LOG4CXX_INFO(molsimlogger, "Arrived @ main.");
 
@@ -508,7 +502,28 @@ int main(int argc, char* argsv[]) {
 			id4 = 25*((*itC).getWidth()) + 18;	//(18, 25)
 
 			pgen.cuboidsToList();
-			list<Particle>& particleList = pgen.getParticleList();
+			particleList = pgen.getParticleList();
+
+			for (std::list<Particle>::iterator it = particleList.begin();
+					it != particleList.end(); it++){
+				cout << "Particle " << (*it).getID() << ": (size=" << (*it).getDirectNeighbors().size() <<") ";
+				for (list<Particle>::iterator j = (*it).getDirectNeighbors().begin();
+					j != (*it).getDirectNeighbors().end(); j++){
+					 cout << (*j).getID() << ", " ;
+				}
+				cout << endl;
+			}
+
+			for (std::list<Particle>::iterator it = particleList.begin();
+					it != particleList.end(); it++){
+				cout << "Particle " << (*it).getID() << ": (size=" << (*it).getDiagNeighbors().size() <<") ";
+				for (list<Particle>::iterator j = (*it).getDiagNeighbors().begin();
+					j != (*it).getDiagNeighbors().end(); j++){
+					 cout << (*j).getID() << ", " ;
+				}
+				cout << endl;
+			}
+			cout << cin.ignore();
 
 			thermo = Thermostat(inpMem);
 
@@ -1170,12 +1185,7 @@ void LCcalculateFLJ() {
 				cout << "EndInner: " << ((*(lcContainer.endInner(i))).toString())
 								<< endl;
 								*/
-			if (p1.getX() == p2.getX()
-					&& p1.getF() == p2.getF()
-					&& p1.getM() == p2.getM()
-					&& p1.getV() == p2.getV()
-					&& p1.getOldF() == p2.getOldF()
-					&& p1.getTempF() == p2.getTempF()) {
+			if (p1 == p2) {
 				//cout << "ok" << endl;
 				++innerIterator;
 				continue;
