@@ -178,7 +178,7 @@ int main(int argc, char* argsv[]) {
 	Cuboid cub = *pgen.getCuboidList().begin();
 */
 /*
-	Cuboid cub(5, 5, 1, 1.0, 1.0,
+	Cuboid cub(6, 10, 1, 1.0, 1.0,
 			utils::Vector<double, 3>((double) 0), utils::Vector<double, 3>((double) 0),
 			0.1, 0, 1.0, 5.0);
 	cub.initNeighbors();
@@ -504,6 +504,7 @@ int main(int argc, char* argsv[]) {
 			pgen.cuboidsToList();
 			particleList = pgen.getParticleList();
 
+/*
 			for (std::list<Particle>::iterator it = particleList.begin();
 					it != particleList.end(); it++){
 				cout << "Particle " << (*it).getID() << ": (size=" << (*it).getDirectNeighbors().size() <<") ";
@@ -524,7 +525,7 @@ int main(int argc, char* argsv[]) {
 				cout << endl;
 			}
 			cout << cin.ignore();
-
+*/
 			thermo = Thermostat(inpMem);
 
 			lcContainer.initialize(particleList, domainSize, R_CUTOFF);

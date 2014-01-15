@@ -66,8 +66,10 @@ public:
 	Particle(
 			// for visualization, we need always 3 coordinates
 			// -> in case of 2d, we use only the first and the second
+			//ID = -1 : Nullpointer
+			//ID = -2 : no need for IDs at all
 			utils::Vector<double, 3> x_arg, utils::Vector<double, 3> v_arg,
-			double m_arg, int type, int id = 0);
+			double m_arg, int type, int id = -2);
 
 	virtual ~Particle();
 

@@ -109,12 +109,75 @@ std::string Particle::toString() {
 }
 
 bool Particle::operator ==(Particle& other) {
-	if ( (x == other.x) && (v == other.v) && (f == other.f) &&
-			(type == other.type) & (m == other.m) && (old_f == other.old_f)) {
+	// not membrane
+	if (parID == -2 && other.parID == -2)
+			return (x == other.x) && (v == other.v)
+			&& (f == other.f)
+			&& (type == other.type) & (m == other.m)
+			&& (old_f == other.old_f);
+
+	//membrane
+	return parID == other.parID;
+/*
+		if (directNeighbors.empty() && diagNeighbors.empty()
+				&& other.directNeighbors.empty() && other.diagNeighbors.empty())
+			return true;
+
+		if (parID != other.parID)
+			return false;
+
+		std::list<int> nr, other_nr;
+		//direct
+		for (std::list<Particle>::iterator it = directNeighbors.begin();
+				it != directNeighbors.end(); it++){
+			nr.push_back((*it).getID());
+		}
+		nr.sort();
+
+		for (std::list<Particle>::iterator it = other.directNeighbors.begin();
+				it != other.directNeighbors.end(); it++){
+			other_nr.push_back((*it).getID());
+		}
+		other_nr.sort();
+
+		if (nr.size() != other_nr.size())
+			return false;
+
+		std::list<int>::iterator j = other_nr.begin();
+		for (std::list<int>::iterator it = nr.begin(); it != nr.end(); it++){
+			if (*it != *j)
+				return false;
+			j++;
+		}
+
+		//diag
+		nr.clear();
+		other_nr.clear();
+		for (std::list<Particle>::iterator it = diagNeighbors.begin();
+				it != diagNeighbors.end(); it++){
+			nr.push_back((*it).getID());
+		}
+		nr.sort();
+
+		for (std::list<Particle>::iterator it = other.diagNeighbors.begin();
+				it != other.diagNeighbors.end(); it++){
+			other_nr.push_back((*it).getID());
+		}
+		other_nr.sort();
+
+		if (nr.size() != other_nr.size())
+			return false;
+
+		j = other_nr.begin();
+		for (std::list<int>::iterator it = nr.begin(); it != nr.end(); it++){
+			if (*it != *j)
+				return false;
+			j++;
+		}
+
 		return true;
 	}
-
-	return false;
+*/
 }
 
 std::ostream& operator<<(std::ostream& stream, Particle& p) {
