@@ -95,9 +95,9 @@ void LCOuterParticleIteratorTest::testIteration() {
 	for (int i = 0; i < num_of_cells; i++) {
 		size[i] = 0;
 	}
-	std::list<Particle*>::iterator iterator = particles.begin();
+	std::list<Particle>::iterator iterator = particles.begin();
 	while (iterator != particles.end()) {
-		Particle p = **iterator;
+		Particle &p = *iterator;
 		if (p.getX()[0] <= domain_size[0] && p.getX()[1] <= domain_size[1]
 				&& p.getX()[2] <= domain_size[2]) {
 			int i = (int) (p.getX()[0] / cutoff_radius)

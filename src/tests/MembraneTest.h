@@ -24,8 +24,6 @@ class MembraneTest: public CppUnit::TestCase {
 private:
 	utils::ParticleGenerator pgen;
 
-	std::list<Particle*> parList;
-
 	Cuboid cub;
 
 public:

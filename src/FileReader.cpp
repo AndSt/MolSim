@@ -33,7 +33,7 @@ FileReader::~FileReader() {
 }
 
 
-void FileReader::readFile(std::list<Particle*>& particles, char* filename) {
+void FileReader::readFile(std::list<Particle>& particles, char* filename) {
 	double x[] = {0,0,0};
 	double v[] = {1,1,1};
 	double m = 1;
@@ -75,7 +75,7 @@ void FileReader::readFile(std::list<Particle*>& particles, char* filename) {
     		}
     		datastream >> m;
     		Particle p(x, v, m, 0);
-    		particles.push_back(&p);
+    		particles.push_back(p);
 
     		getline(input_file, tmp_string);
     		LOG4CXX_DEBUG(filereaderlogger,"Read line: " << tmp_string << ".");
@@ -88,7 +88,7 @@ void FileReader::readFile(std::list<Particle*>& particles, char* filename) {
 }
 
 // Input file (eingabe-brownian.txt) lies in src folder
-void FileReader::readFileCub(std::list<Cuboid*>& cuboids, char* filename) {
+void FileReader::readFileCub(std::list<Cuboid>& cuboids, char* filename) {
 	double ori[] = {0,0,0};
 	double startVelocity[] = {0,0,0};
 	double mass = 1;
@@ -147,7 +147,7 @@ void FileReader::readFileCub(std::list<Cuboid*>& cuboids, char* filename) {
 
     	    // Create a new cuboid with extracted information from file
     	    Cuboid cub(hei, w, d, distance, mass, ori, startVelocity, meanVelocity,0, 5.0, 1.0);
-    	    cuboids.push_back(&cub);
+    	    cuboids.push_back(cub);
 
     	    getline(input_file, tmp_string);
     	    LOG4CXX_DEBUG(filereaderlogger,"Read line: " << tmp_string);
@@ -159,7 +159,7 @@ void FileReader::readFileCub(std::list<Cuboid*>& cuboids, char* filename) {
 
 }
 
-void FileReader::readStatus(std::list<Particle*>& particles, double& eps, double& sig, char* filename) {
+void FileReader::readStatus(std::list<Particle>& particles, double& eps, double& sig, char* filename) {
 	double x[] = {0,0,0};
 	double v[] = {1,1,1};
 	double f[] = {0,0,0};
@@ -215,7 +215,7 @@ void FileReader::readStatus(std::list<Particle*>& particles, double& eps, double
     		Particle p(x, v, m, t);
     		p.getF() = utils::Vector<double, 3> (f);
     		p.getOldF() = utils::Vector<double, 3> (old_f);
-    		particles.push_back(&p);
+    		particles.push_back(p);
 
     		getline(input_file, tmp_string);
     		LOG4CXX_DEBUG(filereaderlogger,"Read line: " << tmp_string << ".");

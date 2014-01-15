@@ -18,11 +18,11 @@ public:
 	FileReader();
 	virtual ~FileReader();
 
-	void readFile(std::list<Particle*>& particles, char* filename);
+	void readFile(std::list<Particle>& particles, char* filename);
 
-	void readFileCub(std::list<Cuboid*>& cuboids, char* filename);
+	void readFileCub(std::list<Cuboid>& cuboids, char* filename);
 
-	void readStatus(std::list<Particle*>& particles,
+	void readStatus(std::list<Particle>& particles,
 					double& eps, double& sig, char* filename);
 };
 

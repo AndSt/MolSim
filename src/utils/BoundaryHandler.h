@@ -20,7 +20,7 @@ class BoundaryHandler {
 public:
 	BoundaryHandler(std::vector<int> boundary_type_arg,
 			LCParticleContainer& container_arg, double h_arg,
-			void (*calculate)(Particle*, Particle*));
+			void (*calculate)(Particle&, Particle&));
 
 	virtual ~BoundaryHandler();
 
@@ -87,7 +87,7 @@ private:
 	/**
 	 * the computeForce borrowed from MolSim.cpp
 	 */
-	void (*calculate)(Particle*, Particle*);
+	void (*calculate)(Particle&, Particle&);
 };
 
 } /* namespace utils */

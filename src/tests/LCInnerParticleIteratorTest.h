@@ -88,7 +88,7 @@ private:
 		/**
 		 * The particle list, which will be used to compare to the container
 		 */
-		std::list<Particle*> particles;
+		std::list<Particle> particles;
 
 };
 

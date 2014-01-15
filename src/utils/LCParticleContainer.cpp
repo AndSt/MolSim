@@ -26,15 +26,15 @@ LCParticleContainer::~LCParticleContainer() {
 
 }
 
-void LCParticleContainer::initialize(std::list<Particle*>& particles_arg,
+void LCParticleContainer::initialize(std::list<Particle>& particles_arg,
 		Vector<double, 3> domain_size_arg, double cutoff_radius_arg) {
-//	std::list<Particle*>::iterator iterator = particles_arg.begin();
+//	std::list<Particle>::iterator iterator = particles_arg.begin();
 //	while(iterator != particles_arg.end()){
-//		particles.push_back(*iterator);
+//		particles.push_back(&(*iterator));
 //	}
-	std::list<Particle*>::iterator iterator = particles_arg.begin();
+	std::list<Particle>::iterator iterator = particles_arg.begin();
 	while (iterator != particles_arg.end()) {
-		particles.push_back(*iterator);
+		particles.push_back(&(*iterator));
 		++iterator;
 	}
 	domain_size = domain_size_arg;

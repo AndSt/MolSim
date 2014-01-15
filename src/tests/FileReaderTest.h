@@ -33,7 +33,7 @@ public:
 	virtual ~FileReaderTest();
 
 private:
-	std::list<Particle*> testL;
+	std::list<Particle> testL;
 };
 
 #endif /* FILEREADERTEST_H_ */

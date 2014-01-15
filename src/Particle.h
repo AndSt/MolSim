@@ -49,12 +49,12 @@ private:
 	/**
 	 * list of direct neighbors (needed for membranes)
 	 */
-	std::list<Particle*> directNeighbors;
+	std::list<Particle> directNeighbors;
 
 	/**
 	 * list of diagonal neighbors (needed for membranes)
 	 */
-	std::list<Particle*> diagNeighbors;
+	std::list<Particle> diagNeighbors;
 
 
 public:
@@ -67,7 +67,7 @@ public:
 			// for visualization, we need always 3 coordinates
 			// -> in case of 2d, we use only the first and the second
 			utils::Vector<double, 3> x_arg, utils::Vector<double, 3> v_arg,
-	        double m_arg, int type, int id = 0);
+			double m_arg, int type, int id = 0);
 
 	virtual ~Particle();
 
@@ -95,15 +95,17 @@ public:
 
 	void updateTempF(utils::Vector<double, 3> newF);
 
-	std::list<Particle*>& getDirectNeighbors();
+	std::list<Particle>& getDirectNeighbors();
 
-	std::list<Particle*>& getDiagNeighbors();
+	std::list<Particle>& getDiagNeighbors();
 
 	int& getID();
 
-	bool isDirectNeighborTo(Particle* p);
+	void setID(int id);
 
-	bool isDiagNeighborTo(Particle* p);
+	bool isDirectNeighborTo(Particle& p);
+
+	bool isDiagNeighborTo(Particle& p);
 };
 
 std::ostream& operator<<(std::ostream& stream, Particle& p);

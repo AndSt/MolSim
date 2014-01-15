@@ -31,16 +31,16 @@ ParticleGenerator::ParticleGenerator() {
 	//LOG4CXX_INFO(particlegeneratorlogger,"Constructed.");
 }
 
-ParticleGenerator::ParticleGenerator(std::list<Cuboid*>& cubList){
+ParticleGenerator::ParticleGenerator(std::list<Cuboid>& cubList){
 	//LOG4CXX_INFO(particlegeneratorlogger,"Constructed with CuboidList.");
 	cuboidList = cubList;
 }
 
-ParticleGenerator::ParticleGenerator(std::list<Particle*>& parList){
+ParticleGenerator::ParticleGenerator(std::list<Particle>& parList){
 	particleList = parList;
 }
 
-ParticleGenerator::ParticleGenerator(std::list<Sphere*>& sphList){
+ParticleGenerator::ParticleGenerator(std::list<Sphere>& sphList){
 	sphereList = sphList;
 }
 
@@ -48,8 +48,8 @@ ParticleGenerator::~ParticleGenerator() {
 	//LOG4CXX_INFO(particlegeneratorlogger,"Destructed.");
 }
 
-void ParticleGenerator::mergeWithParticleList(std::list<Particle*>& before){
-	for (std::list<Particle*>::iterator it = particleList.begin(); it!=particleList.end(); it++){
+void ParticleGenerator::mergeWithParticleList(std::list<Particle>& before){
+	for (std::list<Particle>::iterator it = particleList.begin(); it!=particleList.end(); it++){
 		before.push_back(*it);
 	}
 }
@@ -61,44 +61,44 @@ void ParticleGenerator::readCuboids(char* filename){
 }
 
 void ParticleGenerator::cuboidsToList() {
-	std::list<Cuboid*>::iterator iterator;
+	std::list<Cuboid>::iterator iterator;
 	//LOG4CXX_INFO(particlegeneratorlogger,"Doing cuboidsToList.");
 	particleList.clear();
 	for (iterator = cuboidList.begin(); iterator != cuboidList.end(); iterator++) {
-		Cuboid* temp = *iterator;
-		std::list<Particle*>::iterator iterator1;
-		for (iterator1 = (*temp).getCuboid().begin();
-				iterator1 != (*temp).getCuboid().end(); iterator1++) {
-			Particle* tempP = *iterator1;
+		Cuboid& temp = *iterator;
+		std::list<Particle>::iterator iterator1;
+		for (iterator1 = temp.getCuboid().begin();
+				iterator1 != temp.getCuboid().end(); iterator1++) {
+			Particle& tempP = *iterator1;
 			particleList.push_back(tempP);
 		}
 	}
 }
 
 void ParticleGenerator::spheresToList() {
-	std::list<Sphere*>::iterator iterator;
+	std::list<Sphere>::iterator iterator;
 	particleList.clear();
 	for (iterator = sphereList.begin(); iterator != sphereList.end(); iterator++) {
-		Sphere* temp = *iterator;
-		std::list<Particle*>::iterator iterator1;
-		for (iterator1 = (*temp).getSphere().begin();
-				iterator1 != (*temp).getSphere().end(); iterator1++) {
-			Particle* tempP = *iterator1;
+		Sphere& temp = *iterator;
+		std::list<Particle>::iterator iterator1;
+		for (iterator1 = temp.getSphere().begin();
+				iterator1 != temp.getSphere().end(); iterator1++) {
+			Particle& tempP = *iterator1;
 			particleList.push_back(tempP);
 		}
 	}
 }
 
-std::list<Cuboid*>& ParticleGenerator::getCuboidList(){
+std::list<Cuboid>& ParticleGenerator::getCuboidList(){
 	//LOG4CXX_INFO(particlegeneratorlogger,"Returning cuboid list.");
 	return cuboidList;
 }
 
-std::list<Sphere*>& ParticleGenerator::getSphereList(){
+std::list<Sphere>& ParticleGenerator::getSphereList(){
 	return sphereList;
 }
 
-std::list<Particle*>& ParticleGenerator::getParticleList(){
+std::list<Particle>& ParticleGenerator::getParticleList(){
 	//LOG4CXX_INFO(particlegeneratorlogger,"Returning particle list.");
 	return particleList;
 }
@@ -128,7 +128,7 @@ void ParticleGenerator::extractCuboids(const string filename)
 
 
 				Cuboid c(hei, w, d, mesh, m, ori, vel, meanV, typeC, EPSILON, SIGMA);
-				cuboidList.push_back(&c);
+				cuboidList.push_back(c);
 	    	}
 	
   	}
@@ -162,7 +162,7 @@ void ParticleGenerator::extractSpheres(const string filename){
 
 
 				Sphere s(centerP, vel, meanV, m, radiuss, mesh, typeS, EPSILON, SIGMA);
-				sphereList.push_back(&s);
+				sphereList.push_back(s);
 	    	}
 	
   	}
@@ -189,7 +189,7 @@ void ParticleGenerator::extractParticles(const string filename)
 				double typeP = i->parTypeP();
 
 				Particle p(pos, vel, m, typeP);
-				particleList.push_back(&p);
+				particleList.push_back(p);
 	    	}
 	
   	}

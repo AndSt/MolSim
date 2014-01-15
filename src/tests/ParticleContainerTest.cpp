@@ -36,23 +36,23 @@ void ParticleContainerTest::testInitialize() {
 
 	//iterate over both lists and check equality
 	utils::ParticleIterator pIterator = container.begin();
-	std::list<Particle*>::iterator iterator = particles.begin();
+	std::list<Particle>::iterator iterator = particles.begin();
 	while (iterator != particles.end()) {
-		CPPUNIT_ASSERT(**iterator == *pIterator);
+		CPPUNIT_ASSERT(*iterator == *pIterator);
 		++iterator;
 		++pIterator;
 	}
 }
 
 void ParticleContainerTest::testBegin() {
-	CPPUNIT_ASSERT(**particles.begin() == *container.begin());
+	CPPUNIT_ASSERT(*particles.begin() == *container.begin());
 }
 
 void ParticleContainerTest::testEnd() {
 
 	//go to the the last element in both lists and check equality
-	std::list<Particle*>::iterator iterator1 = particles.begin();
-	std::list<Particle*>::iterator testIterator1;
+	std::list<Particle>::iterator iterator1 = particles.begin();
+	std::list<Particle>::iterator testIterator1;
 	while (iterator1 != particles.end()) {
 		testIterator1 = iterator1;
 		++iterator1;
@@ -64,15 +64,15 @@ void ParticleContainerTest::testEnd() {
 		testIterator2 = iterator2;
 		++iterator2;
 	}
-	CPPUNIT_ASSERT(**testIterator1 == *testIterator2);
+	CPPUNIT_ASSERT(*testIterator1 == *testIterator2);
 }
 
 void ParticleContainerTest::testGetList() {
 	//iterate over both lists and check equality
 	utils::ParticleIterator pIterator = container.begin();
-	std::list<Particle*>::iterator iterator = particles.begin();
+	std::list<Particle>::iterator iterator = particles.begin();
 	while (iterator != particles.end()) {
-		CPPUNIT_ASSERT(**iterator == *pIterator);
+		CPPUNIT_ASSERT(*iterator == *pIterator);
 		++iterator;
 		++pIterator;
 	}

@@ -31,13 +31,13 @@ namespace utils {
 class ParticleGenerator {
 private:
 	/** A list of cuboids, each cuboid is an instance of class Cuboid.*/
-	std::list<Cuboid*> cuboidList;
+	std::list<Cuboid> cuboidList;
 
 	/** A list of spheres, each sphere is an instance of class Sphere.*/
-	std::list<Sphere*> sphereList;
+	std::list<Sphere> sphereList;
 
 	/** The particles of either cuboids or spheres will be stored here.*/
-	std::list<Particle*> particleList;
+	std::list<Particle> particleList;
 
 public:
 	/** Default constructor.
@@ -47,17 +47,17 @@ public:
 	/** Main cuboid constructor, which creates a particle generator from a list of cuboids.
 	 * @param[in] cubList A list of cuboids.
 	 */
-	ParticleGenerator(std::list<Cuboid*>& cubList);
+	ParticleGenerator(std::list<Cuboid>& cubList);
 
 	/** Main particle constructor, which creates a particle generator from a list of untructered particles.
 	 * @param[in] parList A list of particles.
 	 */
-	ParticleGenerator(std::list<Particle*>& parList);
+	ParticleGenerator(std::list<Particle>& parList);
 
 	/** Main sphere constructor, which creates a particle generator from a list of spheres.
 	 * @param[in] sphList A list of spheres.
 	 */
-	ParticleGenerator(std::list<Sphere*>& sphList);
+	ParticleGenerator(std::list<Sphere>& sphList);
 
 	/** The reading procedure, which can convert information 
 	 *  from a given TXT input file into particle generator's list of cuboids.
@@ -130,16 +130,16 @@ public:
 	 * @param[in] particleList All elements of this list will be added into the gear side of before.
 	 * @param[out] before The new elements will be pushed into before's back.
 	 */
-	void mergeWithParticleList(std::list<Particle*>& before);
+	void mergeWithParticleList(std::list<Particle>& before);
 
 	/** \return Particle generator's list of cuboids.*/
-	std::list<Cuboid*>& getCuboidList();
+	std::list<Cuboid>& getCuboidList();
 
 	/** \return Particle generator's list of spheres.*/
-	std::list<Sphere*>& getSphereList();
+	std::list<Sphere>& getSphereList();
 
 	/** \return Particle generator's list of particles.*/
-	std::list<Particle*>& getParticleList();
+	std::list<Particle>& getParticleList();
 
 	virtual ~ParticleGenerator();
 };

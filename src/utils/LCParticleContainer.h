@@ -29,7 +29,7 @@ public:
 	 * @param domain_size_arg the domain size
 	 * @param cutoff_radius_arg the cutoff_radius
 	 */
-	void initialize(std::list<Particle*>& particles_arg,
+	void initialize(std::list<Particle>& particles_arg,
 			Vector<double, 3> domain_size_arg, double cutoff_radius_arg);
 
 	/**

@@ -57,7 +57,7 @@ private:
 	double SIGMA;
 
 	/** The list of particles stored in this sphere.*/
-	std::list<Particle*> sph;
+	std::list<Particle> sph;
 
 	/** A list of centers of parallel circles along the Oz axis.
 	 * The distance between 2 nearest circles is meshWidth.
@@ -178,7 +178,7 @@ public:
 
 	/** \returns List of stored particles in the sphere.
 	 */
-	std::list<Particle*>& getSphere();
+	std::list<Particle>& getSphere();
 
 	/** \returns particle type of the sphere.
 	 */

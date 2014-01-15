@@ -125,7 +125,7 @@ vector<vector<double> > EPS;
 vector<vector<double> > SIG;
 
 int inputSize = 0;
-list<Particle*> particleList;
+list<Particle> particleList;
 utils::ParticleContainer container;
 utils::ParticleGenerator pgen;
 utils::LCParticleContainer lcContainer;
@@ -276,13 +276,13 @@ int main(int argc, char* argsv[]) {
 			resizeEpsSig(1);
 
 			pgen.extractCuboids(*inputNames.begin());
-			list<Cuboid*>::iterator itC = pgen.getCuboidList().begin();
+			list<Cuboid>::iterator itC = pgen.getCuboidList().begin();
 
 			//==================G + MIXING RULE====================
-			gDirMass[1] = G_CONST * ((*(*itC)).getMass());
+			gDirMass[1] = G_CONST * ((*itC).getMass());
 			gravForce[0] = utils::Vector<double, 3>(gDirMass);
-			EPS[0][0] = (*(*itC)).getEpsilon();
-			SIG[0][0] = (*(*itC)).getSigma();
+			EPS[0][0] = (*itC).getEpsilon();
+			SIG[0][0] = (*itC).getSigma();
 			fillEpsSig(1);
 
 			pgen.cuboidsToList();

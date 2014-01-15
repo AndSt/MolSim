@@ -84,7 +84,7 @@ private:
 
 	utils::Vector<double, 3> domain_size;
 
-	std::list<Particle*> particles;
+	std::list<Particle> particles;
 
 	/**
 	 * Used Iterators

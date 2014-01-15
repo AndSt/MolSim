@@ -8,9 +8,9 @@
 #ifndef CUBOID_H_
 #define CUBOID_H_
 #include <vector>
+#include <Particle.h>
 #include <list>
 
-#include "Particle.h"
 #include "utils/Vector.h"
 
 /** \class Cuboid
@@ -25,7 +25,7 @@ private:
 	utils::Vector<double, 3> origin;
 
 	/*!< The particles of a cuboid are saved in one single list. */
-	std::list<Particle*> cub;
+	std::list<Particle> cub;
 
 	/*!< Cuboid's height (measured in particles). */
 	int cHeight;
@@ -89,6 +89,9 @@ public:
 			utils::Vector<double, 3> ori, utils::Vector<double, 3> startVelocity,
 			double meanVelocity, int parType, double EPSILON, double SIGMA);
 
+	Cuboid(int height, int width, int depth, double distance, double mass,
+			utils::Vector<double, 3> ori, utils::Vector<double, 3> startVelocity,
+			double meanVelocity, int parType, double EPSILON, double SIGMA, int first_id);
 	/** \returns Cuboid's lower left corner's location.
 	 */
 	utils::Vector<double, 3>& getOrigin();
@@ -99,7 +102,7 @@ public:
 
 	/** \returns Cuboid's list of particles.
 	 */
-	std::list<Particle*>& getCuboid();
+	std::list<Particle>& getCuboid();
 
 	/** \returns Cuboid's height in particles.
 	 */
@@ -182,7 +185,7 @@ public:
 	 * @param[in] pNull a dummy particle to return in case id is invalid.
 	 * @param[in] id ID of the particle we are looking for.
 	 */
-	Particle* getParticleAtID(Particle* pNull, int id);
+	Particle& getParticleAtID(Particle& pNull, int id);
 
 	virtual ~Cuboid();
 };

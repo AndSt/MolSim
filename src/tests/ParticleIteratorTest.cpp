@@ -18,7 +18,7 @@ ParticleIteratorTest::~ParticleIteratorTest() {
 
 void ParticleIteratorTest::setUp() {
 	FileReader fileReader;
-	std::list<Particle*> particles;
+	std::list<Particle> particles;
 	std::string fileName = "src/tests/testFiles/container+iterator.txt";
 	char *cstr = new char[fileName.length() + 1];
 	strcpy(cstr, fileName.c_str());
