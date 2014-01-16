@@ -22,6 +22,8 @@ Particle::Particle(int type_arg) {
 	old_f = 0.0;
 	m = 1.0;
 	parID = 0;
+	directNeighbors.clear();
+	diagNeighbors.clear();
 }
 
 Particle::Particle(const Particle& other) {
@@ -52,8 +54,8 @@ Particle::Particle(	utils::Vector<double, 3> x_arg,
     f = 0.0;
     old_f = 0.0;
     parID = id;
-    //directNeighbors.clear();
-    //diagNeighbors.clear();
+    directNeighbors.clear();
+    diagNeighbors.clear();
     LOG4CXX_TRACE(particlelogger,"Particle generated!");
 }
 
@@ -199,9 +201,9 @@ int& Particle::getID(){
 
 bool Particle::isDirectNeighborTo(Particle& p){
 	//ID is unique for each particle
-	for (std::list<Particle>::iterator it = p.getDirectNeighbors().begin();
-			it != p.getDirectNeighbors().end(); it++){
-		if ((*it).getID() == this->getID())
+	for (std::list<Particle>::iterator it = this->getDirectNeighbors().begin();
+			it != this->getDirectNeighbors().end(); it++){
+		if ((*it).getID() == p.getID())
 			return true;
 	}
 
@@ -210,9 +212,9 @@ bool Particle::isDirectNeighborTo(Particle& p){
 
 bool Particle::isDiagNeighborTo(Particle& p){
 	//ID is unique for each particle
-	for (std::list<Particle>::iterator it = p.getDiagNeighbors().begin();
-			it != p.getDiagNeighbors().end(); it++){
-		if ((*it).getID() == this->getID())
+	for (std::list<Particle>::iterator it = this->getDiagNeighbors().begin();
+			it != this->getDiagNeighbors().end(); it++){
+		if ((*it).getID() == p.getID())
 			return true;
 	}
 
