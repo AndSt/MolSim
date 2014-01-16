@@ -471,6 +471,44 @@ int main(int argc, char* argsv[]) {
 
 		}
 
+		else if (arg1 == "--rayleigh-taylor-3D") {
+			//getting information from InputSetting first
+			string inpCubBig = "RayleighTaylor3DSetting.xml";
+			pgen.extractSetting(inpCubBig, start_time, end_time, delta_t,
+					inputNames, inputTypes, outputMask, freq, domainSize,
+					R_CUTOFF, domainCondition, G_CONST, inputSize);
+			particleList.clear();
+
+			//initialize the size of gravForce
+			gravForce.resize(inputSize);
+			resizeEpsSig(inputSize);
+
+			pgen.extractCuboids(*inputNames.begin());
+			// For each type
+			for (list<Cuboid>::iterator itCB = pgen.getCuboidList().begin();
+					itCB != pgen.getCuboidList().end(); itCB++) {
+				gDirMass[1] = G_CONST * ((*itCB).getMass());
+				gravForce[(*itCB).getType()] = utils::Vector<double, 3>(
+						gDirMass);
+				// fill the diagonal first
+				EPS[(*itCB).getType()][(*itCB).getType()] =
+						(*itCB).getEpsilon();
+				SIG[(*itCB).getType()][(*itCB).getType()] = (*itCB).getSigma();
+			}
+
+			fillEpsSig(inputSize);
+
+			pgen.cuboidsToList();
+			particleList = pgen.getParticleList();
+
+			thermo = Thermostat(inpCubBig);
+
+			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
+			LCsimulate();
+
+		}
+
+
 		else if (arg1 == "--membrane"){
 			isMembrane = true;
 			//getting information from MembraneSetting first
@@ -504,7 +542,7 @@ int main(int argc, char* argsv[]) {
 			pgen.cuboidsToList();
 			particleList = pgen.getParticleList();
 
-
+/*
 			for (std::list<Particle>::iterator it = particleList.begin();
 					it != particleList.end(); it++){
 				cout << "Particle " << (*it).getID() << ": (size=" << (*it).getDirectNeighbors().size() <<") ";
@@ -525,7 +563,7 @@ int main(int argc, char* argsv[]) {
 				cout << endl;
 			}
 			cout << cin.ignore();
-
+*/
 			thermo = Thermostat(inpMem);
 
 			lcContainer.initialize(particleList, domainSize, R_CUTOFF);

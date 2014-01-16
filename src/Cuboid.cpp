@@ -149,6 +149,13 @@ void Cuboid::initNeighbors(){
 		if (p3.getID() != -1)
 			p.getDirectNeighbors().push_back(p3);
 
+		std::cout << "Particle " << (*it).getID() << ": (size=" << (*it).getDirectNeighbors().size() <<") ";
+		for (std::list<Particle>::iterator j = (*it).getDirectNeighbors().begin();
+			j != (*it).getDirectNeighbors().end(); j++){
+			std::cout << (*j).getID() << ", " ;
+		}
+		std::cout << std::endl;
+
 		/*
 		//delete all the pNulls
 		for (std::list<Particle>::iterator it = p.getDirectNeighbors().begin();
@@ -178,6 +185,12 @@ void Cuboid::initNeighbors(){
 		if (p7.getID() != -1)
 			p.getDiagNeighbors().push_back(p7); //cares for the last of each line
 
+		std::cout << "Particle " << (*it).getID() << ": (size=" << (*it).getDiagNeighbors().size() <<") ";
+		for (std::list<Particle>::iterator j = (*it).getDiagNeighbors().begin();
+			j != (*it).getDiagNeighbors().end(); j++){
+			std::cout << (*j).getID() << ", " ;
+		}
+
 		/*
 		//delete all the pNulls
 		for (std::list<Particle>::iterator it = p.getDiagNeighbors().begin();
@@ -186,6 +199,18 @@ void Cuboid::initNeighbors(){
 				it = p.getDiagNeighbors().erase(it);
 		}
 		*/
+/*
+		std::cout << std::endl;
+		p0.~Particle();
+		p1.~Particle();
+		p2.~Particle();
+		p3.~Particle();
+		p4.~Particle();
+		p5.~Particle();
+		p6.~Particle();
+		p7.~Particle();
+		pNull.~Particle();
+*/
 	}
 }
 
