@@ -1224,7 +1224,8 @@ void LCcalculateFLJ() {
 				cout << "EndInner: " << ((*(lcContainer.endInner(i))).toString())
 								<< endl;
 								*/
-			cout << "> ID1 = " << p1.getID() << ", ID2 = " << p2.getID() << endl;
+			cout << "> ID1 = " << p1.getID();
+			cout << ", ID2 = " << p2.getID() << endl;
 			if (p1 == p2) {
 				//cout << "ok" << endl;
 				++innerIterator;

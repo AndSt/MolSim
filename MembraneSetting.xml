@@ -33,10 +33,10 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 		<condition>3</condition>
 
 		<!-- front -->
-		<condition>3</condition>
+		<condition>2</condition>
 
 		<!-- behind -->
-		<condition>2</condition>
+		<condition>3</condition>
 	</lc>	
 	
 	<!-- Thermostats -->
