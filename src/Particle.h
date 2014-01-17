@@ -49,12 +49,12 @@ private:
 	/**
 	 * list of direct neighbors (needed for membranes)
 	 */
-	std::list<Particle> directNeighbors;
+	std::list<Particle *> directNeighbors;
 
 	/**
 	 * list of diagonal neighbors (needed for membranes)
 	 */
-	std::list<Particle> diagNeighbors;
+	std::list<Particle *> diagNeighbors;
 
 
 public:
@@ -69,7 +69,7 @@ public:
 			//ID = -1 : Nullpointer
 			//ID = -2 : no need for IDs at all
 			utils::Vector<double, 3> x_arg, utils::Vector<double, 3> v_arg,
-			double m_arg, int type, int id = -2);
+			double m_arg, int type, int id = -1);
 
 	virtual ~Particle();
 
@@ -97,9 +97,9 @@ public:
 
 	void updateTempF(utils::Vector<double, 3> newF);
 
-	std::list<Particle>& getDirectNeighbors();
+	std::list<Particle *>& getDirectNeighbors();
 
-	std::list<Particle>& getDiagNeighbors();
+	std::list<Particle *>& getDiagNeighbors();
 
 	int& getID();
 

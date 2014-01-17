@@ -546,9 +546,9 @@ int main(int argc, char* argsv[]) {
 			for (std::list<Particle>::iterator it = particleList.begin();
 					it != particleList.end(); it++){
 				cout << "Particle " << (*it).getID() << ": (size=" << (*it).getDirectNeighbors().size() <<") ";
-				for (list<Particle>::iterator j = (*it).getDirectNeighbors().begin();
+				for (list<Particle *>::iterator j = (*it).getDirectNeighbors().begin();
 					j != (*it).getDirectNeighbors().end(); j++){
-					 cout << (*j).getID() << ", " ;
+					 cout << (*(*j)).getID() << ", " ;
 				}
 				cout << endl;
 			}
@@ -556,9 +556,9 @@ int main(int argc, char* argsv[]) {
 			for (std::list<Particle>::iterator it = particleList.begin();
 					it != particleList.end(); it++){
 				cout << "Particle " << (*it).getID() << ": (size=" << (*it).getDiagNeighbors().size() <<") ";
-				for (list<Particle>::iterator j = (*it).getDiagNeighbors().begin();
+				for (list<Particle *>::iterator j = (*it).getDiagNeighbors().begin();
 					j != (*it).getDiagNeighbors().end(); j++){
-					 cout << (*j).getID() << ", " ;
+					 cout << (*(*j)).getID() << ", " ;
 				}
 				cout << endl;
 			}
@@ -1224,6 +1224,7 @@ void LCcalculateFLJ() {
 				cout << "EndInner: " << ((*(lcContainer.endInner(i))).toString())
 								<< endl;
 								*/
+			cout << "> ID1 = " << p1.getID() << ", ID2 = " << p2.getID() << endl;
 			if (p1 == p2) {
 				//cout << "ok" << endl;
 				++innerIterator;

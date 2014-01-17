@@ -185,7 +185,7 @@ public:
 	 * @param[in] pNull a dummy particle to return in case id is invalid.
 	 * @param[in] id ID of the particle we are looking for.
 	 */
-	Particle& getParticleAtID(Particle& pNull, int id);
+	Particle * getParticleAtID(int id);
 
 	virtual ~Cuboid();
 };

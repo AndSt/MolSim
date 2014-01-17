@@ -43,30 +43,25 @@ void MembraneTest::testInitNeighbors(){
 }
 
 void MembraneTest::testGetParticleAtID(){
-	Particle pNull(
-			utils::Vector<double, 3>(0.0),
-			utils::Vector<double, 3>(0.0),
-			1.0, 1, -1);
-
 	for (int i = 0; i<100; i++){
-		Particle p = cub.getParticleAtID(pNull, i);
+		Particle * p = cub.getParticleAtID(i);
 		//CPPUNIT_ASSERT(p->getID() != -1);
-		CPPUNIT_ASSERT(p.getID() == i);
+		CPPUNIT_ASSERT((*p).getID() == i);
 	}
 
-	Particle& p1 = cub.getParticleAtID(pNull, -1);
-	CPPUNIT_ASSERT(p1.getID() == -1);
-	p1 = cub.getParticleAtID(pNull, -2);
-	CPPUNIT_ASSERT(p1.getID() == -1);
-	p1 = cub.getParticleAtID(pNull, -20);
-	CPPUNIT_ASSERT(p1.getID() == -1);
+	Particle * p = cub.getParticleAtID(-1);
+	CPPUNIT_ASSERT(p == NULL);
+	p = cub.getParticleAtID(-2);
+	CPPUNIT_ASSERT(p == NULL);
+	p = cub.getParticleAtID(-20);
+	CPPUNIT_ASSERT(p == NULL);
 
-	p1 = cub.getParticleAtID(pNull, 101);
-	CPPUNIT_ASSERT(p1.getID() == -1);
-	p1 = cub.getParticleAtID(pNull, 102);
-	CPPUNIT_ASSERT(p1.getID() == -1);
-	p1 = cub.getParticleAtID(pNull, 200);
-	CPPUNIT_ASSERT(p1.getID() == -1);
+	p = cub.getParticleAtID(101);
+	CPPUNIT_ASSERT(p == NULL);
+	p = cub.getParticleAtID(102);
+	CPPUNIT_ASSERT(p == NULL);
+	p = cub.getParticleAtID(200);
+	CPPUNIT_ASSERT(p == NULL);
 
 }
 
@@ -75,12 +70,12 @@ void MembraneTest::testGetDirectNeighbors(){
 			it != parList.end(); it++){
 		CPPUNIT_ASSERT((*it).getDirectNeighbors().size() >= 2
 						&& (*it).getDirectNeighbors().size() <= 4);
-		for(std::list<Particle>::iterator its = (*it).getDirectNeighbors().begin();
+		for(std::list<Particle *>::iterator its = (*it).getDirectNeighbors().begin();
 				its != (*it).getDirectNeighbors().end(); its++){
 			//no more pNull in the list
-			CPPUNIT_ASSERT((*its).getID() != -1);
+			CPPUNIT_ASSERT(*its != NULL);
 
-			double distance = ((*it).getX() - (*its).getX()).L2Norm();
+			double distance = ((*it).getX() - (*(*its)).getX()).L2Norm();
 			CPPUNIT_ASSERT(distance <= 1.0);
 		}
 	}
@@ -91,12 +86,12 @@ void MembraneTest::testGetDiagNeighbors(){
 			it != parList.end(); it++){
 		CPPUNIT_ASSERT((*it).getDiagNeighbors().size() >= 1
 						&& (*it).getDiagNeighbors().size() <= 4);
-		for(std::list<Particle>::iterator its = (*it).getDiagNeighbors().begin();
+		for(std::list<Particle *>::iterator its = (*it).getDiagNeighbors().begin();
 				its != (*it).getDiagNeighbors().end(); its++){
 			//no more pNull in the list
-			CPPUNIT_ASSERT((*its).getID() != -1);
+			CPPUNIT_ASSERT(*its != NULL);
 
-			double distance = ((*it).getX() - (*its).getX()).L2Norm();
+			double distance = ((*it).getX() - (*(*its)).getX()).L2Norm();
 			CPPUNIT_ASSERT(distance <= 1.0*sqrt(2.0));
 		}
 	}

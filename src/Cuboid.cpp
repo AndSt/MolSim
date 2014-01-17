@@ -100,22 +100,23 @@ Cuboid::Cuboid(int height, int width, int depth, double distance, double mass,
  }
  */
 
-Particle& Cuboid::getParticleAtID(Particle& pNull, int id){
+Particle * Cuboid::getParticleAtID(int id){
 	//id starts from 0
 	if ((id < 0) || (id >= cub.size()))
-		return pNull;
+		return NULL;
 
 	for (std::list<Particle>::iterator it = cub.begin();
 			it != cub.end(); it++){
 		if ((*it).getID() == id)
-			return *it;
+			return &(*it);
 	}
 
-	return pNull;
+	return NULL;
 }
 
 void Cuboid::initNeighbors(){
 	//works for 2D membranes
+	Particle * pp = NULL;
 	for (std::list<Particle>::iterator it = cub.begin();
 			it != cub.end(); it++){
 		Particle& p = *it;
@@ -125,92 +126,59 @@ void Cuboid::initNeighbors(){
 		p.getDirectNeighbors().clear();
 		p.getDiagNeighbors().clear();
 
-		utils::Vector<double, 3> xi((double) 0);
-		utils::Vector<double, 3> vi((double) 0);
-		Particle pNull(xi, vi, 0.0, 0, -1);
-
 		//direct under
-		Particle& p0 = this->getParticleAtID(pNull, id - cWidth);
-		if (p0.getID() != -1)
-			p.getDirectNeighbors().push_back(p0);
+		pp = this->getParticleAtID(id - cWidth);
+		if (pp != NULL)
+			p.getDirectNeighbors().push_back(pp);
 
 		//direct left
-		Particle& p1 = this->getParticleAtID(pNull, isFirst ? (-1) : (id - 1));
-		if (p1.getID() != -1)
-			p.getDirectNeighbors().push_back(p1); //cares for the first of each line
+		pp = this->getParticleAtID(isFirst ? (-1) : (id - 1));
+		if (pp != NULL)
+			p.getDirectNeighbors().push_back(pp); //cares for the first of each line
 
 		//direct right
-		Particle& p2 = this->getParticleAtID(pNull, isLast ? (-1) : (id + 1));
-		if (p2.getID() != -1)
-			p.getDirectNeighbors().push_back(p2); //cares for the last of each line
+		pp = this->getParticleAtID(isLast ? (-1) : (id + 1));
+		if (pp != NULL)
+			p.getDirectNeighbors().push_back(pp); //cares for the last of each line
 
 		//direct above
-		Particle& p3 = this->getParticleAtID(pNull, id + cWidth);
-		if (p3.getID() != -1)
-			p.getDirectNeighbors().push_back(p3);
+		pp = this->getParticleAtID(id + cWidth);
+		if (pp != NULL)
+			p.getDirectNeighbors().push_back(pp);
 
 		std::cout << "Particle " << (*it).getID() << ": (size=" << (*it).getDirectNeighbors().size() <<") ";
-		for (std::list<Particle>::iterator j = (*it).getDirectNeighbors().begin();
+		for (std::list<Particle *>::iterator j = (*it).getDirectNeighbors().begin();
 			j != (*it).getDirectNeighbors().end(); j++){
-			std::cout << (*j).getID() << ", " ;
+			std::cout << (*(*j)).getID() << ", " ;
 		}
 		std::cout << std::endl;
-
-		/*
-		//delete all the pNulls
-		for (std::list<Particle>::iterator it = p.getDirectNeighbors().begin();
-				it != p.getDirectNeighbors().end(); it++){
-			if ((*it).getID() == -1)
-				it = p.getDirectNeighbors().erase(it);
-		}
-		*/
 
 		//diagonal lower left
-		Particle& p4 = this->getParticleAtID(pNull, isFirst ? (-1) : (id - 1 - cWidth));
-		if (p4.getID() != -1)
-			p.getDiagNeighbors().push_back(p4); //cares for the first of each line
+		pp = this->getParticleAtID(isFirst ? (-1) : (id - 1 - cWidth));
+		if (pp != NULL)
+			p.getDiagNeighbors().push_back(pp); //cares for the first of each line
 
 		//diagonal lower right
-		Particle& p5 = this->getParticleAtID(pNull, isLast ? (-1) : (id + 1 - cWidth));
-		if (p5.getID() != -1)
-			p.getDiagNeighbors().push_back(p5); //cares for the last of each line
+		pp = this->getParticleAtID(isLast ? (-1) : (id + 1 - cWidth));
+		if (pp != NULL)
+			p.getDiagNeighbors().push_back(pp); //cares for the last of each line
 
 		//diagonal upper left
-		Particle& p6 = this->getParticleAtID(pNull, isFirst ? (-1) : (id - 1 + cWidth));
-		if (p6.getID() != -1)
-			p.getDiagNeighbors().push_back(p6); //cares for the first of each line
+		pp = this->getParticleAtID(isFirst ? (-1) : (id - 1 + cWidth));
+		if (pp != NULL)
+			p.getDiagNeighbors().push_back(pp); //cares for the first of each line
 
 		//diagonal upper right
-		Particle& p7 = this->getParticleAtID(pNull, isLast ? (-1) : (id + 1 + cWidth));
-		if (p7.getID() != -1)
-			p.getDiagNeighbors().push_back(p7); //cares for the last of each line
+		pp = this->getParticleAtID(isLast ? (-1) : (id + 1 + cWidth));
+		if (pp != NULL)
+			p.getDiagNeighbors().push_back(pp); //cares for the last of each line
 
 		std::cout << "Particle " << (*it).getID() << ": (size=" << (*it).getDiagNeighbors().size() <<") ";
-		for (std::list<Particle>::iterator j = (*it).getDiagNeighbors().begin();
+		for (std::list<Particle *>::iterator j = (*it).getDiagNeighbors().begin();
 			j != (*it).getDiagNeighbors().end(); j++){
-			std::cout << (*j).getID() << ", " ;
+			std::cout << (*(*j)).getID() << ", " ;
 		}
-
-		/*
-		//delete all the pNulls
-		for (std::list<Particle>::iterator it = p.getDiagNeighbors().begin();
-				it != p.getDiagNeighbors().end(); it++){
-			if ((*it).getID() == -1)
-				it = p.getDiagNeighbors().erase(it);
-		}
-		*/
-/*
 		std::cout << std::endl;
-		p0.~Particle();
-		p1.~Particle();
-		p2.~Particle();
-		p3.~Particle();
-		p4.~Particle();
-		p5.~Particle();
-		p6.~Particle();
-		p7.~Particle();
-		pNull.~Particle();
-*/
 	}
 }
 
