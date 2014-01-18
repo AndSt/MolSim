@@ -121,6 +121,7 @@ double G_CONST = -12.44;
 //only for cuboids and spheres, not for particles alone
 //type = index
 double gDirMass[] = { 0.0, 1.0, 0.0 }; //will store mass (without G_CONST*)
+double gDirMassMem[] = { 0.0, 0.0, 1.0};
 vector<utils::Vector<double, 3> > gravForce;
 vector<vector<double> > EPS;
 vector<vector<double> > SIG;
@@ -527,8 +528,8 @@ int main(int argc, char* argsv[]) {
 			(*itC).initNeighbors();
 
 			//==================G + MIXING RULE====================
-			gDirMass[1] = G_CONST * ((*itC).getMass());
-			gravForce[0] = utils::Vector<double, 3>(gDirMass);
+			gDirMassMem[2] = G_CONST * ((*itC).getMass());
+			gravForce[0] = utils::Vector<double, 3>(gDirMassMem);
 			EPS[0][0] = (*itC).getEpsilon();
 			SIG[0][0] = (*itC).getSigma();
 			//fillEpsSig(1);
