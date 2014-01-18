@@ -114,6 +114,13 @@ void BoundaryHandler::applyPeriodicMoving() {
 					tempX[2] = tempX[2] + domain_size[2];
 					(*iterator).getX() = tempX;
 				}
+
+				assert((*iterator).getX()[0] >= 0);
+				assert((*iterator).getX()[0] < domain_size[0]);
+				assert((*iterator).getX()[1] >= 0);
+				assert((*iterator).getX()[1] < domain_size[1]);
+				assert((*iterator).getX()[2] >= 0);
+
 				++iterator;
 			}
 		}
@@ -125,6 +132,14 @@ void BoundaryHandler::applyPeriodicMoving() {
 					tempX[1] = tempX[1] - domain_size[1];
 					(*iterator).getX() = tempX;
 				}
+
+				assert((*iterator).getX()[0] >= 0);
+				assert((*iterator).getX()[0] < domain_size[0]);
+				assert((*iterator).getX()[1] >= 0);
+				assert((*iterator).getX()[1] < domain_size[1]);
+				assert((*iterator).getX()[2] >= 0);
+				assert((*iterator).getX()[2] < domain_size[2]);
+
 				++iterator;
 			}
 		}
@@ -197,7 +212,7 @@ void BoundaryHandler::applyReflecting() {
 		if (boundary_type[4] == 2) {
 			iterator = container.beginFrontBoundary();
 			while (iterator != container.endFrontBoundary()) {
-				if ((*iterator).getX()[2] <= h) {
+				if ((*iterator).getX()[2] >= domain_size[2] - h) {
 					double x_arg[3] = { (*iterator).getX()[0],
 							(*iterator).getX()[1], domain_size[2] };
 					utils::Vector<double, 3> x(x_arg);
@@ -211,7 +226,7 @@ void BoundaryHandler::applyReflecting() {
 		if (boundary_type[5] == 2) {
 			iterator = container.beginBackBoundary();
 			while (iterator != container.endBackBoundary()) {
-				if ((*iterator).getX()[2] >= domain_size[2] - h) {
+				if ((*iterator).getX()[2] <= h) {
 					double x_arg[3] = { (*iterator).getX()[0],
 							(*iterator).getX()[1], 0 };
 					utils::Vector<double, 3> x(x_arg);
@@ -267,7 +282,7 @@ void BoundaryHandler::applyOutflow() {
 		if (boundary_type[4] == 1) {
 			iterator = container.beginFrontBoundary();
 			while (iterator != container.endFrontBoundary()) {
-				if ((*iterator).getX()[2] < 0) {
+				if ((*iterator).getX()[2] >= domain_size[2]) {
 					(container.getList()).remove(&(*iterator));
 				}
 				++iterator;
@@ -276,7 +291,7 @@ void BoundaryHandler::applyOutflow() {
 		if (boundary_type[5] == 1) {
 			iterator = container.beginBackBoundary();
 			while (iterator != container.endBackBoundary()) {
-				if ((*iterator).getX()[2] >= domain_size[2]) {
+				if ((*iterator).getX()[2] < 0) {
 					(container.getList()).remove(&(*iterator));
 				}
 				++iterator;
@@ -289,7 +304,7 @@ void BoundaryHandler::applyPeriodic() {
 	if (boundary_type[0] == 3) {
 		LCOuterParticleIterator iterator = container.beginLeftBoundary();
 		int i, z, j;
-		if (depth > 1) {
+		if (depth > 2) {
 			int k;
 			while (iterator != container.endLeftBoundary()) {
 				i = iterator.getCellNumber();
@@ -353,7 +368,7 @@ void BoundaryHandler::applyPeriodic() {
 	if (boundary_type[2] == 3) {
 		LCOuterParticleIterator iterator = container.beginBottomBoundary();
 		int i, z, j;
-		if (depth > 1) {
+		if (depth > 2) {
 			int k;
 			while (iterator != container.endBottomBoundary()) {
 				i = iterator.getCellNumber();

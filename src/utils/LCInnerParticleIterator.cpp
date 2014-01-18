@@ -139,7 +139,7 @@ void LCInnerParticleIterator::operator++() {
 			} else if (depth > 0
 					&& index == original_index + width * height + width + 1) {
 				assert((*cells)[index]->empty() == false);
-				index = old_index;
+				index = original_index + width * height + width + 2;
 				done = true;
 			} else {
 				index = original_index + width * height + width + 2;
@@ -211,7 +211,7 @@ bool LCInnerParticleIterator::checkBack() {
 	}
 }
 bool LCInnerParticleIterator::checkTop() {
-        return (width * height - width > (original_index % (width * height)));
+        return ((width - 1) * height  > (original_index % (width * height)));
 }
 
 }
