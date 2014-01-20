@@ -51,7 +51,7 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 	</thermo>
 
 	<inputfile>
-		<name>RayleighTaylor3DCuboids.xml</name>
+		<name>input/RayleighTaylor3DCuboids.xml</name>
 		<!-- particles/cuboids/spheres -->
 		<type>cuboids</type>
 	</inputfile>

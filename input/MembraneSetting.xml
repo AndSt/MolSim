@@ -4,39 +4,39 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 
 	<start_time>0.0</start_time>
-	<t_end>0.1</t_end>
-	<delta_t>0.0005</delta_t>
-	<numberOfTypes>2</numberOfTypes>
+	<t_end>500</t_end>
+	<delta_t>0.01</delta_t>
+	<numberOfTypes>1</numberOfTypes>
 	
-	<gconst>-12.44</gconst>
+	<gconst>-0.001</gconst>
 	
 	<!-- Short range, linked cell algorithm -->
 	<lc>
 		<domainsize>
-			<domainX>60.0</domainX>
-			<domainY>180.0</domainY>
-			<domainZ>0.0</domainZ>
+			<domainX>148.0</domainX>
+			<domainY>148.0</domainY>
+			<domainZ>148.0</domainZ>
 		</domainsize>
-		<rcutoff>3.0</rcutoff>
+		<rcutoff>4.0</rcutoff>
 	
-		<!-- 1=outflow, 2=reflecting for 6 boundaries -->
+		<!-- 1=outflow, 2=reflecting, 3=periodic for 6 boundaries -->
 		<!-- left side -->
-		<condition>2</condition>
+		<condition>3</condition>
 
 		<!-- right -->
-		<condition>2</condition>
+		<condition>3</condition>
 
 		<!-- ground -->
-		<condition>2</condition>
+		<condition>3</condition>
 
 		<!-- upper -->
-		<condition>1</condition>
+		<condition>3</condition>
 
 		<!-- front -->
 		<condition>2</condition>
 
 		<!-- behind -->
-		<condition>2</condition>
+		<condition>3</condition>
 	</lc>	
 	
 	<!-- Thermostats -->
@@ -51,19 +51,13 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 	</thermo>
 
 	<inputfile>
-		<name>InputCuboids.xml</name>
+		<name>input/MembraneCuboid.xml</name>
 		<!-- particles/cuboids/spheres -->
 		<type>cuboids</type>
 	</inputfile>
 	
-	<inputfile>
-		<name>InputSpheres.xml</name>
-		<!-- particles/cuboids/spheres -->
-		<type>spheres</type>
-	</inputfile>
-	
 	<outputfile>
-		<name>MolSimVTK</name>
+		<name>MembraneVTK</name>
 		<freq>10</freq>
 	</outputfile>
 </pse>

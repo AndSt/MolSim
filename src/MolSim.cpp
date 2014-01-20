@@ -167,45 +167,6 @@ log4cxx::LoggerPtr molsimlogger(log4cxx::Logger::getLogger("molsim"));
  * The third parameter is delta_t.
  */
 int main(int argc, char* argsv[]) {
-
-
-	//for membrane test
-/*
-	std::string fileName = "src/tests/testFiles/TestMembrane.xml";
-	char *cstr = new char[fileName.length() + 1];
-	strcpy(cstr, fileName.c_str());
-
-	pgen.extractCuboids(cstr);
-	Cuboid cub = *pgen.getCuboidList().begin();
-*/
-/*
-	Cuboid cub(6, 10, 1, 1.0, 1.0,
-			utils::Vector<double, 3>((double) 0), utils::Vector<double, 3>((double) 0),
-			0.1, 0, 1.0, 5.0);
-	cub.initNeighbors();
-	list<Particle> particleList = cub.getCuboid();
-	for (std::list<Particle>::iterator it = particleList.begin();
-			it != particleList.end(); it++){
-		cout << "Particle " << (*it).getID() << ": (size=" << (*it).getDirectNeighbors().size() <<") ";
-		for (list<Particle>::iterator j = (*it).getDirectNeighbors().begin();
-			j != (*it).getDirectNeighbors().end(); j++){
-			 cout << (*j).getID() << ", " ;
-		}
-		cout << endl;
-	}
-
-	for (std::list<Particle>::iterator it = particleList.begin();
-			it != particleList.end(); it++){
-		cout << "Particle " << (*it).getID() << ": (size=" << (*it).getDiagNeighbors().size() <<") ";
-		for (list<Particle>::iterator j = (*it).getDiagNeighbors().begin();
-			j != (*it).getDiagNeighbors().end(); j++){
-			 cout << (*j).getID() << ", " ;
-		}
-		cout << endl;
-	}
-
-	return 0;
-*/
 	PropertyConfigurator::configure("Log4cxxConfig.cfg");
 	LOG4CXX_INFO(molsimlogger, "Arrived @ main.");
 
@@ -320,7 +281,7 @@ int main(int argc, char* argsv[]) {
 			}
 		} else if (arg1 == "--falling-drop-init") {
 			//getting information from InputSetting first
-			string inpInit = "FallingDropInitSetting.xml";
+			string inpInit = "input/FallingDropInitSetting.xml";
 			pgen.extractSetting(inpInit, start_time, end_time, delta_t,
 					inputNames, inputTypes, outputMask, freq, domainSize,
 					R_CUTOFF, domainCondition, G_CONST, inputSize);
@@ -364,7 +325,7 @@ int main(int argc, char* argsv[]) {
 			particleList = pgen.getParticleList();
 
 			//getting information from InputSetting first
-			string inpEnd = "FallingDropEndSetting.xml";
+			string inpEnd = "input/FallingDropEndSetting.xml";
 			pgen.extractSetting(inpEnd, start_time, end_time, delta_t,
 					inputNames, inputTypes, outputMask, freq, domainSize,
 					R_CUTOFF, domainCondition, G_CONST, inputSize);
@@ -401,7 +362,7 @@ int main(int argc, char* argsv[]) {
 
 		else if (arg1 == "--rayleigh-taylor-small") {
 			//getting information from InputSetting first
-			string inpCubSmall = "RayleighTaylorSmallSetting.xml";
+			string inpCubSmall = "input/RayleighTaylorSmallSetting.xml";
 			pgen.extractSetting(inpCubSmall, start_time, end_time, delta_t,
 					inputNames, inputTypes, outputMask, freq, domainSize,
 					R_CUTOFF, domainCondition, G_CONST, inputSize);
@@ -437,7 +398,7 @@ int main(int argc, char* argsv[]) {
 
 		else if (arg1 == "--rayleigh-taylor-big") {
 			//getting information from InputSetting first
-			string inpCubBig = "RayleighTaylorBigSetting.xml";
+			string inpCubBig = "input/RayleighTaylorBigSetting.xml";
 			pgen.extractSetting(inpCubBig, start_time, end_time, delta_t,
 					inputNames, inputTypes, outputMask, freq, domainSize,
 					R_CUTOFF, domainCondition, G_CONST, inputSize);
@@ -474,7 +435,7 @@ int main(int argc, char* argsv[]) {
 
 		else if (arg1 == "--rayleigh-taylor-3D") {
 			//getting information from InputSetting first
-			string inpCubBig = "RayleighTaylor3DSetting.xml";
+			string inpCubBig = "input/RayleighTaylor3DSetting.xml";
 			pgen.extractSetting(inpCubBig, start_time, end_time, delta_t,
 					inputNames, inputTypes, outputMask, freq, domainSize,
 					R_CUTOFF, domainCondition, G_CONST, inputSize);
@@ -513,7 +474,7 @@ int main(int argc, char* argsv[]) {
 		else if (arg1 == "--membrane"){
 			isMembrane = true;
 			//getting information from MembraneSetting first
-			string inpMem = "MembraneSetting.xml";
+			string inpMem = "input/MembraneSetting.xml";
 			pgen.extractSetting(inpMem, start_time, end_time, delta_t,
 					inputNames, inputTypes, outputMask, freq, domainSize,
 					R_CUTOFF, domainCondition, G_CONST, inputSize);
@@ -576,6 +537,16 @@ int main(int argc, char* argsv[]) {
 			return -1;
 		}
 	} else {
+		cout << "Invalid argument!" << endl;
+		cout << "Try:" << endl;
+		cout << "\t./MolSim --falling-drop-init" << endl;
+		cout << "\t./MolSim --falling-drop-end" << endl;
+		cout << "\t./MolSim --membrane" << endl;
+		cout << "\t./MolSim --rayleigh-taylor-small" << endl;
+		cout << "\t./MolSim --rayleigh-taylor-big" << endl;
+		cout << "\t./MolSim --rayleigh-taylor-3D" << endl;
+		return -1;
+/*
 		//argc==1
 		//./MolSim
 		LOG4CXX_INFO(molsimlogger, "Arrived @ filedecision.");
@@ -727,7 +698,7 @@ int main(int argc, char* argsv[]) {
 			particleList.clear();
 			list<string>::iterator itT = inputTypes.begin();
 			int i = 1;
-
+*/
 			/*// calculate the number of cuboids + spheres in input file
 			 for (list<string>::iterator itN = inputNames.begin();
 			 itN != inputNames.end(); itN++) {
@@ -741,7 +712,7 @@ int main(int argc, char* argsv[]) {
 			 itT++;
 			 i++;
 			 }*/
-
+/*
 			//initialize the size of gravForce
 			gravForce.resize(inputSize);
 			resizeEpsSig(inputSize);
@@ -899,6 +870,7 @@ int main(int argc, char* argsv[]) {
 			container.initialize(particleList);
 			simulate();
 		}
+*/
 	}
 
 	LOG4CXX_INFO(molsimlogger, "Arrived @ ending simulation.");
@@ -1225,8 +1197,6 @@ void LCcalculateFLJ() {
 				cout << "EndInner: " << ((*(lcContainer.endInner(i))).toString())
 								<< endl;
 								*/
-			cout << "> ID1 = " << p1.getID();
-			cout << ", ID2 = " << p2.getID() << endl;
 			if (p1 == p2) {
 				//cout << "ok" << endl;
 				++innerIterator;

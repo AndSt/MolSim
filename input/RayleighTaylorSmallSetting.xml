@@ -4,22 +4,22 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 
 	<start_time>0.0</start_time>
-	<t_end>500</t_end>
-	<delta_t>0.01</delta_t>
-	<numberOfTypes>1</numberOfTypes>
+	<t_end>25</t_end>
+	<delta_t>0.0005</delta_t>
+	<numberOfTypes>2</numberOfTypes>
 	
-	<gconst>-0.001</gconst>
+	<gconst>-12.44</gconst>
 	
 	<!-- Short range, linked cell algorithm -->
 	<lc>
 		<domainsize>
-			<domainX>148.0</domainX>
-			<domainY>148.0</domainY>
-			<domainZ>148.0</domainZ>
+			<domainX>63.0</domainX>
+			<domainY>36.0</domainY>
+			<domainZ>0.0</domainZ>
 		</domainsize>
-		<rcutoff>4.0</rcutoff>
+		<rcutoff>3.0</rcutoff>
 	
-		<!-- 1=outflow, 2=reflecting, 3=periodic for 6 boundaries -->
+		<!-- 1=outflow, 2=reflecting for 6 boundaries -->
 		<!-- left side -->
 		<condition>3</condition>
 
@@ -27,23 +27,23 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 		<condition>3</condition>
 
 		<!-- ground -->
-		<condition>3</condition>
+		<condition>2</condition>
 
 		<!-- upper -->
-		<condition>3</condition>
+		<condition>2</condition>
 
 		<!-- front -->
 		<condition>2</condition>
 
 		<!-- behind -->
-		<condition>3</condition>
+		<condition>2</condition>
 	</lc>	
 	
 	<!-- Thermostats -->
 	<thermo>
-		<enabled>false</enabled>
-		<brownianFlag>true</brownianFlag>
-		<initT>0.5</initT>
+		<enabled>true</enabled>
+		<brownianFlag>false</brownianFlag>
+		<initT>40.0</initT>
 		<targetT>80</targetT>
 		<deltaT>0</deltaT>
 		<nThermo>1000</nThermo>
@@ -51,13 +51,13 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 	</thermo>
 
 	<inputfile>
-		<name>MembraneCuboid.xml</name>
+		<name>input/RayleighTaylorSmallCuboids.xml</name>
 		<!-- particles/cuboids/spheres -->
 		<type>cuboids</type>
 	</inputfile>
-	
+		
 	<outputfile>
-		<name>MembraneVTK</name>
+		<name>RayleighTaylorSmall</name>
 		<freq>10</freq>
 	</outputfile>
 </pse>
