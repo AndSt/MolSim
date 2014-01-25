@@ -844,6 +844,20 @@ class pse_t: public ::xml_schema::type
   void
   gconst (const gconst_type& x);
 
+  // force
+  // 
+  typedef ::xml_schema::boolean force_type;
+  typedef ::xsd::cxx::tree::traits< force_type, char > force_traits;
+
+  const force_type&
+  force () const;
+
+  force_type&
+  force ();
+
+  void
+  force (const force_type& x);
+
   // lc
   // 
   typedef ::lc_t lc_type;
@@ -919,6 +933,7 @@ class pse_t: public ::xml_schema::type
          const delta_t_type&,
          const numberOfTypes_type&,
          const gconst_type&,
+         const force_type&,
          const lc_type&,
          const thermo_type&,
          const outputfile_type&);
@@ -928,6 +943,7 @@ class pse_t: public ::xml_schema::type
          const delta_t_type&,
          const numberOfTypes_type&,
          const gconst_type&,
+         const force_type&,
          ::std::auto_ptr< lc_type >&,
          ::std::auto_ptr< thermo_type >&,
          ::std::auto_ptr< outputfile_type >&);
@@ -960,6 +976,7 @@ class pse_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< delta_t_type > delta_t_;
   ::xsd::cxx::tree::one< numberOfTypes_type > numberOfTypes_;
   ::xsd::cxx::tree::one< gconst_type > gconst_;
+  ::xsd::cxx::tree::one< force_type > force_;
   ::xsd::cxx::tree::one< lc_type > lc_;
   ::xsd::cxx::tree::one< thermo_type > thermo_;
   inputfile_sequence inputfile_;

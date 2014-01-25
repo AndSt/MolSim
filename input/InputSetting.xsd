@@ -116,6 +116,7 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 			<xs:element name="delta_t" type="xs:decimal"/>
 			<xs:element name="numberOfTypes" type="xs:int"/>
 			<xs:element name="gconst" type="xs:decimal"/>
+			<xs:element name="force" type="xs:boolean"/>
 			<xs:element name="lc" type="lc_t"/>
 			<xs:element name="thermo" type="thermo_t"/>
 			<xs:element name="inputfile" type="inputfile_t" maxOccurs="unbounded"/>

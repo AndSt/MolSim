@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<cuboids
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="InputCuboids.xsd">
+	
+	<cuboid>
+		<meshWidth>1.15</meshWidth>
+		<mass>1.0</mass>
+		<meanV>0.1</meanV>
+		<parTypeC>0</parTypeC>
+		 
+		<epsilon>1.0</epsilon>
+		<sigma>1.0</sigma>		
+		
+		<originVector>
+			<oriX>0.575</oriX>
+			<oriY>0.575</oriY>
+			<oriZ>0.575</oriZ>
+		</originVector>
+		<startVelocity>
+			<velX>0.0</velX>
+			<velY>0.0</velY>
+			<velZ>0.0</velZ>
+		</startVelocity>
+		<size3D>
+			<width>8</width>
+			<height>8</height>
+			<depth>8</depth>
+		</size3D>
+	</cuboid>	
+</cuboids> 

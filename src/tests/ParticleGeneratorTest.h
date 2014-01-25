@@ -51,6 +51,8 @@ public:
 	
 	void testExtractSetting();
 
+	void testForce();
+
 	/**
 	 *
 	 * @return the TestSuite for the tested methods of ParticleGenerator

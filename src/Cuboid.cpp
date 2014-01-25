@@ -173,12 +173,14 @@ void Cuboid::initNeighbors(){
 		if (pp != NULL)
 			p.getDiagNeighbors().push_back(pp); //cares for the last of each line
 
+		/*
 		std::cout << "Particle " << (*it).getID() << ": (size=" << (*it).getDiagNeighbors().size() <<") ";
 		for (std::list<Particle *>::iterator j = (*it).getDiagNeighbors().begin();
 			j != (*it).getDiagNeighbors().end(); j++){
 			std::cout << (*(*j)).getID() << ", " ;
 		}
 		std::cout << std::endl;
+		*/
 	}
 }
 

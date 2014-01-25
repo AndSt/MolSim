@@ -257,6 +257,26 @@ void ParticleGeneratorTest::testExtractSetting(){
 	CPPUNIT_ASSERT(rcutoffT==3.0);
 }
 
+void ParticleGeneratorTest::testForce(){
+	double start_timeT, end_timeT, delta_tT;
+	std::list<std::string> inputNamesT, inputTypesT;
+	string outputMaskT;
+	int outputFreqT;
+	utils::Vector<double, 3> domainSizeT;
+	double rcutoffT;
+	std::vector<int> cond;
+	double gT;
+	int inputSizeT;
+
+	std::string fileName = "src/tests/testFiles/TestInputSetting.xml";
+	char *cstr = new char[fileName.length() + 1];
+	strcpy(cstr, fileName.c_str());
+	generator.extractSetting(cstr, start_timeT, end_timeT, delta_tT,
+				inputNamesT, inputTypesT, outputMaskT,
+				outputFreqT, domainSizeT, rcutoffT, cond, gT, inputSizeT);
+	CPPUNIT_ASSERT(generator.smoothedLJ() == true);
+}
+
 CppUnit::Test *ParticleGeneratorTest::suite() {
 	CppUnit::TestSuite *testSuite = new CppUnit::TestSuite(
 			"ParticleGeneratorTest");

@@ -105,7 +105,7 @@ void MembraneTest::testGetID(){
 		idList.push_back((*it).getID());
 	}
 	//test size
-	CPPUNIT_ASSERT(idList.size() == 100);
+	CPPUNIT_ASSERT(idList.size() == parList.size());
 
 	//test uniqueness of each ID (each ID must exist only once)
 	idList.sort();

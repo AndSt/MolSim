@@ -214,6 +214,7 @@ void ParticleGenerator::extractSetting(string filename, double& start_time, doub
 		delta_t = h->delta_t();
 		inputSize = h->numberOfTypes();
 		g_const = h->gconst();
+		this->smoothed = h->force();
 
 		inputNames.clear();
 		inputTypes.clear();
@@ -245,4 +246,8 @@ void ParticleGenerator::extractSetting(string filename, double& start_time, doub
 		cerr << e;
 		exit(-1);
   	}
+}
+
+bool ParticleGenerator::smoothedLJ(){
+	return smoothed;
 }

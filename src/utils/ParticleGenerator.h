@@ -39,6 +39,9 @@ private:
 	/** The particles of either cuboids or spheres will be stored here.*/
 	std::list<Particle> particleList;
 
+	/** Force flag for smoothed LJ. */
+	bool smoothed;
+
 public:
 	/** Default constructor.
 	 */
@@ -89,6 +92,12 @@ public:
 				string& outputMask, int& outputFreq, 
 				utils::Vector<double, 3>& domainSize, double& r_cutoff, 
 				std::vector<int>& domainBoundCond, double& g_const, int& inputSize);
+
+	/**
+	 * extractSetting must have been called first.
+	 * \return true if smoothed LJ is needed, or else the normal LJ.
+	 */
+	bool smoothedLJ();
 
 	/** The reading procedure, which can convert information 
 	 *  from a given XML input file into particle generator's list of unstructered particles.

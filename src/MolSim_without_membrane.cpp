@@ -35,7 +35,6 @@
 #include "tests/LCOuterParticleIteratorTest.h"
 #include "tests/ThermostatTest.h"
 #include "tests/FileReaderTest.h"
-#include "tests/MembraneTest.h"
 
 #include <list>
 #include <cassert>
@@ -49,6 +48,7 @@
 #include <fstream>
 #include <iomanip>
 #include <sys/time.h>
+#include <omp.h>
 
 using namespace std;
 using namespace log4cxx;
@@ -61,10 +61,10 @@ void simulate();
 void LCsimulate();
 
 /**
- * calculate the force for all particles, according to Lennard-Jones
+ * force calculation methods(with and without linked-cell)
  */
 void calculateFLJ();
-void LCcalculateFLJ();
+void LCcalculateF();
 
 /**
  * calculate the position for all particles
@@ -78,7 +78,21 @@ void LCcalculateX();
 void calculateV();
 void LCcalculateV();
 
-void computeForce(Particle& p1, Particle& p2);
+/**
+ * function pointer to the used force calculation method
+ */
+void (*computeForce)(Particle&, Particle&);
+
+/**
+ * lennard jones force calculation
+ */
+void computeLennardJones(Particle& p1, Particle& p2);
+
+void computeSmoothedLennardJones(Particle& p1, Particle& p2);
+
+void calculateDiffusion();
+
+void calculateRDF();
 
 void getIntegerInput(string &str, int &input);
 
@@ -93,6 +107,9 @@ void plotVTK(int iteration);
 void LCplotVTK(int iteration);
 
 void writeOutputFile(list<Particle *> parList);
+
+void runAllTests();
+void initializeSimulation(string inpFile);
 
 double start_time = 0;
 double end_time = 1000;
@@ -121,21 +138,9 @@ double G_CONST = -12.44;
 //only for cuboids and spheres, not for particles alone
 //type = index
 double gDirMass[] = { 0.0, 1.0, 0.0 }; //will store mass (without G_CONST*)
-double gDirMassMem[] = { 0.0, 0.0, 1.0};
 vector<utils::Vector<double, 3> > gravForce;
 vector<vector<double> > EPS;
 vector<vector<double> > SIG;
-
-// For membrane
-double current_time = 0.0;
-double k = 300;
-double rDirect = 2.2;
-double rDiag = 2.2*sqrt(2);
-double rFLJ = pow(2, 1.0/6.0);
-double FZUpArr[] = {0.0, 0.0, 0.8};
-utils::Vector<double, 3> FZUp(FZUpArr);
-int id1, id2, id3, id4;
-bool isMembrane = false;
 
 int inputSize = 0;
 list<Particle> particleList;
@@ -167,6 +172,7 @@ log4cxx::LoggerPtr molsimlogger(log4cxx::Logger::getLogger("molsim"));
  * The third parameter is delta_t.
  */
 int main(int argc, char* argsv[]) {
+
 	PropertyConfigurator::configure("Log4cxxConfig.cfg");
 	LOG4CXX_INFO(molsimlogger, "Arrived @ main.");
 
@@ -176,16 +182,25 @@ int main(int argc, char* argsv[]) {
 	 *
 	 * ./MolSim --test						: for test
 	 *
-	 * ./MolSim --falling-drop-init			: for initilization of falling drop experiment
+	 * ./MolSim --falling-drop-init			: for initialization of falling drop experiment
 	 *
 	 * ./MolSim --falling-drop-end			: for the falling drop experiment
 	 *
 	 * ./MolSim --rayleigh-taylor-small		: for the small Rayleigh-Taylor experiment
 	 *
 	 * ./MolSim --rayleigh-taylor-big		: for the big Rayleigh-Taylor experiment
+	 *
+	 * ./MolSim --rayleigh-taylor-3D		: for the Rayleigh-Taylor experiment in 3D
+	 *
+	 * ./MolSim --membrane					: for the membrane experiment
+	 *
+	 * ./MolSim --cooling-argon-init		: for initialization of cooling argon experiment
+	 *
+	 * ./MolSim --cooling-argon-1			: for the cooling argon experiment
+	 *
+	 * ./MolSim --cooling-argon-2			: for the super cooling argon experiment
 	 */
 
-	//bool test = false;
 	gettimeofday(&tim, NULL);
 	t1 = tim.tv_sec + (tim.tv_usec / 1000000.0);
 	if (argc > 2) {
@@ -206,50 +221,28 @@ int main(int argc, char* argsv[]) {
 
 			cout << "Here are the testing options: " << endl;
 			cout
-					<< "Tipp: If you Enter Option '1' or '2' you will get back to this menu";
+					<< "Hint: If you enter '1' or '2' you will return to this menu";
 			cout << endl << endl;
 			while (option != 3) {
-				cout << "Enter '1', if you want to test all unit tests."
-						<< endl;
-				cout << "Enter '2', if you want to test a specific unit test."
-						<< endl;
-				cout << "Enter '3', if you want to exit the 'test suite'."
-						<< endl;
+				cout << "Enter '1' to test all unit tests." << endl;
+				cout << "Enter '2' to test a specific unit test." << endl;
+				cout << "Enter '3' to exit the 'test suite'." << endl;
 				cout << endl;
 
 				//Check for correct input
 				getIntegerInput(str, option);
 
 				if (option == 1) {
-
-					CppUnit::TextUi::TestRunner runner;
-					runner.addTest(ParticleIteratorTest::suite());
-					runner.addTest(ParticleContainerTest::suite());
-					runner.addTest(ParticleGeneratorTest::suite());
-					runner.addTest(LCParticleContainerTest::suite());
-					runner.addTest(LCInnerParticleIteratorTest::suite());
-					runner.addTest(LCOuterParticleIteratorTest::suite());
-					runner.addTest(ThermostatTest::suite());
-					runner.addTest(FileReaderTest::suite());
-					runner.addTest(MembraneTest::suite());
-					runner.run();
+					LOG4CXX_DEBUG(molsimlogger, "Running all Tests.");
+					runAllTests();
 
 				} else if (option == 2) {
-					cout
-							<< "Enter '1', if you want to test the ParticleContainer."
-							<< endl;
-					cout
-							<< "Enter '2', if you want to test the ParticleIterator."
-							<< endl;
-					cout
-							<< "Enter '3', if you want to test the ParticleGenerator."
-							<< endl;
-					cout << "Enter '4', if you want to test the Thermostat."
-							<< endl;
-					cout << "Enter '5', if you want to test the FileReader."
-							<< endl;
-					cout << "Enter '6', if you want to test the Membrane functions."
-							<< endl;
+					cout << "Enter '1' to test the ParticleContainer." << endl;
+					cout << "Enter '2' to test the ParticleIterator." << endl;
+					cout << "Enter '3' to test the ParticleGenerator." << endl;
+					cout << "Enter '4' to test the Thermostat." << endl;
+					cout << "Enter '5' to test the FileReader." << endl;
+					//TODO: Alle wählbaren Tests einfügen
 
 					//Check for correct input
 					int opT;
@@ -258,31 +251,55 @@ int main(int argc, char* argsv[]) {
 					CppUnit::TextUi::TestRunner runner;
 					switch (opT) {
 					case 1:
+						LOG4CXX_DEBUG(molsimlogger,
+								"Testing ParticleContainer alone.")
+						;
 						runner.addTest(ParticleContainerTest::suite());
 						break;
 					case 2:
+						LOG4CXX_DEBUG(molsimlogger,
+								"Testing ParticleIterator alone.")
+						;
 						runner.addTest(ParticleIteratorTest::suite());
 						break;
 					case 3:
+						LOG4CXX_DEBUG(molsimlogger,
+								"Testing ParticleGenerator alone.")
+						;
 						runner.addTest(ParticleGeneratorTest::suite());
 						break;
 					case 4:
+						LOG4CXX_DEBUG(molsimlogger, "Testing Thermostat alone.")
+						;
 						runner.addTest(ThermostatTest::suite());
 						break;
 					case 5:
+						LOG4CXX_DEBUG(molsimlogger, "Testing FileReader alone.")
+						;
 						runner.addTest(FileReaderTest::suite());
-						break;
-					case 6:
-						runner.addTest(MembraneTest::suite());
 						break;
 					}
 					runner.run();
+				} else if (option == 3) {
+					LOG4CXX_DEBUG(molsimlogger, "Stopped testing.");
+					cout << "Alright! Goodbye then!" << endl;
+				}
+
+				else {
+					cout << "Invalid number, please try again.\n" << endl;
 				}
 			}
-		} else if (arg1 == "--falling-drop-init") {
-			//getting information from InputSetting first
-			string inpInit = "input/FallingDropInitSetting.xml";
-			pgen.extractSetting(inpInit, start_time, end_time, delta_t,
+		} else if ((arg1 == "--falling-drop-init") ||
+					(arg1 == "--cooling-argon-init")){
+			if (arg1 == "--falling-drop-init"){
+				LOG4CXX_INFO(molsimlogger, "Doing FallingDropInit.");
+				fileName = "input/FallingDropInitSetting.xml";
+			}else{
+				LOG4CXX_INFO(molsimlogger, "Doing CoolingArgonInit.");
+				fileName = "input/CoolingArgonInitSetting.xml";
+			}
+
+			pgen.extractSetting(fileName, start_time, end_time, delta_t,
 					inputNames, inputTypes, outputMask, freq, domainSize,
 					R_CUTOFF, domainCondition, G_CONST, inputSize);
 			particleList.clear();
@@ -303,16 +320,10 @@ int main(int argc, char* argsv[]) {
 
 			pgen.cuboidsToList();
 			particleList = pgen.getParticleList();
-
-			//======================THERMOSTAT=====================
-			thermo = Thermostat(inpInit);
-
-			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
-			LCsimulate();
-			writeOutputFile((lcContainer.getList()));
 		}
 
 		else if (arg1 == "--falling-drop-end") {
+			LOG4CXX_INFO(molsimlogger, "Doing FallingDropEnd.");
 			pgen.getParticleList().clear();
 			double eps1 = 1.0;
 			double sig1 = 1.2;
@@ -325,8 +336,8 @@ int main(int argc, char* argsv[]) {
 			particleList = pgen.getParticleList();
 
 			//getting information from InputSetting first
-			string inpEnd = "input/FallingDropEndSetting.xml";
-			pgen.extractSetting(inpEnd, start_time, end_time, delta_t,
+			fileName = "input/FallingDropEndSetting.xml";
+			pgen.extractSetting(fileName, start_time, end_time, delta_t,
 					inputNames, inputTypes, outputMask, freq, domainSize,
 					R_CUTOFF, domainCondition, G_CONST, inputSize);
 
@@ -352,54 +363,25 @@ int main(int argc, char* argsv[]) {
 
 			pgen.spheresToList();
 			pgen.mergeWithParticleList(particleList);
-
-			//======================THERMOSTAT=====================
-			thermo = Thermostat(inpEnd);
-
-			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
-			LCsimulate();
 		}
-
-		else if (arg1 == "--rayleigh-taylor-small") {
-			//getting information from InputSetting first
-			string inpCubSmall = "input/RayleighTaylorSmallSetting.xml";
-			pgen.extractSetting(inpCubSmall, start_time, end_time, delta_t,
-					inputNames, inputTypes, outputMask, freq, domainSize,
-					R_CUTOFF, domainCondition, G_CONST, inputSize);
-			particleList.clear();
-
-			//initialize the size of gravForce
-			gravForce.resize(inputSize);
-			resizeEpsSig(inputSize);
-
-			pgen.extractCuboids(*inputNames.begin());
-			// For each type
-			for (list<Cuboid>::iterator itCS = pgen.getCuboidList().begin();
-					itCS != pgen.getCuboidList().end(); itCS++) {
-				gDirMass[1] = G_CONST * ((*itCS).getMass());
-				gravForce[(*itCS).getType()] = utils::Vector<double, 3>(
-						gDirMass);
-				// fill the diagonal first
-				EPS[(*itCS).getType()][(*itCS).getType()] =
-						(*itCS).getEpsilon();
-				SIG[(*itCS).getType()][(*itCS).getType()] = (*itCS).getSigma();
+ 
+		else if ((arg1 == "--rayleigh-taylor-small") ||
+				(arg1 == "--rayleigh-taylor-big") ||
+				(arg1 == "--rayleigh-taylor-3D")){
+			if (arg1 == "--rayleigh-taylor-small"){
+				LOG4CXX_INFO(molsimlogger, "Doing RayleighTaylorSmall.");
+				fileName = "input/RayleighTaylorSmallSetting.xml";
+			}
+			else if (arg1 == "--rayleigh-taylor-big"){
+				LOG4CXX_INFO(molsimlogger, "Doing RayleighTaylorBig.");
+				fileName = "input/input/RayleighTaylorBigSetting.xml";
+			}
+			else{
+				LOG4CXX_INFO(molsimlogger, "Doing RayleighTaylor3D.");
+				fileName = "input/input/RayleighTaylor3DSetting.xml";
 			}
 
-			fillEpsSig(inputSize);
-
-			pgen.cuboidsToList();
-			particleList = pgen.getParticleList();
-
-			thermo = Thermostat(inpCubSmall);
-
-			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
-			LCsimulate();
-		}
-
-		else if (arg1 == "--rayleigh-taylor-big") {
-			//getting information from InputSetting first
-			string inpCubBig = "input/RayleighTaylorBigSetting.xml";
-			pgen.extractSetting(inpCubBig, start_time, end_time, delta_t,
+			pgen.extractSetting(fileName, start_time, end_time, delta_t,
 					inputNames, inputTypes, outputMask, freq, domainSize,
 					R_CUTOFF, domainCondition, G_CONST, inputSize);
 			particleList.clear();
@@ -425,60 +407,33 @@ int main(int argc, char* argsv[]) {
 
 			pgen.cuboidsToList();
 			particleList = pgen.getParticleList();
+		} 
 
-			thermo = Thermostat(inpCubBig);
-
-			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
-			LCsimulate();
-
-		}
-
-		else if (arg1 == "--rayleigh-taylor-3D") {
-			//getting information from InputSetting first
-			string inpCubBig = "input/RayleighTaylor3DSetting.xml";
-			pgen.extractSetting(inpCubBig, start_time, end_time, delta_t,
-					inputNames, inputTypes, outputMask, freq, domainSize,
-					R_CUTOFF, domainCondition, G_CONST, inputSize);
-			particleList.clear();
-
-			//initialize the size of gravForce
-			gravForce.resize(inputSize);
-			resizeEpsSig(inputSize);
-
-			pgen.extractCuboids(*inputNames.begin());
-			// For each type
-			for (list<Cuboid>::iterator itCB = pgen.getCuboidList().begin();
-					itCB != pgen.getCuboidList().end(); itCB++) {
-				gDirMass[1] = G_CONST * ((*itCB).getMass());
-				gravForce[(*itCB).getType()] = utils::Vector<double, 3>(
-						gDirMass);
-				// fill the diagonal first
-				EPS[(*itCB).getType()][(*itCB).getType()] =
-						(*itCB).getEpsilon();
-				SIG[(*itCB).getType()][(*itCB).getType()] = (*itCB).getSigma();
+		else if ((arg1 == "--cooling-argon-1") ||
+				(arg1 == "--cooling-argon-2")) {
+			if (arg1 == "--cooling-argon-1"){
+				LOG4CXX_INFO(molsimlogger, "Doing CoolingArgon1.");
+				fileName = "input/CoolingArgon1Setting.xml";
+			}
+			else{
+				LOG4CXX_INFO(molsimlogger, "Doing CoolingArgon2.");
+				fileName = "input/CoolingArgon2Setting.xml";
 			}
 
-			fillEpsSig(inputSize);
+			pgen.getParticleList().clear();
+			double eps1 = 1.0;
+			double sig1 = 1.0;
+			FileReader fileReader;
+			string inTextS = "ParListStatus.txt";
+			char *inText = new char[inTextS.length() + 1];
+			strcpy(inText, inTextS.c_str());
+			fileReader.readStatus(pgen.getParticleList(), eps1, sig1, inText);
 
-			pgen.cuboidsToList();
 			particleList = pgen.getParticleList();
 
-			thermo = Thermostat(inpCubBig);
-
-			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
-			LCsimulate();
-
-		}
-
-
-		else if (arg1 == "--membrane"){
-			isMembrane = true;
-			//getting information from MembraneSetting first
-			string inpMem = "input/MembraneSetting.xml";
-			pgen.extractSetting(inpMem, start_time, end_time, delta_t,
+			pgen.extractSetting(fileName, start_time, end_time, delta_t,
 					inputNames, inputTypes, outputMask, freq, domainSize,
 					R_CUTOFF, domainCondition, G_CONST, inputSize);
-			particleList.clear();
 
 			//initialize the size of gravForce
 			gravForce.resize(1);
@@ -486,374 +441,61 @@ int main(int argc, char* argsv[]) {
 
 			pgen.extractCuboids(*inputNames.begin());
 			list<Cuboid>::iterator itC = pgen.getCuboidList().begin();
-			(*itC).initNeighbors();
 
 			//==================G + MIXING RULE====================
-			gDirMassMem[2] = G_CONST * ((*itC).getMass());
-			gravForce[0] = utils::Vector<double, 3>(gDirMassMem);
+			gDirMass[1] = G_CONST * ((*itC).getMass());
+			gravForce[0] = utils::Vector<double, 3>(gDirMass);
 			EPS[0][0] = (*itC).getEpsilon();
 			SIG[0][0] = (*itC).getSigma();
-			//fillEpsSig(1);
-
-			//set the IDs of 4 special particles
-			id1 = 24*((*itC).getWidth()) + 17;	//(17, 24)
-			id2 = 25*((*itC).getWidth()) + 17;	//(17, 25)
-			id3 = 24*((*itC).getWidth()) + 18;	//(18, 24)
-			id4 = 25*((*itC).getWidth()) + 18;	//(18, 25)
-
-			pgen.cuboidsToList();
-			particleList = pgen.getParticleList();
-
-			thermo = Thermostat(inpMem);
-
-			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
-			LCsimulate();
+			fillEpsSig(1);
 		}
-
+		
 		else {
+			LOG4CXX_ERROR(molsimlogger, "Invalid number input.");
 			cout << arg1 << " invalid!" << endl;
 			return -1;
 		}
-	} else {
+	} else {		
 		cout << "Invalid argument!" << endl;
 		cout << "Try:" << endl;
 		cout << "\t./MolSim --falling-drop-init" << endl;
 		cout << "\t./MolSim --falling-drop-end" << endl;
-		cout << "\t./MolSim --membrane" << endl;
 		cout << "\t./MolSim --rayleigh-taylor-small" << endl;
 		cout << "\t./MolSim --rayleigh-taylor-big" << endl;
 		cout << "\t./MolSim --rayleigh-taylor-3D" << endl;
+		cout << "\t./MolSim --membrane" << endl;
+		cout << "\t./MolSim --cooling-argon-init" << endl;
+		cout << "\t./MolSim --cooling-argon-1" << endl;
+		cout << "\t./MolSim --cooling-argon-2" << endl;
 		return -1;
-/*
-		//argc==1
-		//./MolSim
-		LOG4CXX_INFO(molsimlogger, "Arrived @ filedecision.");
-		string str;
-		FileReader fileReader;
-		cout << "Hello from Andreas, Matthias and Son!" << endl;
-		cout << endl;
-		//variable for Level 1 Options:
-		int option1;
-		//Level 1 Options:
-		//[1] - run from particle file
-		//[2] - run from cuboid file
-		//[3] - run from XML input files
-		cout
-				<< "Enter '1', if you want to run the program with a particle file."
-				<< endl;
-		cout << "Enter '2', if you want to run program with a cuboid file."
-				<< endl;
-		cout << "Enter '3', if you want to run program with xml input files."
-				<< endl;
-
-		getIntegerInput(str, option1);
-
-		switch (option1) {
-		case 1:
-			cout << "Enter '1', if you want the default configuration: "
-					<< endl;
-			cout << "         file -'eingabe-sonne.txt'" << endl;
-			cout << "         end time - 1000" << endl;
-			cout << "         delta t - 0.014" << endl;
-			cout
-					<< "Enter '2', if you 'eingabe-sonne.txt' with different options"
-					<< endl;
-			cout << "Enter '3', if you want completely different options"
-					<< endl;
-
-			break;
-		case 2:
-			cout << "Enter '1', if you want the default configuration: "
-					<< endl;
-			cout << "         file -'eingabe-brownian.txt'" << endl;
-			cout << "         end time - 5" << endl;
-			cout << "         delta t - 0.0002" << endl;
-			cout
-					<< "Enter '2', if you 'eingabe-brownian.txt' with different options"
-					<< endl;
-			cout << "Enter '3', if you want completely different options"
-					<< endl;
-			break;
-		case 3:
-			cout << "XML input files are stored in MolSim." << endl;
-			cout << "There are 3 sources of input files:" << endl;
-			cout
-					<< "\tInputSetting: contains start_time, end_time, delta_t,\
-					\n\t\t inputfile name, inputfile type, output mask\
-					\n\t\t and output frequency."
-					<< endl;
-			cout
-					<< "\tInputParticles: contains all information needed for particles."
-					<< endl;
-			cout
-					<< "\tInputCuboids: contains all information needed for cuboids."
-					<< endl;
-			cout
-					<< "\tInputSpheres: contains all information needed for spheres."
-					<< endl;
-			cout << "\nPress 1 to use Linked Cell Algorithm." << endl;
-			cout << "Press 2 to simulate without Linked Cell Algorithm."
-					<< endl;
-			break;
-		}
-
-		//variable for Level 2 Options:
-		int option2;
-
-		//level 2 Options:
-		//[1] - default configuration
-		//[2] - define delta_t, end_time by yourself
-		//[3] - define fileName, delta_t and end_time by yourself
-		getIntegerInput(str, option2);
-
-		//for particle file:
-		if (option1 == 1) {
-			switch (option2) {
-			case 1:
-				fileName = "eingabe-sonne.txt";
-				delta_t = 0.014;
-				end_time = 1000;
-				break;
-			case 2:
-				fileName = "eingabe-sonne.txt";
-				cout << "Please enter the value of delta_t:" << endl;
-				getDoubleInput(str, delta_t);
-				cout << "Please enter the value of end_time:" << endl;
-				getDoubleInput(str, end_time);
-				break;
-			case 3:
-				cout << "Please enter the name of your file:" << endl;
-				getline(cin, fileName);
-				cout << "Please enter the value of delta_end:" << endl;
-				getDoubleInput(str, delta_t);
-				cout << "Please enter the value of end_time:" << endl;
-				getDoubleInput(str, end_time);
-				break;
-			}
-			char *cstr = new char[fileName.length() + 1];
-			strcpy(cstr, fileName.c_str());
-			fileReader.readFile(particleList, cstr);
-		}
-		//for cuboid list:
-		else if (option1 == 2) {
-			switch (option2) {
-			case 1:
-				fileName = "eingabe-brownian.txt";
-				delta_t = 0.0002;
-				end_time = 5;
-				break;
-			case 2:
-				fileName = "eingabe-brownian.txt";
-				cout << "Please enter the value of delta_t:" << endl;
-				getDoubleInput(str, delta_t);
-				cout << "Please enter the value of end_time:" << endl;
-				getDoubleInput(str, end_time);
-				break;
-			case 3:
-				cout << "Please enter the name of your file:" << endl;
-				getline(cin, fileName);
-				cout << "Please enter the value of delta_t:" << endl;
-				getDoubleInput(str, delta_t);
-				cout << "Please enter the value of end_time:" << endl;
-				getDoubleInput(str, end_time);
-				break;
-			}
-
-			char *cstr = new char[fileName.length() + 1];
-			strcpy(cstr, fileName.c_str());
-			pgen.readCuboids(cstr);
-			pgen.cuboidsToList();
-			particleList = pgen.getParticleList();
-		}
-
-		//for XML input:
-		else if (option1 == 3) {
-			//getting information from InputSetting first
-			string inp = "InputSetting.xml";
-			pgen.extractSetting(inp, start_time, end_time, delta_t, inputNames,
-					inputTypes, outputMask, freq, domainSize, R_CUTOFF,
-					domainCondition, G_CONST, inputSize);
-			particleList.clear();
-			list<string>::iterator itT = inputTypes.begin();
-			int i = 1;
-*/
-			/*// calculate the number of cuboids + spheres in input file
-			 for (list<string>::iterator itN = inputNames.begin();
-			 itN != inputNames.end(); itN++) {
-			 if (*itT == "cuboids") {
-			 pgen.extractCuboids(*itN);
-			 inputSize += pgen.getCuboidList().size();
-			 } else if (*itT == "spheres") {
-			 pgen.extractSpheres(*itN);
-			 inputSize += pgen.getSphereList().size();
-			 }
-			 itT++;
-			 i++;
-			 }*/
-/*
-			//initialize the size of gravForce
-			gravForce.resize(inputSize);
-			resizeEpsSig(inputSize);
-
-			for (list<string>::iterator itN = inputNames.begin();
-					itN != inputNames.end(); itN++) {
-				if (*itT == "particles") {
-					cout << i << ". input file: " << "[particles]." << endl;
-					pgen.extractParticles(*itN);
-					for (list<Particle>::iterator it =
-							pgen.getParticleList().begin();
-							it != pgen.getParticleList().end(); it++) {
-						gDirMass[1] = (*it).getM();
-						gravForce[(*it).getType()] = utils::Vector<double, 3>(
-								gDirMass);
-					}
-					pgen.mergeWithParticleList(particleList);
-				} else if (*itT == "cuboids") {
-					cout << i << ". input file: " << "[cuboids]" << endl;
-					pgen.extractCuboids(*itN);
-					// For each type
-					for (list<Cuboid>::iterator it =
-							pgen.getCuboidList().begin();
-							it != pgen.getCuboidList().end(); it++) {
-						gDirMass[1] = (*it).getMass();
-						gravForce[(*it).getType()] = utils::Vector<double, 3>(
-								gDirMass);
-						// fille the diagonal first
-						EPS[(*it).getType()][(*it).getType()] =
-								(*it).getEpsilon();
-						SIG[(*it).getType()][(*it).getType()] =
-								(*it).getSigma();
-					}
-
-					pgen.cuboidsToList();
-					pgen.mergeWithParticleList(particleList);
-
-				} else {
-					cout << i << ". input file: " << "[spheres]" << endl;
-					pgen.extractSpheres(*itN);
-					// For each type
-					for (list<Sphere>::iterator it =
-							pgen.getSphereList().begin();
-							it != pgen.getSphereList().end(); it++) {
-						gDirMass[1] = (*it).getM();
-						gravForce[(*it).getType()] = utils::Vector<double, 3>(
-								gDirMass);
-						// fill the diagonal first
-						EPS[(*it).getType()][(*it).getType()] =
-								(*it).getEpsilon();
-						SIG[(*it).getType()][(*it).getType()] =
-								(*it).getSigma();
-					}
-					pgen.spheresToList();
-					pgen.mergeWithParticleList(particleList);
-				}
-				itT++;
-				i++;
-			}
-
-			cout << "Press enter to continue..." << endl;
-			cin.ignore();
-
-			//======================GRAVITY=====================
-			int ag;
-			cout
-					<< "Do you want to add gravity?\nPress 1 to confirm, 2 to ignore."
-					<< endl;
-			getIntegerInput(str, ag);
-			if (ag == 1) {
-				cout << "Gravity enabled.\n" << "G = " << G_CONST << "."
-						<< endl;
-			} else {
-				cout << "Gravity disabled." << endl;
-				G_CONST = 0;
-			}
-			//multiply with G_CONST
-			for (int indexGrav = 0; indexGrav < gravForce.size(); indexGrav++) {
-				gravForce[indexGrav] = G_CONST * gravForce[indexGrav];
-			}
-			//======================GRAVITY=====================
-
-			//======================FALLING DROP=====================
-			int fd;
-			cout << "\nDo you want to simulate the falling drop?\n"
-					<< "Note: ParListStatus.txt must exist!\n"
-					<< "Press 1 to confirm, 2 to ignore." << endl;
-			getIntegerInput(str, fd);
-			if (fd == 1) {
-				cout << "Falling drop chosen." << endl;
-				pgen.getParticleList().clear();
-				double eps1 = 1.0;
-				double sig1 = 1.0;
-				string inTextS = "ParListStatus.txt";
-				char *inText = new char[inTextS.length() + 1];
-				strcpy(inText, inTextS.c_str());
-				fileReader.readStatus(pgen.getParticleList(), eps1, sig1,
-						inText);
-				int typeP = (*pgen.getParticleList().begin()).getType();
-				EPS[typeP][typeP] = eps1;
-				SIG[typeP][typeP] = sig1;
-
-				pgen.mergeWithParticleList(particleList);
-				cout << "Input data from ParListStatus imported." << endl;
-			} else {
-				cout << "Falling drop disabled." << endl;
-			}
-			//======================FALLING DROP=====================
-
-			fillEpsSig(inputSize);
-		}
-
-		cout << "\nReading input file..." << endl;
-
-		//initialize container with particle list
-		LOG4CXX_INFO(molsimlogger, "Arrived @ initialization call.");
-
-		//start simulation
-		LOG4CXX_INFO(molsimlogger, "Arrived @ simulation call.");
-
-		//======================THERMOSTAT=====================
-		int thermoOption;
-		cout
-				<< "Do you want to use Thermostat?\nPress 1 to confirm, 2 to ignore."
-				<< endl;
-		getIntegerInput(str, thermoOption);
-
-		thermo = Thermostat();
-
-		if (thermoOption == 1) {
-			//initialize thermostat to get enabled flag (true --> call, false --> ignore)
-			thermo.getEnabled() = true;
-			cout << "Thermostat enabled." << endl;
-			if (thermo.getDelta_T() != 0)
-				cout << "Target temperature: " << thermo.getT_target() << ".\n"
-						<< endl;
-		} else {
-			thermo.getEnabled() = false;
-			cout << "Thermostat disabled.\n" << endl;
-		}
-		//======================THERMOSTAT=====================
-		cout << "Running simulation..." << endl;
-		int wo;
-		if (option1 == 3 && option2 == 1) {
-			lcContainer.initialize(particleList, domainSize, R_CUTOFF);
-			LCsimulate();
-			cout << "\nWrite ParListStatus.txt out?" << endl;
-			cout << "Press 1 to confirm, 2 to ignore." << endl;
-			getIntegerInput(str, wo);
-			if (wo == 1) {
-				writeOutputFile((lcContainer.getList()));
-				cout << "ParListStatus.txt written." << endl;
-			}
-		} else {
-			container.initialize(particleList);
-			simulate();
-		}
-*/
 	}
 
-	LOG4CXX_INFO(molsimlogger, "Arrived @ ending simulation.");
+	thermo = Thermostat(fileName);
+
+	lcContainer.initialize(particleList, domainSize, R_CUTOFF);
+	LOG4CXX_INFO(molsimlogger, "Arrived @ simulation call.");
+	LCsimulate();
+	if ((fileName == "input/FallingDropInitSetting.xml")
+		|| (fileName == "input/CoolingArgonInitSetting.xml")) {
+		writeOutputFile((lcContainer.getList()));
+	}
+
+	LOG4CXX_INFO(molsimlogger, "Simulation ended successfully.");
 
 	return 0;
+}
+
+void runAllTests() {
+	CppUnit::TextUi::TestRunner runner;
+	runner.addTest(ParticleIteratorTest::suite());
+	runner.addTest(ParticleContainerTest::suite());
+	runner.addTest(ParticleGeneratorTest::suite());
+	runner.addTest(LCParticleContainerTest::suite());
+	runner.addTest(LCInnerParticleIteratorTest::suite());
+	runner.addTest(LCOuterParticleIteratorTest::suite());
+	runner.addTest(ThermostatTest::suite());
+	runner.addTest(FileReaderTest::suite());
+	runner.run();
 }
 
 void simulate() {
@@ -866,7 +508,7 @@ void simulate() {
 	calculateFLJ();
 	//addGravity(container.getList());
 
-	current_time = start_time;
+	double current_time = start_time;
 
 	int iteration = 0;
 
@@ -951,10 +593,9 @@ void calculateFLJ() {
 			utils::Vector<double, 3> tempD = p2.getX() - p1.getX();
 			double tempDNorm = tempD.L2Norm();
 
-			double tempDSigDivNormPowSix = pow(
-					SIG[p1.getType()][p2.getType()] / tempDNorm, 6);
+			double tempDSigDivNormPowSix = pow(SIG[0][0] / tempDNorm, 6);
 			utils::Vector<double, 3> tempF =
-					24 * EPS[p1.getType()][p2.getType()] * pow(1 / tempDNorm, 2)
+					24 * EPS[0][0] * pow(1 / tempDNorm, 2)
 							* (tempDSigDivNormPowSix
 									- 2 * pow(tempDSigDivNormPowSix, 2))
 							* tempD;
@@ -966,9 +607,10 @@ void calculateFLJ() {
 			++j;
 		}
 		// GRAVITY (G_CONST = 0 when gravity is disabled)
-		(*iterator).setF(gravForce[(*iterator).getType()] + sumF[i]);
+		//(*iterator).setF(gravForce[(*iterator).getType()] + sumF[i]);
 		++iterator;
 		++i;
+		//TODO: Eps und Sig abklären
 	}
 }
 
@@ -1068,19 +710,18 @@ void plotVTK(int iteration) {
 
 void LCsimulate() {
 // the forces are needed to calculate x, but are not given in the input file.
-//calculateF();
 
 	LOG4CXX_INFO(molsimlogger, "lcContainer.size: " << lcContainer.size());
 	LOG4CXX_INFO(molsimlogger, "particleList.size: " << particleList.size());
 	//assert(lcContainer.size() == particleList.size());
 
 	utils::BoundaryHandler boundHandler(domainCondition, lcContainer, h,
-			computeForce);
+			computeLennardJones);
 
-	LCcalculateFLJ();
+	LCcalculateF();
 	//addGravity(lcContainer.getList());
 
-	current_time = start_time;
+	double current_time = start_time;
 
 	double temperature = thermo.getT_init();
 	bool target_temp_reached = false;
@@ -1102,7 +743,8 @@ void LCsimulate() {
 		boundHandler.applyPeriodic();
 
 		// calculate new f
-		LCcalculateFLJ();
+		LCcalculateF();
+
 		// calculate new v
 		LCcalculateV();
 
@@ -1126,9 +768,9 @@ void LCsimulate() {
 			}
 		}
 
-		if (iteration % freq == 0) {
-			LCplotVTK(iteration);
-		}
+//		if (iteration % freq == 0) {
+//			LCplotVTK(iteration);
+//		}
 
 		LOG4CXX_TRACE(molsimlogger, "Iteration " << iteration << " finished.");
 
@@ -1146,74 +788,92 @@ void LCsimulate() {
 	cout << "\nOutput written. Terminating..." << endl;
 }
 
-void LCcalculateFLJ() {
+void LCcalculateF() {
 
 	utils::Vector<double, 3> zero((double) 0);
 	utils::Vector<double, 3> sumF((double) 0);
-	utils::Vector<double, 3> FZ((double) 0);
+
+#ifndef _OPENMP
 	utils::LCOuterParticleIterator iterator = lcContainer.beginOuter();
-	int i = 0;
+
 	while (iterator != lcContainer.endOuter()) {
-		i = iterator.getCellNumber();
 		sumF = zero;
-		utils::LCInnerParticleIterator innerIterator
-					= lcContainer.beginInner(iterator);
-		while (innerIterator != lcContainer.endInner(i)) {
-			assert(innerIterator != lcContainer.endInner(i));
-			if (innerIterator.getCellNumber()
-					   > lcContainer.endInner(i).getCellNumber()
-					   || innerIterator.getCellNumber()
-					   > lcContainer.endOuter().getCellNumber()) {
-			   break;
-			}
+		utils::LCInnerParticleIterator innerIterator = lcContainer.beginInner(
+				iterator);
+		while (innerIterator != lcContainer.endInner(iterator.getCellNumber())) {
+
 			Particle& p1 = *iterator;
 			Particle& p2 = *innerIterator;
-			//cout << p1 << endl;
-			//cout << p2 << endl;
-				/*cout << "Element: " << innerIterator.getCellNumber() << " "
-								<< p2.toString() << endl;
-				cout << "EndInner: " << ((*(lcContainer.endInner(i))).toString())
-								<< endl;
-								*/
+
 			if (p1 == p2) {
-				//cout << "ok" << endl;
 				++innerIterator;
 				continue;
 			} else {
 				assert(!(p1 == p2));
-
-				computeForce(p1, p2);
-
-				++innerIterator;
+				computeLennardJones(p1, p2);
 			}
+			++innerIterator;
 		}
+		++iterator;
+	}
+#endif
+#ifdef _OPENMP
+	utils::LCOuterParticleIterator iterator;
+	utils::LCInnerParticleIterator innerIterator;
+	int i, j;
+#pragma omp parallel private(i, j, iterator, innerIterator, zero, sumF)
+	{
+#pragma omp for schedule(dynamic)
+		for (i = 0; i < omp_get_num_threads(); i++) {
+			iterator = lcContainer.beginOuter(i);
 
-	   //FZUp
-	   if (isMembrane){
-		   if (current_time <= 150){
-			   if (	((*iterator).getID() == id1) ||
-					((*iterator).getID() == id2) ||
-					((*iterator).getID() == id3) ||
-					((*iterator).getID() == id4)){
-				   FZ[3] = FZUp[3];
-			   }
-		   }
-	   }
+			while (iterator != lcContainer.endOuter(i)) {
+//#pragma omp critical
+//			{
+//				std::cout << iterator.getCellNumber() << " | " << lcContainer.endOuter(i).getCellNumber() << std::endl;
+//			}
+				assert(iterator.getCellNumber() <= lcContainer.endOuter(i).getCellNumber());
+				j = iterator.getCellNumber();
+				sumF = zero;
+				innerIterator = lcContainer.beginInner(iterator);
+				while (innerIterator
+						!= lcContainer.endInner(j)) {
 
+					assert(innerIterator.getCellNumber() <= lcContainer.endInner(j).getCellNumber());
 
-	   // GRAVITY (G_CONST = 0 when gravity is disabled)
-	   (*iterator).setF(
-			   FZ + gravForce[(*iterator).getType()] + (*iterator).getTempF());
-	   (*iterator).deleteTempF();
-	   ++iterator;
+					Particle& p1 = *iterator;
+					Particle& p2 = *innerIterator;
+					if (p1 == p2) {
+						++innerIterator;
+						continue;
+					} else {
+						computeLennardJones(p1, p2);
+					}
+					++innerIterator;
+				}
+				++iterator;
+			}
+
+		}
+	}
+
+#endif
+
+	//setF
+	utils::LCOuterParticleIterator iterator2 = lcContainer.beginOuter();
+	while (iterator2 != lcContainer.endOuter()) {
+		(*iterator2).setF(
+				gravForce[(*iterator2).getType()] + (*iterator2).getTempF());
+		(*iterator2).deleteTempF();
+		++iterator2;
 	}
 }
 
 void LCcalculateX() {
-
+//#ifndef _OPENMP
 	utils::LCOuterParticleIterator iterator = lcContainer.beginOuter();
 	while (iterator != lcContainer.endOuter()) {
-		int i = iterator.getCellNumber();
+
 		Particle& p = *iterator;
 
 		utils::Vector<double, 3> tempX = p.getX() + delta_t * p.getV()
@@ -1226,22 +886,61 @@ void LCcalculateX() {
 
 		++iterator;
 	}
+	/*#else
+	 #pragma omp parallel
+	 {
+	 #pragma omp for schedule(dynamic)
+	 for(int i = 0; i < omp_get_num_threads(); i++) {
+	 utils::LCOuterParticleIterator iterator = lcContainer.beginOuter(i);
+	 while (iterator != lcContainer.endOuter(i)) {
+	 Particle& p = *iterator;
+	 utils::Vector<double, 3> tempX = p.getX() + delta_t * p.getV()
+	 + ((delta_t) * (delta_t) / (2 * p.getM())) * p.getOldF();
+
+	 //				if (tempX[0] < 0 || tempX[1] < 0) {
+	 //				 cout << iterator.getCellNumber() << " " << (*iterator).toString();
+	 //				 }
+	 p.getX() = tempX;
+
+	 ++iterator;
+	 }
+	 }
+	 }
+	 #endif*/
 }
 
 void LCcalculateV() {
-
+//#ifndef _OPENMP
 	utils::LCOuterParticleIterator iterator = lcContainer.beginOuter();
 	while (iterator != lcContainer.endOuter()) {
-
-		int i = iterator.getCellNumber();
 		Particle& p = *iterator;
 
 		utils::Vector<double, 3> tempV = p.getV()
 				+ (delta_t / (2 * p.getM())) * (p.getF() + p.getOldF());
 
 		p.getV() = tempV;
+
 		++iterator;
 	}
+	/*#else
+	 #pragma omp parallel
+	 {
+	 #pragma omp for schedule(dynamic)
+	 for(int i = 0; i < omp_get_num_threads(); i++) {
+	 utils::LCOuterParticleIterator iterator = lcContainer.beginOuter(i);
+	 while (iterator != lcContainer.endOuter(i)) {
+	 Particle& p = *iterator;
+
+	 utils::Vector<double, 3> tempV = p.getV()
+	 + (delta_t / (2 * p.getM())) * (p.getF() + p.getOldF());
+
+	 p.getV() = tempV;
+
+	 ++iterator;
+	 }
+	 }
+	 }
+	 #endif*/
 }
 
 /**
@@ -1249,37 +948,51 @@ void LCcalculateV() {
  * @param p1 the particle of the outer iterator
  * @param p2 the particle of the inner iterator
  */
-void computeForce(Particle& p1, Particle& p2) {
+void computeLennardJones(Particle& p1, Particle& p2) {
 	utils::Vector<double, 3> tempD = p2.getX() - p1.getX();
 	double tempDNorm = tempD.L2Norm();
-	utils::Vector<double, 3> tempF((double) 0);
 
 	if (tempDNorm < R_CUTOFF) {
-		if (!isMembrane){
-			double tempDSigDivNorm = pow(
-					SIG[p1.getType()][p2.getType()] / tempDNorm, 6);
-			tempF = 24 * EPS[p1.getType()][p2.getType()]
-					* pow(1 / tempDNorm, 2)
-					* (tempDSigDivNorm - 2 * pow(tempDSigDivNorm, 2)) * tempD;
-		}else{
-			if (p1.isDirectNeighborTo(p2)){
-				tempF = k*(1 - rDirect/tempDNorm)*tempD;
-			}
-			else if (p1.isDiagNeighborTo(p2)){
-				tempF = k*(1 - rDiag/tempDNorm)*tempD;
-			}
-			else if (tempDNorm <= rFLJ){
-				double tempDSigDivNorm = pow(
-						SIG[p1.getType()][p2.getType()] / tempDNorm, 6);
-				tempF = 24 * EPS[p1.getType()][p2.getType()]
-						* pow(1 / tempDNorm, 2)
-						* (tempDSigDivNorm - 2 * pow(tempDSigDivNorm, 2)) * tempD;
-			}
-		}
+
+		double tempDSigDivNorm = pow(
+				SIG[p1.getType()][p2.getType()] / tempDNorm, 6);
+
+		utils::Vector<double, 3> tempF = 24 * EPS[p1.getType()][p2.getType()]
+				* pow(1 / tempDNorm, 2)
+				* (tempDSigDivNorm - 2 * pow(tempDSigDivNorm, 2)) * tempD;
 
 		p2.updateTempF((-1) * tempF);
 		p1.updateTempF(tempF);
 	}
+}
+
+void computeSmoothedLennardJones(Particle& p1, Particle& p2) {
+	utils::Vector<double, 3> tempD = p2.getX() - p1.getX();
+	double tempDNorm = tempD.L2Norm();
+
+	double rl = 1.3;
+	utils::Vector<double, 3> tempS;
+	if (tempDNorm < rl) {
+		tempS = 1.0;
+	} else if (tempDNorm < R_CUTOFF) {
+		tempS = 1
+				- (tempDNorm - rl) * (tempDNorm - rl)
+						* ((3 * R_CUTOFF - rl - (2 * tempDNorm))
+								/ pow(R_CUTOFF - rl, 3));
+	} else {
+		tempS = 0.0;
+
+	}
+
+	double tempDSigDivNorm = pow(SIG[p1.getType()][p2.getType()] / tempDNorm,
+			6);
+
+	utils::Vector<double, 3> tempF = 24 * EPS[p1.getType()][p2.getType()]
+			* pow(1 / tempDNorm, 2)
+			* (tempDSigDivNorm - 2 * pow(tempDSigDivNorm, 2)) * tempS * tempD;
+
+	p2.updateTempF((-1) * tempF);
+	p1.updateTempF(tempF);
 }
 
 void LCplotVTK(int iteration) {
@@ -1356,5 +1069,57 @@ void fillEpsSig(int inSize) {
 			EPS[i][j] = (EPS[i][i] + EPS[j][j]) / 2;
 			SIG[i][j] = sqrt(SIG[i][i] * SIG[j][j]);
 		}
+	}
+}
+
+void calculateDiffusion() {
+	utils::Vector<double, 3> diffusion = 0.0;
+	utils::LCOuterParticleIterator iterator = lcContainer.beginOuter();
+	int i = 0;
+	//number of particles
+	while (iterator != lcContainer.endOuter()) {
+		Particle& p = *iterator;
+		diffusion += (p.getX() - p.getX0()) * (p.getX() - p.getX0());
+		++i;
+		++iterator;
+	} //TODO: //diff[t] = (1/(double)i) * diffusion;
+}
+
+void calculateRDF() {
+
+	double r = 1.0;
+	double deltaR = 0.1;
+
+	std::vector<double> number;
+	number.resize((r / deltaR));		//Check if the cast is correct
+	for (int i = 0; i < number.size(); i++) {
+		number[i] = 0;
+	}
+
+	utils::LCOuterParticleIterator outerIterator = lcContainer.beginOuter();
+
+	while (outerIterator != lcContainer.endOuter()) {
+
+		utils::LCInnerParticleIterator innerIterator = lcContainer.beginInner(
+				outerIterator);
+
+		while (innerIterator != lcContainer.endInner(outerIterator.getCellNumber())) {
+
+			utils::Vector<double, 3> tempD = (*innerIterator).getX()
+					- (*outerIterator).getX();
+			double tempDNorm = tempD.L2Norm();
+
+			if (tempDNorm <= r) {
+				number[(tempDNorm / deltaR)] += 2;
+			}
+
+			++innerIterator;
+		}
+
+		++outerIterator;
+	}
+
+	for(int i = 0; i < number.size(); i++){
+		number[i] = number[i] / ((double)lcContainer.size());
 	}
 }

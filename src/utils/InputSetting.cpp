@@ -545,6 +545,24 @@ gconst (const gconst_type& x)
   this->gconst_.set (x);
 }
 
+const pse_t::force_type& pse_t::
+force () const
+{
+  return this->force_.get ();
+}
+
+pse_t::force_type& pse_t::
+force ()
+{
+  return this->force_.get ();
+}
+
+void pse_t::
+force (const force_type& x)
+{
+  this->force_.set (x);
+}
+
 const pse_t::lc_type& pse_t::
 lc () const
 {
@@ -1417,6 +1435,7 @@ pse_t (const start_time_type& start_time,
        const delta_t_type& delta_t,
        const numberOfTypes_type& numberOfTypes,
        const gconst_type& gconst,
+       const force_type& force,
        const lc_type& lc,
        const thermo_type& thermo,
        const outputfile_type& outputfile)
@@ -1426,6 +1445,7 @@ pse_t (const start_time_type& start_time,
   delta_t_ (delta_t, ::xml_schema::flags (), this),
   numberOfTypes_ (numberOfTypes, ::xml_schema::flags (), this),
   gconst_ (gconst, ::xml_schema::flags (), this),
+  force_ (force, ::xml_schema::flags (), this),
   lc_ (lc, ::xml_schema::flags (), this),
   thermo_ (thermo, ::xml_schema::flags (), this),
   inputfile_ (::xml_schema::flags (), this),
@@ -1439,6 +1459,7 @@ pse_t (const start_time_type& start_time,
        const delta_t_type& delta_t,
        const numberOfTypes_type& numberOfTypes,
        const gconst_type& gconst,
+       const force_type& force,
        ::std::auto_ptr< lc_type >& lc,
        ::std::auto_ptr< thermo_type >& thermo,
        ::std::auto_ptr< outputfile_type >& outputfile)
@@ -1448,6 +1469,7 @@ pse_t (const start_time_type& start_time,
   delta_t_ (delta_t, ::xml_schema::flags (), this),
   numberOfTypes_ (numberOfTypes, ::xml_schema::flags (), this),
   gconst_ (gconst, ::xml_schema::flags (), this),
+  force_ (force, ::xml_schema::flags (), this),
   lc_ (lc, ::xml_schema::flags (), this),
   thermo_ (thermo, ::xml_schema::flags (), this),
   inputfile_ (::xml_schema::flags (), this),
@@ -1465,6 +1487,7 @@ pse_t (const pse_t& x,
   delta_t_ (x.delta_t_, f, this),
   numberOfTypes_ (x.numberOfTypes_, f, this),
   gconst_ (x.gconst_, f, this),
+  force_ (x.force_, f, this),
   lc_ (x.lc_, f, this),
   thermo_ (x.thermo_, f, this),
   inputfile_ (x.inputfile_, f, this),
@@ -1482,6 +1505,7 @@ pse_t (const ::xercesc::DOMElement& e,
   delta_t_ (f, this),
   numberOfTypes_ (f, this),
   gconst_ (f, this),
+  force_ (f, this),
   lc_ (f, this),
   thermo_ (f, this),
   inputfile_ (f, this),
@@ -1555,6 +1579,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!gconst_.present ())
       {
         this->gconst_.set (gconst_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // force
+    //
+    if (n.name () == "force" && n.namespace_ ().empty ())
+    {
+      if (!force_.present ())
+      {
+        this->force_.set (force_traits::create (i, f, this));
         continue;
       }
     }
@@ -1647,6 +1682,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
   {
     throw ::xsd::cxx::tree::expected_element< char > (
       "gconst",
+      "");
+  }
+
+  if (!force_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "force",
       "");
   }
 
