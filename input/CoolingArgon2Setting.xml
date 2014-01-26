@@ -11,7 +11,7 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 	<gconst>0.0</gconst>
 	
 	<!-- true: smoothed LJ, false: LJ -->
-	<force>true<force>
+	<force>true</force>
 		
 	<!-- Short range, linked cell algorithm -->
 	<lc>
