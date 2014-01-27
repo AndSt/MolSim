@@ -200,11 +200,20 @@ void ParticleGenerator::extractParticles(const string filename)
   	}
 }
 
-void ParticleGenerator::extractSetting(string filename, double& start_time, double& end_time, double& delta_t,
-				std::list<string>& inputNames, std::list<string>& inputTypes, 
-				string& outputMask, int& outputFreq,
-				utils::Vector<double, 3>& domainSize, double& r_cutoff,
-				std::vector<int>& domainBoundCond, double& g_const, int& inputSize)
+void ParticleGenerator::extractSetting(
+		string filename,
+		double& start_time,
+		double& end_time,
+		double& delta_t,
+		std::list<string>& inputNames,
+		std::list<string>& inputTypes,
+		string& outputMask,
+		int& outputFreq,
+		utils::Vector<double, 3>& domainSize,
+		double& r_cutoff,
+		std::vector<int>& domainBoundCond,
+		double& g_const,
+		int& inputSize)
 {
   	try
   	{
@@ -214,7 +223,6 @@ void ParticleGenerator::extractSetting(string filename, double& start_time, doub
 		delta_t = h->delta_t();
 		inputSize = h->numberOfTypes();
 		g_const = h->gconst();
-		this->smoothed = h->force();
 
 		inputNames.clear();
 		inputTypes.clear();
@@ -248,6 +256,26 @@ void ParticleGenerator::extractSetting(string filename, double& start_time, doub
   	}
 }
 
-bool ParticleGenerator::smoothedLJ(){
-	return smoothed;
+void ParticleGenerator::extractMembraneSetting(
+		std::string filename,
+		double& r0,
+		double& k,
+		double& f_z,
+		double& t_z){
+	auto_ptr<pse_t> h (pse (filename, xml_schema::flags::dont_validate));
+
+	r0 = h->membrane().r0();
+	k = h->membrane().k();
+	f_z = h->membrane().f_z();
+	t_z= h->membrane().t_z();
+}
+
+void ParticleGenerator::extractArgonSetting(
+		std::string filename,
+		bool& smoothed,
+		double& rl){
+	auto_ptr<pse_t> h (pse (filename, xml_schema::flags::dont_validate));
+
+	smoothed = h->argon().force();
+	rl = h->argon().rl();
 }

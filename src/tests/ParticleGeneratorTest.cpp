@@ -257,24 +257,29 @@ void ParticleGeneratorTest::testExtractSetting(){
 	CPPUNIT_ASSERT(rcutoffT==3.0);
 }
 
-void ParticleGeneratorTest::testForce(){
-	double start_timeT, end_timeT, delta_tT;
-	std::list<std::string> inputNamesT, inputTypesT;
-	string outputMaskT;
-	int outputFreqT;
-	utils::Vector<double, 3> domainSizeT;
-	double rcutoffT;
-	std::vector<int> cond;
-	double gT;
-	int inputSizeT;
+void ParticleGeneratorTest::testMembraneSetting(){
+	double r0, k, f_z, t_z;
 
 	std::string fileName = "src/tests/testFiles/TestInputSetting.xml";
 	char *cstr = new char[fileName.length() + 1];
 	strcpy(cstr, fileName.c_str());
-	generator.extractSetting(cstr, start_timeT, end_timeT, delta_tT,
-				inputNamesT, inputTypesT, outputMaskT,
-				outputFreqT, domainSizeT, rcutoffT, cond, gT, inputSizeT);
-	CPPUNIT_ASSERT(generator.smoothedLJ() == true);
+	generator.extractMembraneSetting(cstr, r0, k, f_z, t_z);
+	CPPUNIT_ASSERT(r0 == 2.2);
+	CPPUNIT_ASSERT(k == 300.0);
+	CPPUNIT_ASSERT(f_z == 0.8);
+	CPPUNIT_ASSERT(t_z == 150.0);
+}
+
+void ParticleGeneratorTest::testArgonSetting(){
+	bool smoothed;
+	double rl;
+
+	std::string fileName = "src/tests/testFiles/TestInputSetting.xml";
+	char *cstr = new char[fileName.length() + 1];
+	strcpy(cstr, fileName.c_str());
+	generator.extractArgonSetting(cstr, smoothed, rl);
+	CPPUNIT_ASSERT(smoothed == false);
+	CPPUNIT_ASSERT(rl == 1.9);
 }
 
 CppUnit::Test *ParticleGeneratorTest::suite() {
@@ -292,6 +297,12 @@ CppUnit::Test *ParticleGeneratorTest::suite() {
 	testSuite->addTest(
 			new CppUnit::TestCaller<ParticleGeneratorTest>("testExtractSetting",
 					&ParticleGeneratorTest::testExtractSetting));
+	testSuite->addTest(
+			new CppUnit::TestCaller<ParticleGeneratorTest>("testMembraneSetting",
+					&ParticleGeneratorTest::testMembraneSetting));
+	testSuite->addTest(
+			new CppUnit::TestCaller<ParticleGeneratorTest>("testArgonSetting",
+					&ParticleGeneratorTest::testArgonSetting));
 	testSuite->addTest(
 			new CppUnit::TestCaller<ParticleGeneratorTest>("testExtractSpheres",
 					&ParticleGeneratorTest::testExtractSpheres));

@@ -228,6 +228,8 @@ class inputfile_t;
 class type_t;
 class outputfile_t;
 class thermo_t;
+class membrane_t;
+class argon_t;
 class pse_t;
 
 #include <memory>    // std::auto_ptr
@@ -771,6 +773,164 @@ class thermo_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< nDelta_type > nDelta_;
 };
 
+class membrane_t: public ::xml_schema::type
+{
+  public:
+  // r0
+  // 
+  typedef ::xml_schema::decimal r0_type;
+  typedef ::xsd::cxx::tree::traits< r0_type, char, ::xsd::cxx::tree::schema_type::decimal > r0_traits;
+
+  const r0_type&
+  r0 () const;
+
+  r0_type&
+  r0 ();
+
+  void
+  r0 (const r0_type& x);
+
+  // k
+  // 
+  typedef ::xml_schema::decimal k_type;
+  typedef ::xsd::cxx::tree::traits< k_type, char, ::xsd::cxx::tree::schema_type::decimal > k_traits;
+
+  const k_type&
+  k () const;
+
+  k_type&
+  k ();
+
+  void
+  k (const k_type& x);
+
+  // f_z
+  // 
+  typedef ::xml_schema::decimal f_z_type;
+  typedef ::xsd::cxx::tree::traits< f_z_type, char, ::xsd::cxx::tree::schema_type::decimal > f_z_traits;
+
+  const f_z_type&
+  f_z () const;
+
+  f_z_type&
+  f_z ();
+
+  void
+  f_z (const f_z_type& x);
+
+  // t_z
+  // 
+  typedef ::xml_schema::decimal t_z_type;
+  typedef ::xsd::cxx::tree::traits< t_z_type, char, ::xsd::cxx::tree::schema_type::decimal > t_z_traits;
+
+  const t_z_type&
+  t_z () const;
+
+  t_z_type&
+  t_z ();
+
+  void
+  t_z (const t_z_type& x);
+
+  // Constructors.
+  //
+  membrane_t (const r0_type&,
+              const k_type&,
+              const f_z_type&,
+              const t_z_type&);
+
+  membrane_t (const ::xercesc::DOMElement& e,
+              ::xml_schema::flags f = 0,
+              ::xml_schema::container* c = 0);
+
+  membrane_t (const membrane_t& x,
+              ::xml_schema::flags f = 0,
+              ::xml_schema::container* c = 0);
+
+  virtual membrane_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  virtual 
+  ~membrane_t ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  ::xsd::cxx::tree::one< r0_type > r0_;
+  ::xsd::cxx::tree::one< k_type > k_;
+  ::xsd::cxx::tree::one< f_z_type > f_z_;
+  ::xsd::cxx::tree::one< t_z_type > t_z_;
+};
+
+class argon_t: public ::xml_schema::type
+{
+  public:
+  // force
+  // 
+  typedef ::xml_schema::boolean force_type;
+  typedef ::xsd::cxx::tree::traits< force_type, char > force_traits;
+
+  const force_type&
+  force () const;
+
+  force_type&
+  force ();
+
+  void
+  force (const force_type& x);
+
+  // rl
+  // 
+  typedef ::xml_schema::decimal rl_type;
+  typedef ::xsd::cxx::tree::traits< rl_type, char, ::xsd::cxx::tree::schema_type::decimal > rl_traits;
+
+  const rl_type&
+  rl () const;
+
+  rl_type&
+  rl ();
+
+  void
+  rl (const rl_type& x);
+
+  // Constructors.
+  //
+  argon_t (const force_type&,
+           const rl_type&);
+
+  argon_t (const ::xercesc::DOMElement& e,
+           ::xml_schema::flags f = 0,
+           ::xml_schema::container* c = 0);
+
+  argon_t (const argon_t& x,
+           ::xml_schema::flags f = 0,
+           ::xml_schema::container* c = 0);
+
+  virtual argon_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  virtual 
+  ~argon_t ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  ::xsd::cxx::tree::one< force_type > force_;
+  ::xsd::cxx::tree::one< rl_type > rl_;
+};
+
 class pse_t: public ::xml_schema::type
 {
   public:
@@ -844,19 +1004,39 @@ class pse_t: public ::xml_schema::type
   void
   gconst (const gconst_type& x);
 
-  // force
+  // membrane
   // 
-  typedef ::xml_schema::boolean force_type;
-  typedef ::xsd::cxx::tree::traits< force_type, char > force_traits;
+  typedef ::membrane_t membrane_type;
+  typedef ::xsd::cxx::tree::traits< membrane_type, char > membrane_traits;
 
-  const force_type&
-  force () const;
+  const membrane_type&
+  membrane () const;
 
-  force_type&
-  force ();
+  membrane_type&
+  membrane ();
 
   void
-  force (const force_type& x);
+  membrane (const membrane_type& x);
+
+  void
+  membrane (::std::auto_ptr< membrane_type > p);
+
+  // argon
+  // 
+  typedef ::argon_t argon_type;
+  typedef ::xsd::cxx::tree::traits< argon_type, char > argon_traits;
+
+  const argon_type&
+  argon () const;
+
+  argon_type&
+  argon ();
+
+  void
+  argon (const argon_type& x);
+
+  void
+  argon (::std::auto_ptr< argon_type > p);
 
   // lc
   // 
@@ -933,7 +1113,8 @@ class pse_t: public ::xml_schema::type
          const delta_t_type&,
          const numberOfTypes_type&,
          const gconst_type&,
-         const force_type&,
+         const membrane_type&,
+         const argon_type&,
          const lc_type&,
          const thermo_type&,
          const outputfile_type&);
@@ -943,7 +1124,8 @@ class pse_t: public ::xml_schema::type
          const delta_t_type&,
          const numberOfTypes_type&,
          const gconst_type&,
-         const force_type&,
+         ::std::auto_ptr< membrane_type >&,
+         ::std::auto_ptr< argon_type >&,
          ::std::auto_ptr< lc_type >&,
          ::std::auto_ptr< thermo_type >&,
          ::std::auto_ptr< outputfile_type >&);
@@ -976,7 +1158,8 @@ class pse_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< delta_t_type > delta_t_;
   ::xsd::cxx::tree::one< numberOfTypes_type > numberOfTypes_;
   ::xsd::cxx::tree::one< gconst_type > gconst_;
-  ::xsd::cxx::tree::one< force_type > force_;
+  ::xsd::cxx::tree::one< membrane_type > membrane_;
+  ::xsd::cxx::tree::one< argon_type > argon_;
   ::xsd::cxx::tree::one< lc_type > lc_;
   ::xsd::cxx::tree::one< thermo_type > thermo_;
   inputfile_sequence inputfile_;

@@ -102,6 +102,32 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 		</xs:sequence>
 	</xs:complexType>
 
+	<xs:complexType name="membrane_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The membrane type consists of some extra information needed for a membrane.
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:sequence>
+			<xs:element name="r0" type="xs:decimal"/>
+			<xs:element name="k" type="xs:decimal"/>
+			<xs:element name="f_z" type="xs:decimal"/>
+			<xs:element name="t_z" type="xs:decimal"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="argon_t">
+			<xs:annotation>
+			  <xs:documentation>
+				The argon type consists of some extra information needed for cooling argon.
+			  </xs:documentation>
+			</xs:annotation>
+		<xs:sequence>
+			<xs:element name="force" type="xs:boolean"/>
+			<xs:element name="rl" type="xs:decimal"/>
+		</xs:sequence>
+	</xs:complexType>
+
 	<!-- type of the biggest complex element -->
 	<xs:complexType name="pse_t">
 			<xs:annotation>
@@ -116,7 +142,8 @@ xmlns:xs="http://www.w3.org/2001/XMLSchema">
 			<xs:element name="delta_t" type="xs:decimal"/>
 			<xs:element name="numberOfTypes" type="xs:int"/>
 			<xs:element name="gconst" type="xs:decimal"/>
-			<xs:element name="force" type="xs:boolean"/>
+			<xs:element name="membrane" type="membrane_t"/>
+			<xs:element name="argon" type="argon_t"/>
 			<xs:element name="lc" type="lc_t"/>
 			<xs:element name="thermo" type="thermo_t"/>
 			<xs:element name="inputfile" type="inputfile_t" maxOccurs="unbounded"/>

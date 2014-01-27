@@ -39,9 +39,6 @@ private:
 	/** The particles of either cuboids or spheres will be stored here.*/
 	std::list<Particle> particleList;
 
-	/** Force flag for smoothed LJ. */
-	bool smoothed;
-
 public:
 	/** Default constructor.
 	 */
@@ -87,17 +84,48 @@ public:
 	 * @param[out] g_const The constant g of gravitational force
 	 * @param[out] inputSize Number of particle types
 	 */
-	void extractSetting(std::string filename, double& start_time, double& end_time, double& delta_t,
-				std::list<string>& inputNames, std::list<string>& inputTypes, 
-				string& outputMask, int& outputFreq, 
-				utils::Vector<double, 3>& domainSize, double& r_cutoff, 
-				std::vector<int>& domainBoundCond, double& g_const, int& inputSize);
+	void extractSetting(
+			std::string filename,
+			double& start_time,
+			double& end_time,
+			double& delta_t,
+			std::list<string>& inputNames,
+			std::list<string>& inputTypes,
+			string& outputMask,
+			int& outputFreq,
+			utils::Vector<double, 3>& domainSize,
+			double& r_cutoff,
+			std::vector<int>& domainBoundCond,
+			double& g_const,
+			int& inputSize);
 
-	/**
-	 * extractSetting must have been called first.
-	 * \return true if smoothed LJ is needed, or else the normal LJ.
+	/** The reading procedure, which can extract some extra information needed
+	 *  for configuring the simulation of a membrane.
+	 *
+	 * @param[in] filename Input file name.
+	 * @param[out] r0 The average bond length of a molecule pair (not the meshwidth!).
+	 * @param[out] k Stiffness constant.
+	 * @param[out] f_z FZUp.
+	 * @param[out] t_z Effective time of FZUp.
 	 */
-	bool smoothedLJ();
+	void extractMembraneSetting(
+			std::string filename,
+			double& r0,
+			double& k,
+			double& f_z,
+			double& t_z);
+
+	/** The reading procedure, which can extract some extra information needed
+	 *  for configuring the simulation of cooling argon.
+	 *
+	 * @param[in] filename Input file name.
+	 * @param[out] smoothed True when smoothed LJ was chosen.
+	 * @param[out] rl rl.
+	 */
+	void extractArgonSetting(
+			std::string filename,
+			bool& smoothed,
+			double& rl);
 
 	/** The reading procedure, which can convert information 
 	 *  from a given XML input file into particle generator's list of unstructered particles.

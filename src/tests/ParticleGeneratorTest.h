@@ -51,7 +51,9 @@ public:
 	
 	void testExtractSetting();
 
-	void testForce();
+	void testMembraneSetting();
+
+	void testArgonSetting();
 
 	/**
 	 *

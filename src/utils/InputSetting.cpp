@@ -452,6 +452,122 @@ nDelta (const nDelta_type& x)
 }
 
 
+// membrane_t
+// 
+
+const membrane_t::r0_type& membrane_t::
+r0 () const
+{
+  return this->r0_.get ();
+}
+
+membrane_t::r0_type& membrane_t::
+r0 ()
+{
+  return this->r0_.get ();
+}
+
+void membrane_t::
+r0 (const r0_type& x)
+{
+  this->r0_.set (x);
+}
+
+const membrane_t::k_type& membrane_t::
+k () const
+{
+  return this->k_.get ();
+}
+
+membrane_t::k_type& membrane_t::
+k ()
+{
+  return this->k_.get ();
+}
+
+void membrane_t::
+k (const k_type& x)
+{
+  this->k_.set (x);
+}
+
+const membrane_t::f_z_type& membrane_t::
+f_z () const
+{
+  return this->f_z_.get ();
+}
+
+membrane_t::f_z_type& membrane_t::
+f_z ()
+{
+  return this->f_z_.get ();
+}
+
+void membrane_t::
+f_z (const f_z_type& x)
+{
+  this->f_z_.set (x);
+}
+
+const membrane_t::t_z_type& membrane_t::
+t_z () const
+{
+  return this->t_z_.get ();
+}
+
+membrane_t::t_z_type& membrane_t::
+t_z ()
+{
+  return this->t_z_.get ();
+}
+
+void membrane_t::
+t_z (const t_z_type& x)
+{
+  this->t_z_.set (x);
+}
+
+
+// argon_t
+// 
+
+const argon_t::force_type& argon_t::
+force () const
+{
+  return this->force_.get ();
+}
+
+argon_t::force_type& argon_t::
+force ()
+{
+  return this->force_.get ();
+}
+
+void argon_t::
+force (const force_type& x)
+{
+  this->force_.set (x);
+}
+
+const argon_t::rl_type& argon_t::
+rl () const
+{
+  return this->rl_.get ();
+}
+
+argon_t::rl_type& argon_t::
+rl ()
+{
+  return this->rl_.get ();
+}
+
+void argon_t::
+rl (const rl_type& x)
+{
+  this->rl_.set (x);
+}
+
+
 // pse_t
 // 
 
@@ -545,22 +661,52 @@ gconst (const gconst_type& x)
   this->gconst_.set (x);
 }
 
-const pse_t::force_type& pse_t::
-force () const
+const pse_t::membrane_type& pse_t::
+membrane () const
 {
-  return this->force_.get ();
+  return this->membrane_.get ();
 }
 
-pse_t::force_type& pse_t::
-force ()
+pse_t::membrane_type& pse_t::
+membrane ()
 {
-  return this->force_.get ();
+  return this->membrane_.get ();
 }
 
 void pse_t::
-force (const force_type& x)
+membrane (const membrane_type& x)
 {
-  this->force_.set (x);
+  this->membrane_.set (x);
+}
+
+void pse_t::
+membrane (::std::auto_ptr< membrane_type > x)
+{
+  this->membrane_.set (x);
+}
+
+const pse_t::argon_type& pse_t::
+argon () const
+{
+  return this->argon_.get ();
+}
+
+pse_t::argon_type& pse_t::
+argon ()
+{
+  return this->argon_.get ();
+}
+
+void pse_t::
+argon (const argon_type& x)
+{
+  this->argon_.set (x);
+}
+
+void pse_t::
+argon (::std::auto_ptr< argon_type > x)
+{
+  this->argon_.set (x);
 }
 
 const pse_t::lc_type& pse_t::
@@ -1426,6 +1572,248 @@ thermo_t::
 {
 }
 
+// membrane_t
+//
+
+membrane_t::
+membrane_t (const r0_type& r0,
+            const k_type& k,
+            const f_z_type& f_z,
+            const t_z_type& t_z)
+: ::xml_schema::type (),
+  r0_ (r0, ::xml_schema::flags (), this),
+  k_ (k, ::xml_schema::flags (), this),
+  f_z_ (f_z, ::xml_schema::flags (), this),
+  t_z_ (t_z, ::xml_schema::flags (), this)
+{
+}
+
+membrane_t::
+membrane_t (const membrane_t& x,
+            ::xml_schema::flags f,
+            ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  r0_ (x.r0_, f, this),
+  k_ (x.k_, f, this),
+  f_z_ (x.f_z_, f, this),
+  t_z_ (x.t_z_, f, this)
+{
+}
+
+membrane_t::
+membrane_t (const ::xercesc::DOMElement& e,
+            ::xml_schema::flags f,
+            ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  r0_ (f, this),
+  k_ (f, this),
+  f_z_ (f, this),
+  t_z_ (f, this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, true, false);
+    this->parse (p, f);
+  }
+}
+
+void membrane_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  for (; p.more_elements (); p.next_element ())
+  {
+    const ::xercesc::DOMElement& i (p.cur_element ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    // r0
+    //
+    if (n.name () == "r0" && n.namespace_ ().empty ())
+    {
+      if (!r0_.present ())
+      {
+        this->r0_.set (r0_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // k
+    //
+    if (n.name () == "k" && n.namespace_ ().empty ())
+    {
+      if (!k_.present ())
+      {
+        this->k_.set (k_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // f_z
+    //
+    if (n.name () == "f_z" && n.namespace_ ().empty ())
+    {
+      if (!f_z_.present ())
+      {
+        this->f_z_.set (f_z_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // t_z
+    //
+    if (n.name () == "t_z" && n.namespace_ ().empty ())
+    {
+      if (!t_z_.present ())
+      {
+        this->t_z_.set (t_z_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!r0_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "r0",
+      "");
+  }
+
+  if (!k_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "k",
+      "");
+  }
+
+  if (!f_z_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "f_z",
+      "");
+  }
+
+  if (!t_z_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "t_z",
+      "");
+  }
+}
+
+membrane_t* membrane_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class membrane_t (*this, f, c);
+}
+
+membrane_t::
+~membrane_t ()
+{
+}
+
+// argon_t
+//
+
+argon_t::
+argon_t (const force_type& force,
+         const rl_type& rl)
+: ::xml_schema::type (),
+  force_ (force, ::xml_schema::flags (), this),
+  rl_ (rl, ::xml_schema::flags (), this)
+{
+}
+
+argon_t::
+argon_t (const argon_t& x,
+         ::xml_schema::flags f,
+         ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  force_ (x.force_, f, this),
+  rl_ (x.rl_, f, this)
+{
+}
+
+argon_t::
+argon_t (const ::xercesc::DOMElement& e,
+         ::xml_schema::flags f,
+         ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  force_ (f, this),
+  rl_ (f, this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, true, false);
+    this->parse (p, f);
+  }
+}
+
+void argon_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  for (; p.more_elements (); p.next_element ())
+  {
+    const ::xercesc::DOMElement& i (p.cur_element ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    // force
+    //
+    if (n.name () == "force" && n.namespace_ ().empty ())
+    {
+      if (!force_.present ())
+      {
+        this->force_.set (force_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // rl
+    //
+    if (n.name () == "rl" && n.namespace_ ().empty ())
+    {
+      if (!rl_.present ())
+      {
+        this->rl_.set (rl_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!force_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "force",
+      "");
+  }
+
+  if (!rl_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "rl",
+      "");
+  }
+}
+
+argon_t* argon_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class argon_t (*this, f, c);
+}
+
+argon_t::
+~argon_t ()
+{
+}
+
 // pse_t
 //
 
@@ -1435,7 +1823,8 @@ pse_t (const start_time_type& start_time,
        const delta_t_type& delta_t,
        const numberOfTypes_type& numberOfTypes,
        const gconst_type& gconst,
-       const force_type& force,
+       const membrane_type& membrane,
+       const argon_type& argon,
        const lc_type& lc,
        const thermo_type& thermo,
        const outputfile_type& outputfile)
@@ -1445,7 +1834,8 @@ pse_t (const start_time_type& start_time,
   delta_t_ (delta_t, ::xml_schema::flags (), this),
   numberOfTypes_ (numberOfTypes, ::xml_schema::flags (), this),
   gconst_ (gconst, ::xml_schema::flags (), this),
-  force_ (force, ::xml_schema::flags (), this),
+  membrane_ (membrane, ::xml_schema::flags (), this),
+  argon_ (argon, ::xml_schema::flags (), this),
   lc_ (lc, ::xml_schema::flags (), this),
   thermo_ (thermo, ::xml_schema::flags (), this),
   inputfile_ (::xml_schema::flags (), this),
@@ -1459,7 +1849,8 @@ pse_t (const start_time_type& start_time,
        const delta_t_type& delta_t,
        const numberOfTypes_type& numberOfTypes,
        const gconst_type& gconst,
-       const force_type& force,
+       ::std::auto_ptr< membrane_type >& membrane,
+       ::std::auto_ptr< argon_type >& argon,
        ::std::auto_ptr< lc_type >& lc,
        ::std::auto_ptr< thermo_type >& thermo,
        ::std::auto_ptr< outputfile_type >& outputfile)
@@ -1469,7 +1860,8 @@ pse_t (const start_time_type& start_time,
   delta_t_ (delta_t, ::xml_schema::flags (), this),
   numberOfTypes_ (numberOfTypes, ::xml_schema::flags (), this),
   gconst_ (gconst, ::xml_schema::flags (), this),
-  force_ (force, ::xml_schema::flags (), this),
+  membrane_ (membrane, ::xml_schema::flags (), this),
+  argon_ (argon, ::xml_schema::flags (), this),
   lc_ (lc, ::xml_schema::flags (), this),
   thermo_ (thermo, ::xml_schema::flags (), this),
   inputfile_ (::xml_schema::flags (), this),
@@ -1487,7 +1879,8 @@ pse_t (const pse_t& x,
   delta_t_ (x.delta_t_, f, this),
   numberOfTypes_ (x.numberOfTypes_, f, this),
   gconst_ (x.gconst_, f, this),
-  force_ (x.force_, f, this),
+  membrane_ (x.membrane_, f, this),
+  argon_ (x.argon_, f, this),
   lc_ (x.lc_, f, this),
   thermo_ (x.thermo_, f, this),
   inputfile_ (x.inputfile_, f, this),
@@ -1505,7 +1898,8 @@ pse_t (const ::xercesc::DOMElement& e,
   delta_t_ (f, this),
   numberOfTypes_ (f, this),
   gconst_ (f, this),
-  force_ (f, this),
+  membrane_ (f, this),
+  argon_ (f, this),
   lc_ (f, this),
   thermo_ (f, this),
   inputfile_ (f, this),
@@ -1583,13 +1977,30 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
-    // force
+    // membrane
     //
-    if (n.name () == "force" && n.namespace_ ().empty ())
+    if (n.name () == "membrane" && n.namespace_ ().empty ())
     {
-      if (!force_.present ())
+      ::std::auto_ptr< membrane_type > r (
+        membrane_traits::create (i, f, this));
+
+      if (!membrane_.present ())
       {
-        this->force_.set (force_traits::create (i, f, this));
+        this->membrane_.set (r);
+        continue;
+      }
+    }
+
+    // argon
+    //
+    if (n.name () == "argon" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< argon_type > r (
+        argon_traits::create (i, f, this));
+
+      if (!argon_.present ())
+      {
+        this->argon_.set (r);
         continue;
       }
     }
@@ -1685,10 +2096,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "");
   }
 
-  if (!force_.present ())
+  if (!membrane_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
-      "force",
+      "membrane",
+      "");
+  }
+
+  if (!argon_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "argon",
       "");
   }
 

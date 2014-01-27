@@ -9,9 +9,20 @@ xsi:noNamespaceSchemaLocation="InputSetting.xsd">
 	<numberOfTypes>2</numberOfTypes>
 	
 	<gconst>-12.44</gconst>
-
-	<!-- true: smoothed LJ, false: LJ -->
-	<force>false</force>	
+	
+	<membrane>
+		<r0>2.2</r0>
+		<k>300.0</k>
+		<f_z>0.8</f_z>
+		<t_z>150.0</t_z>
+	</membrane>
+	
+	<argon>
+		<!-- true: smoothed LJ, false: LJ -->
+		<force>false</force>
+		
+		<rl>1.9</rl>
+	</argon>	
 	
 	<!-- Short range, linked cell algorithm -->
 	<lc>
