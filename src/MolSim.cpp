@@ -183,6 +183,10 @@ int main(int argc, char* argsv[]) {
 	 * ./MolSim --rayleigh-taylor-small		: for the small Rayleigh-Taylor experiment
 	 *
 	 * ./MolSim --rayleigh-taylor-big		: for the big Rayleigh-Taylor experiment
+	 *
+	 * ./MolSim --rayleigh-taylor-3D		: for the Rayleigh-Taylor experiment in 3D
+	 *
+	 * ./MolSim --membrane					: for the membrane experiment
 	 */
 
 	//bool test = false;
